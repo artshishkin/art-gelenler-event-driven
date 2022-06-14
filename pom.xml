@@ -19,7 +19,12 @@
         <java.version>11</java.version>
         <mapstruct.version>1.5.1.Final</mapstruct.version>
         <twitter4j.version>4.0.7</twitter4j.version>
+        <spring.boot.version>2.7.0</spring.boot.version>
     </properties>
+
+    <modules>
+        <module>twitter-to-kafka-service</module>
+    </modules>
 
     <dependencyManagement>
         <dependencies>
@@ -88,7 +93,7 @@
                         <path>
                             <groupId>org.springframework.boot</groupId>
                             <artifactId>spring-boot-configuration-processor</artifactId>
-                            <version>${project.parent.version}</version>
+                            <version>${spring.boot.version}</version>
                         </path>
                     </annotationProcessorPaths>
                     <compilerArgs>
