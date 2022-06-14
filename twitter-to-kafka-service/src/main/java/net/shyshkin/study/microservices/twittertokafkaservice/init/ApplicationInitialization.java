@@ -15,6 +15,7 @@ public class ApplicationInitialization implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        log.debug("Twitter-To-Kafka-Service Configuration Data: {}", configData);
+        log.debug("{}", configData.getWelcomeMessage());
+        log.debug("Keywords: {}", configData.getTwitterKeywords());
     }
 }
