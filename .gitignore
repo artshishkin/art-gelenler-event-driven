@@ -35,3 +35,4 @@ build/
 node_modules/
 /output/
 /OutputFiles/
+logs/
