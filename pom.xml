@@ -20,10 +20,12 @@
         <mapstruct.version>1.5.1.Final</mapstruct.version>
         <twitter4j.version>4.0.7</twitter4j.version>
         <spring.boot.version>2.7.0</spring.boot.version>
+        <twitter-api-java-sdk.version>1.2.4</twitter-api-java-sdk.version>
     </properties>
 
     <modules>
         <module>twitter-to-kafka-service</module>
+        <module>twitter-to-kafka-service-v2</module>
     </modules>
 
     <dependencyManagement>
@@ -32,6 +34,11 @@
                 <groupId>org.twitter4j</groupId>
                 <artifactId>twitter4j-stream</artifactId>
                 <version>${twitter4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.twitter</groupId>
+                <artifactId>twitter-api-java-sdk</artifactId>
+                <version>${twitter-api-java-sdk.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
