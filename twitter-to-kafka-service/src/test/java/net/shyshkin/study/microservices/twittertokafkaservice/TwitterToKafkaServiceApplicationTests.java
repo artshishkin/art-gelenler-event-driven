@@ -4,6 +4,8 @@ import net.shyshkin.study.microservices.twittertokafkaservice.config.TwitterToKa
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import twitter4j.TwitterStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -12,6 +14,9 @@ class TwitterToKafkaServiceApplicationTests {
 
     @Autowired
     private TwitterToKafkaServiceConfigData configData;
+
+    @MockBean
+    TwitterStream twitterStream;
 
     @Test
     void contextLoads() {
