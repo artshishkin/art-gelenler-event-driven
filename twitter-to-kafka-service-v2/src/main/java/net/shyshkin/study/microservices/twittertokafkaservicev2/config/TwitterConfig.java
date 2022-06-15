@@ -13,7 +13,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -46,7 +48,15 @@ public class TwitterConfig {
             try {
                 GetRulesResponse rules = tweetsApi().getRules(null, null, null);
                 log.debug("Rules: {}", rules);
+                List<String> existingRules = rules.getData().stream()
+                        .map(Rule::getValue)
+                        .collect(Collectors.toList());
+                if (!listsEqual(existingRules, twitterToKafkaServiceConfigData.getTwitterKeywords())) {
+                    deleteFilteringRules(existingRules);
+                    addFilteringRules();
+                }
             } catch (Exception ex) {
+                log.error("Exception with Rules", ex);
                 addFilteringRules();
             }
 
@@ -62,6 +72,14 @@ public class TwitterConfig {
         return null;
     }
 
+    private boolean listsEqual(List<?> list1, List<?> list2) {
+        if (Objects.equals(list1, list2)) return true;
+        if (list1.size() != list2.size()) return false;
+        ArrayList<?> list1copy = new ArrayList<>(list1);
+        list1copy.removeAll(list2);
+        return list1copy.size() == 0;
+    }
+
     private void addFilteringRules() throws ApiException {
 
         AddRulesRequest addRulesRequest = new AddRulesRequest();
@@ -75,12 +93,10 @@ public class TwitterConfig {
         log.debug("Add Rules Response: {}", rulesResponse);
     }
 
-    private void deleteFilteringRules() throws ApiException {
+    private void deleteFilteringRules(List<String> rulesToDelete) throws ApiException {
 
         var deleteRulesRequestDelete = new DeleteRulesRequestDelete();
-        twitterToKafkaServiceConfigData
-                .getTwitterKeywords()
-                .forEach(deleteRulesRequestDelete::addValuesItem);
+        rulesToDelete.forEach(deleteRulesRequestDelete::addValuesItem);
 
         AddOrDeleteRulesRequest addOrDeleteRulesRequest = new AddOrDeleteRulesRequest(new DeleteRulesRequest().delete(deleteRulesRequestDelete));
         AddOrDeleteRulesResponse rulesResponse = tweetsApi().addOrDeleteRules(addOrDeleteRulesRequest, false);
