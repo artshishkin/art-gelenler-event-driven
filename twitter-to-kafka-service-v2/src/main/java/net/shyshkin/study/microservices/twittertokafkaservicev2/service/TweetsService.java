@@ -1,7 +1,7 @@
 package net.shyshkin.study.microservices.twittertokafkaservicev2.service;
 
 import com.twitter.clientlib.ApiException;
-import com.twitter.clientlib.api.TwitterApi;
+import com.twitter.clientlib.api.TweetsApi;
 import com.twitter.clientlib.model.ResourceUnauthorizedProblem;
 import com.twitter.clientlib.model.SingleTweetLookupResponse;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +14,7 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class TweetsService {
 
-    private final TwitterApi twitterApi;
+    private final TweetsApi tweetsApi;
 
     public void fetchTweet() {
         Set<String> tweetFields = new HashSet<>();
@@ -24,7 +24,7 @@ public class TweetsService {
 
         try {
             // findTweetById
-            SingleTweetLookupResponse result = twitterApi.tweets().findTweetById("20", null, tweetFields, null, null, null, null);
+            SingleTweetLookupResponse result = tweetsApi.findTweetById("20", null, tweetFields, null, null, null, null);
             if (result.getErrors() != null && result.getErrors().size() > 0) {
                 System.out.println("Error:");
 

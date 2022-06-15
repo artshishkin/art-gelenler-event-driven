@@ -2,6 +2,7 @@ package net.shyshkin.study.microservices.twittertokafkaservicev2.config;
 
 import com.twitter.clientlib.ApiException;
 import com.twitter.clientlib.TwitterCredentialsBearer;
+import com.twitter.clientlib.api.TweetsApi;
 import com.twitter.clientlib.api.TwitterApi;
 import com.twitter.clientlib.model.*;
 import lombok.RequiredArgsConstructor;
@@ -32,19 +33,24 @@ public class TwitterConfig {
     }
 
     @Bean
+    TweetsApi tweetsApi() {
+        return twitterApi().tweets();
+    }
+
+    @Bean
     TweetsStreamListenersExecutor tweetsStreamListenersExecutor(TweetsStreamListener tweetsStreamListener) {
 
         var tweetFields = Set.of("author_id", "id", "created_at");
         try {
 //            deleteFilteringRules();
             try {
-                GetRulesResponse rules = twitterApi().tweets().getRules(null, null, null);
+                GetRulesResponse rules = tweetsApi().getRules(null, null, null);
                 log.debug("Rules: {}", rules);
             } catch (Exception ex) {
                 addFilteringRules();
             }
 
-            InputStream streamResult = twitterApi().tweets().searchStream(5, null, tweetFields, null, null, null, null, 0);
+            InputStream streamResult = tweetsApi().searchStream(5, null, tweetFields, null, null, null, null, 0);
 
             // sampleStream with TweetsStreamListenersExecutor
             TweetsStreamListenersExecutor tsle = new TweetsStreamListenersExecutor(streamResult);
@@ -68,7 +74,7 @@ public class TwitterConfig {
                 .collect(Collectors.toList());
         addRulesRequest.add(ruleNoIds);
         AddOrDeleteRulesRequest addOrDeleteRulesRequest = new AddOrDeleteRulesRequest(addRulesRequest);
-        AddOrDeleteRulesResponse rulesResponse = twitterApi().tweets().addOrDeleteRules(10, addOrDeleteRulesRequest, false);
+        AddOrDeleteRulesResponse rulesResponse = tweetsApi().addOrDeleteRules(10, addOrDeleteRulesRequest, false);
         log.debug("Add Rules Response: {}", rulesResponse);
     }
 
@@ -80,7 +86,7 @@ public class TwitterConfig {
                 .forEach(deleteRulesRequestDelete::addValuesItem);
 
         AddOrDeleteRulesRequest addOrDeleteRulesRequest = new AddOrDeleteRulesRequest(new DeleteRulesRequest().delete(deleteRulesRequestDelete));
-        AddOrDeleteRulesResponse rulesResponse = twitterApi().tweets().addOrDeleteRules(addOrDeleteRulesRequest, false);
+        AddOrDeleteRulesResponse rulesResponse = tweetsApi().addOrDeleteRules(addOrDeleteRulesRequest, false);
         log.debug("Delete Rules Response: {}", rulesResponse);
     }
 
