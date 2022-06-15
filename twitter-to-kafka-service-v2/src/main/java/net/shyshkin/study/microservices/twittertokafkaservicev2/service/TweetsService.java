@@ -5,11 +5,13 @@ import com.twitter.clientlib.api.TweetsApi;
 import com.twitter.clientlib.model.ResourceUnauthorizedProblem;
 import com.twitter.clientlib.model.SingleTweetLookupResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
 import java.util.Set;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class TweetsService {
@@ -26,22 +28,19 @@ public class TweetsService {
             // findTweetById
             SingleTweetLookupResponse result = tweetsApi.findTweetById("20", null, tweetFields, null, null, null, null);
             if (result.getErrors() != null && result.getErrors().size() > 0) {
-                System.out.println("Error:");
+                log.warn("Error:");
 
                 result.getErrors().forEach(e -> {
-                    System.out.println(e.toString());
+                    log.warn(e.toString());
                     if (e instanceof ResourceUnauthorizedProblem) {
-                        System.out.println(((ResourceUnauthorizedProblem) e).getTitle() + " " + ((ResourceUnauthorizedProblem) e).getDetail());
+                        log.warn("{} {}", ((ResourceUnauthorizedProblem) e).getTitle(), ((ResourceUnauthorizedProblem) e).getDetail());
                     }
                 });
             } else {
-                System.out.println("findTweetById - Tweet Text: " + result.toString());
+                log.debug("findTweetById - Tweet Text: {}", result);
             }
         } catch (ApiException e) {
-            System.err.println("Status code: " + e.getCode());
-            System.err.println("Reason: " + e.getResponseBody());
-            System.err.println("Response headers: " + e.getResponseHeaders());
-            e.printStackTrace();
+            log.error("Status code: {}. Reason: {}. Response headers: {}", e.getCode(), e.getResponseBody(), e.getResponseHeaders(), e);
         }
 
 

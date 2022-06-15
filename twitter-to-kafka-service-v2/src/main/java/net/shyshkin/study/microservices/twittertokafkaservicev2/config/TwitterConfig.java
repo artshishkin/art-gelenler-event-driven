@@ -57,10 +57,7 @@ public class TwitterConfig {
             tsle.addListener(tweetsStreamListener);
             return tsle;
         } catch (ApiException e) {
-            System.err.println("Status code: " + e.getCode());
-            System.err.println("Reason: " + e.getResponseBody());
-            System.err.println("Response headers: " + e.getResponseHeaders());
-            e.printStackTrace();
+            log.error("Status code: {}. Reason: {}. Response headers: {}", e.getCode(), e.getResponseBody(), e.getResponseHeaders(), e);
         }
         return null;
     }

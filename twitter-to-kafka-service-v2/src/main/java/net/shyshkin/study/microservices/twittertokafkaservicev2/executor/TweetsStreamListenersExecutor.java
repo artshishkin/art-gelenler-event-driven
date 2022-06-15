@@ -4,6 +4,7 @@ import com.google.gson.reflect.TypeToken;
 import com.twitter.clientlib.JSON;
 import com.twitter.clientlib.model.SingleTweetLookupResponse;
 import com.twitter.clientlib.model.StreamingTweet;
+import lombok.extern.slf4j.Slf4j;
 import net.shyshkin.study.microservices.twittertokafkaservicev2.listener.TweetsStreamListener;
 
 import java.io.BufferedReader;
@@ -15,6 +16,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
+@Slf4j
 public class TweetsStreamListenersExecutor {
 
     private final ITweetsQueue tweetsQueue;
@@ -38,10 +40,10 @@ public class TweetsStreamListenersExecutor {
 
     public void executeListeners() {
         if (stream == null) {
-            System.out.println("Error: stream is null.");
+            log.warn("Error: stream is null.");
             return;
         } else if (this.tweetsQueue == null) {
-            System.out.println("Error: tweetsQueue is null.");
+            log.warn("Error: tweetsQueue is null.");
             return;
         }
 
@@ -53,7 +55,7 @@ public class TweetsStreamListenersExecutor {
 
     public synchronized void shutdown() {
         isRunning = false;
-        System.out.println("TweetsStreamListenersExecutor is shutting down.");
+        log.debug("TweetsStreamListenersExecutor is shutting down.");
     }
 
     private class TweetsListenersExecutor extends Thread {
