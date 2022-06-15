@@ -6,7 +6,7 @@ twitter-to-kafka-service:
     - Spring
     - Kafka
     - Elasticsearch
-
+  twitter-v2-bearer-token: ${TWITTER_BEARER_TOKEN}
 
 
 

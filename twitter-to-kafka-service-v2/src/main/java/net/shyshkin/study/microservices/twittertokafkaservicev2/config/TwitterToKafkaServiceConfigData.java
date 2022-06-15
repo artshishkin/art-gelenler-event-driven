@@ -13,5 +13,6 @@ public class TwitterToKafkaServiceConfigData {
 
     private List<String> twitterKeywords;
     private String welcomeMessage;
+    private String twitterV2BearerToken;
 
 }
