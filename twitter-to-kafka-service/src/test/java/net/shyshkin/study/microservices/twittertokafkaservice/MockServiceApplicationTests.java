@@ -4,23 +4,19 @@ import net.shyshkin.study.microservices.twittertokafkaservice.config.TwitterToKa
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.TestPropertySource;
-import twitter4j.TwitterStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @TestPropertySource(properties = {
-        "twitter-to-kafka-service.mock.enable=false"
+        "twitter-to-kafka-service.mock.enable=true",
+        "twitter-to-kafka-service.mock.sleep-ms=10"
 })
-class TwitterToKafkaServiceApplicationTests {
+class MockServiceApplicationTests {
 
     @Autowired
     private TwitterToKafkaServiceConfigData configData;
-
-    @MockBean
-    TwitterStream twitterStream;
 
     @Test
     void contextLoads() {
