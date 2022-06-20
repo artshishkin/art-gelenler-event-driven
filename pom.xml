@@ -26,6 +26,7 @@
     <modules>
         <module>twitter-to-kafka-service</module>
         <module>twitter-to-kafka-service-v2</module>
+        <module>app-config-data</module>
     </modules>
 
     <dependencyManagement>

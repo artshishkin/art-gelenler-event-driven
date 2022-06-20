@@ -1,6 +1,6 @@
 package net.shyshkin.study.microservices.twittertokafkaservice;
 
-import net.shyshkin.study.microservices.twittertokafkaservice.config.TwitterToKafkaServiceConfigData;
+import net.shyshkin.study.microservices.config.TwitterToKafkaServiceConfigData;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

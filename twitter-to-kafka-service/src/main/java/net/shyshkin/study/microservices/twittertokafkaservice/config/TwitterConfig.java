@@ -1,5 +1,6 @@
 package net.shyshkin.study.microservices.twittertokafkaservice.config;
 
+import net.shyshkin.study.microservices.config.TwitterToKafkaServiceConfigData;
 import net.shyshkin.study.microservices.twittertokafkaservice.listener.TwitterKafkaStatusListener;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;

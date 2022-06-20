@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 
 @EnableConfigurationProperties
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = {"net.shyshkin.study.microservices"})
 public class TwitterToKafkaServiceApplication {
 
     public static void main(String[] args) {

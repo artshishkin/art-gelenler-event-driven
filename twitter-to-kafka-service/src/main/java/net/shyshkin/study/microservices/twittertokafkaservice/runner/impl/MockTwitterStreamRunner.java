@@ -2,7 +2,7 @@ package net.shyshkin.study.microservices.twittertokafkaservice.runner.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.shyshkin.study.microservices.twittertokafkaservice.config.TwitterToKafkaServiceConfigData;
+import net.shyshkin.study.microservices.config.TwitterToKafkaServiceConfigData;
 import net.shyshkin.study.microservices.twittertokafkaservice.exception.TwitterToKafkaServiceException;
 import net.shyshkin.study.microservices.twittertokafkaservice.runner.StreamRunner;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
