@@ -21,12 +21,15 @@
         <twitter4j.version>4.0.7</twitter4j.version>
         <spring.boot.version>2.7.0</spring.boot.version>
         <twitter-api-java-sdk.version>1.2.4</twitter-api-java-sdk.version>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
     </properties>
 
     <modules>
         <module>twitter-to-kafka-service</module>
         <module>twitter-to-kafka-service-v2</module>
         <module>app-config-data</module>
+        <module>kafka</module>
     </modules>
 
     <dependencyManagement>
