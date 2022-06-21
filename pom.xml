@@ -23,6 +23,7 @@
         <twitter-api-java-sdk.version>1.2.4</twitter-api-java-sdk.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
+        <avro.version>1.11.0</avro.version>
     </properties>
 
     <modules>
@@ -43,6 +44,11 @@
                 <groupId>com.twitter</groupId>
                 <artifactId>twitter-api-java-sdk</artifactId>
                 <version>${twitter-api-java-sdk.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.avro</groupId>
+                <artifactId>avro</artifactId>
+                <version>${avro.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
