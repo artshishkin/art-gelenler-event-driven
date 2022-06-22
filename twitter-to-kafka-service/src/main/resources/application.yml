@@ -30,5 +30,6 @@ kafka-config:
     - twitter-topic
   number-of-partitions: 3
   replication-factor: 3
-
-
+logging:
+  level:
+    net.shyshkin.study: debug
