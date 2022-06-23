@@ -12,16 +12,16 @@ import java.util.List;
 public class KafkaConfigData {
 
     private String bootstrapServers;
-    private SchemaRegistryUrl schemaRegistryUrl;
+    private SchemaRegistry schemaRegistry;
     private String topicName;
     private List<String> topicNamesToCreate;
     private Integer numberOfPartitions;
     private Short replicationFactor;
 
     @Data
-    public static class SchemaRegistryUrl {
+    public static class SchemaRegistry {
         private String key;
-        private String value;
+        private String url;
     }
 
 }
