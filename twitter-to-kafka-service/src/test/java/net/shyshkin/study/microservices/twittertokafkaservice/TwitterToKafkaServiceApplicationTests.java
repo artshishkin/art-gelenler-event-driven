@@ -1,6 +1,9 @@
 package net.shyshkin.study.microservices.twittertokafkaservice;
 
 import net.shyshkin.study.microservices.config.TwitterToKafkaServiceConfigData;
+import net.shyshkin.study.microservices.kafka.avro.model.TwitterAvroModel;
+import net.shyshkin.study.microservices.kafka.client.KafkaAdminClient;
+import net.shyshkin.study.microservices.kafka.producer.service.KafkaProducer;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -21,6 +24,12 @@ class TwitterToKafkaServiceApplicationTests {
 
     @MockBean
     TwitterStream twitterStream;
+
+    @MockBean
+    KafkaAdminClient kafkaAdminClient;
+
+    @MockBean
+    KafkaProducer<Long, TwitterAvroModel> producer;
 
     @Test
     void contextLoads() {
