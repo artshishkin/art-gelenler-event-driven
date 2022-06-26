@@ -36,7 +36,7 @@ public class KafkaAdminClient {
 
     private final WebClient webClient;
 
-    public void createTopic() {
+    public void createTopics() {
 
         CreateTopicsResult createTopicsResult;
         try {
