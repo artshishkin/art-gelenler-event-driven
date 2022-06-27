@@ -25,6 +25,8 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <avro.version>1.11.0</avro.version>
         <kafka-avro-serializer.version>7.1.1</kafka-avro-serializer.version>
+        <docker.image.prefix>artarkatesoft</docker.image.prefix>
+        <docker.image.name>${project.artifactId}</docker.image.name>
     </properties>
 
     <modules>
