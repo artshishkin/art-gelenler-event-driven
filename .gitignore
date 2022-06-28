@@ -36,4 +36,5 @@ node_modules/
 /output/
 /OutputFiles/
 logs/
+*.log
 twitter4j.properties
