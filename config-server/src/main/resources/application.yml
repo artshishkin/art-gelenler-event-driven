@@ -14,9 +14,10 @@ spring:
       server:
         git:
           #with common git repository - disadvantage - clone all the repo with submodules (longer)
-          uri: file:@project.basedir@/../
+          uri: @project.basedir@/../
           default-label: main
-          search-paths: '{config-server-repository/config-client}'
+          search-paths: config-server-repository
+          basedir: ${user.home}/config-repo
 
 ---
 spring:
