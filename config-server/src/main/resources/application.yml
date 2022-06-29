@@ -18,6 +18,8 @@ spring:
           default-label: main
           search-paths: config-server-repository
           basedir: ${user.home}/config-repo
+          clone-on-start: true
+      fail-fast: true
 
 ---
 spring:
