@@ -1,0 +1,7 @@
+### Get default client configuration
+GET http://localhost:8080/config-client/default
+Accept: application/json
+
+### Get twitter_to_kafka client configuration
+GET http://localhost:8080/config-client/twitter_to_kafka
+Accept: application/json
