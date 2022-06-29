@@ -1,0 +1,35 @@
+logging:
+  level:
+    ROOT: info
+    org.springframework.cloud.config: debug
+
+server:
+  port: 8080
+
+spring:
+  application:
+    name: config-server
+  cloud:
+    config:
+      server:
+        git:
+          #with common git repository - disadvantage - clone all the repo with submodules (longer)
+          uri: file:@project.basedir@/../
+          default-label: main
+          search-paths: '{config-server-repository/config-client}'
+
+---
+spring:
+  config:
+    activate:
+      on-profile: separate-git-repo-locally
+      #with separate git repository `config-server-repository` (git init)
+  cloud:
+    config:
+      server:
+        git:
+#          uri: file:C:\Users\Admin\IdeaProjects\Study\AliGelenler\art-gelenler-event-driven\config-server-repository #gives Could not merge error
+#          uri: C:\Users\Admin\IdeaProjects\Study\AliGelenler\art-gelenler-event-driven\config-server-repository #works
+          uri: @project.basedir@\..\config-server-repository
+          default-label: master
+          search-paths: '{config-client}'
