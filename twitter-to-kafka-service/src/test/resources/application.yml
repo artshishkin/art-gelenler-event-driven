@@ -45,3 +45,7 @@ kafka-producer-config:
 logging:
   level:
     net.shyshkin.study: debug
+spring:
+  cloud:
+    config:
+      enabled: false

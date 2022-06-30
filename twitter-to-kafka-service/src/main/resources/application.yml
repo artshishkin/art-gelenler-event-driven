@@ -1,0 +1,13 @@
+server.port: 8091
+spring:
+  application:
+    name: twitter-to-kafka-service
+  profiles:
+    active: twitter_to_kafka
+  cloud:
+    config:
+#      fail-fast: true
+      name: twitter-to-kafka-service,config-client
+      uri: http://localhost:8080
+  config:
+    import: 'configserver:'
