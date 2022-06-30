@@ -25,6 +25,22 @@ spring:
 spring:
   config:
     activate:
+      on-profile: remote-git-repo
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/artshishkin/art-gelenler-event-driven
+          default-label: main
+          search-paths: config-server-repository
+          basedir: ${user.home}/config-repo
+          clone-on-start: true
+      fail-fast: true
+
+---
+spring:
+  config:
+    activate:
       on-profile: separate-git-repo-locally
       #with separate git repository `config-server-repository` (git init)
   cloud:
