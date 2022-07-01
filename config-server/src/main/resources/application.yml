@@ -20,6 +20,10 @@ spring:
           basedir: ${user.home}/config-repo
           clone-on-start: true
       fail-fast: true
+  security:
+    user:
+      name: spring_cloud_user
+      password: springCloud_Pwd!
 
 ---
 spring:
@@ -65,8 +69,8 @@ spring:
     config:
       server:
         git:
-#          uri: file:C:\Users\Admin\IdeaProjects\Study\AliGelenler\art-gelenler-event-driven\config-server-repository #gives Could not merge error
-#          uri: C:\Users\Admin\IdeaProjects\Study\AliGelenler\art-gelenler-event-driven\config-server-repository #works
+          #          uri: file:C:\Users\Admin\IdeaProjects\Study\AliGelenler\art-gelenler-event-driven\config-server-repository #gives Could not merge error
+          #          uri: C:\Users\Admin\IdeaProjects\Study\AliGelenler\art-gelenler-event-driven\config-server-repository #works
           uri: @project.basedir@\..\config-server-repository
           default-label: master
           search-paths: '{config-client}'

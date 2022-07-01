@@ -9,5 +9,7 @@ spring:
 #      fail-fast: true
       name: twitter-to-kafka-service,config-client
       uri: http://localhost:8080
+      username: spring_cloud_user
+      password: springCloud_Pwd!
   config:
     import: 'configserver:'
