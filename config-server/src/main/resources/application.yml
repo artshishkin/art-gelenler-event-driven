@@ -41,6 +41,24 @@ spring:
 spring:
   config:
     activate:
+      on-profile: separate-remote-git-repo
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/artshishkin/art-gelenler-event-driven-config-repo
+          default-label: main
+          search-paths: '{config-client}'
+          basedir: ${user.home}/config-repo-remote
+          clone-on-start: true
+          username: artshishkin
+          password: ${GITHUB_ACCESS_TOKEN:fake}
+      fail-fast: true
+
+---
+spring:
+  config:
+    activate:
       on-profile: separate-git-repo-locally
       #with separate git repository `config-server-repository` (git init)
   cloud:

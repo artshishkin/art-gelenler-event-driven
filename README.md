@@ -25,6 +25,20 @@ Tutorial -  Event-Driven Microservices: Spring Boot, Kafka and Elastic - from Al
 1. Kafkacat as consumer
    - `docker run --tty --network host confluentinc/cp-kafkacat kafkacat -b localhost:29092 -C -t twitter-topic`
 
+### Section 4: Externalizing configuration with Spring Cloud Config Server
+
+#### 25. Using remote GitHub repository
+
+1. Create private repository `art-gelenler-event-driven-config-repo` 
+2. Create github access token
+   - Settings -> Developer settings -> Personal Access Tokens -> [Create new](https://github.com/settings/tokens/new)
+   - Select scopes: `repo`
+   - Generate token
+   - Copy token
+3. Create environment variable
+   - `GITHUB_ACCESS_TOKEN = {Paste token here}`
+4. Use `separate-remote-git-repo` spring profile to start application
+
 
 [springver]: https://img.shields.io/badge/dynamic/xml?label=Spring%20Boot&query=%2F%2A%5Blocal-name%28%29%3D%27project%27%5D%2F%2A%5Blocal-name%28%29%3D%27parent%27%5D%2F%2A%5Blocal-name%28%29%3D%27version%27%5D&url=https%3A%2F%2Fraw.githubusercontent.com%2Fartshishkin%2Fart-gelenler-event-driven%2Fmaster%2Fpom.xml&logo=Spring&labelColor=white&color=grey
 [licence]: https://img.shields.io/github/license/artshishkin/art-gelenler-event-driven.svg
