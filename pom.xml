@@ -28,6 +28,7 @@
         <kafka-avro-serializer.version>7.1.1</kafka-avro-serializer.version>
         <docker.image.prefix>artarkatesoft</docker.image.prefix>
         <docker.image.name>${project.artifactId}</docker.image.name>
+        <jasypt.version>3.0.3</jasypt.version>
     </properties>
 
     <modules>
@@ -87,6 +88,12 @@
                 <artifactId>kafka-avro-serializer</artifactId>
                 <version>${kafka-avro-serializer.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.github.ulisesbocchio</groupId>
+                <artifactId>jasypt-spring-boot-starter</artifactId>
+                <version>${jasypt.version}</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 
