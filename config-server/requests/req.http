@@ -7,3 +7,16 @@ Authorization: Basic c3ByaW5nX2Nsb3VkX3VzZXI6c3ByaW5nQ2xvdWRfUHdkIQ==
 GET http://localhost:8080/config-client/twitter_to_kafka
 Accept: application/json
 Authorization: Basic c3ByaW5nX2Nsb3VkX3VzZXI6c3ByaW5nQ2xvdWRfUHdkIQ==
+
+### Encrypt Password
+POST http://localhost:8080/encrypt
+Content-Type: text/plain
+
+Test Message to Encrypt
+
+### Decrypt Password
+POST http://localhost:8080/decrypt
+Content-Type: text/plain
+
+f39372f146990bbccd47a26b5ffc9cd974e9737b2c399a25a39f3af6e5182b4e017f802f0fefa704a4ad69bdb842f1d0
+
