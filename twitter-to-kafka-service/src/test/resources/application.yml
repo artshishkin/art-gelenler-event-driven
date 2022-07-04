@@ -49,3 +49,7 @@ spring:
   cloud:
     config:
       enabled: false
+
+jasypt:
+  encryptor:
+    password: fake

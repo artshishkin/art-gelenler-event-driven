@@ -25,9 +25,9 @@ spring:
       name: spring_cloud_user
       password: ENC(U6CPf8pQwZn4NjfUqedtFjDaqYAjfXfoflZlEztinXsT/KAKpUH8hdl4jpov9hoOkuixqGhzM5mqwsRB96QP7Q==)
 
-jasypt:
-  encryptor:
-    password: plain_jasypt_password_not_recommended
+#jasypt:
+#  encryptor:
+#    password: ${JASYPT_ENCRYPTOR_PASSWORD}
 
 ---
 spring:

@@ -28,7 +28,7 @@
         <kafka-avro-serializer.version>7.1.1</kafka-avro-serializer.version>
         <docker.image.prefix>artarkatesoft</docker.image.prefix>
         <docker.image.name>${project.artifactId}</docker.image.name>
-        <jasypt.version>3.0.3</jasypt.version>
+        <jasypt.version>3.0.4</jasypt.version>
     </properties>
 
     <modules>

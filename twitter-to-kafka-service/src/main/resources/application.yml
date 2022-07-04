@@ -10,10 +10,14 @@ spring:
       name: twitter-to-kafka-service,config-client
       uri: http://localhost:8080
       username: spring_cloud_user
-      password: ENC(U6CPf8pQwZn4NjfUqedtFjDaqYAjfXfoflZlEztinXsT/KAKpUH8hdl4jpov9hoOkuixqGhzM5mqwsRB96QP7Q==)
+      password: springCloud_Pwd!
+#      password: ENC(U6CPf8pQwZn4NjfUqedtFjDaqYAjfXfoflZlEztinXsT/KAKpUH8hdl4jpov9hoOkuixqGhzM5mqwsRB96QP7Q==) #does not work properly
   config:
-    import: 'configserver:'
+    import: 'optional:configserver:'
 
 jasypt:
   encryptor:
-    password: plain_jasypt_password_not_recommended
+    password: ${JASYPT_ENCRYPTOR_PASSWORD}
+    bootstrap: true
+    bean: encryptorBean
+
