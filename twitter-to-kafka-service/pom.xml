@@ -57,6 +57,10 @@
                         </exclude>
                     </excludes>
                     <imageName>${docker.image.prefix}/${docker.image.name}:${project.version}</imageName>
+                    <pullPolicy>IF_NOT_PRESENT</pullPolicy>
+                    <layers>
+                        <enabled>true</enabled>
+                    </layers>
                 </configuration>
                 <executions>
                     <execution>
