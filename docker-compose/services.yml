@@ -22,12 +22,14 @@ services:
   config-server:
     image: ${GROUP_ID}/art-gelenler-config-server:${SERVICE_VERSION:-latest}
     ports:
-      - "5006:5006"
+      - "8080:8080"
     volumes:
       - "./docker-logs:/workspace/config-server/logs"
     environment:
-      - "JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5006 -Xms128m -Xmx256m"
+      - "JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n -Xms128m -Xmx256m"
       - "ENCRYPT_KEY=${ENCRYPT_KEY}"
+      - "SPRING_PROFILES_ACTIVE=separate-remote-git-repo"
+      - "GITHUB_ACCESS_TOKEN={cipher}43c0c0b04ad14146b1da3870650c6b39506c4763a53276eab40e47b9422fc6ef4a68e2bb44267abd6b39d73af9fce4bd9902b3638038526fac51dae2f00a7e53"
     networks:
       - ${GLOBAL_NETWORK:-services}
 
