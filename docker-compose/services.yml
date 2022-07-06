@@ -1,4 +1,4 @@
-version: '3'
+version: '3.8'
 services:
 
   twitter-to-kafka-service:
@@ -7,11 +7,9 @@ services:
       - "8091:8091"
     volumes:
       - "./docker-logs:/workspace/twitter-to-kafka-service/logs"
-      - "./check-config-server-started.sh:/usr/local/bin/check-config-server-started.sh"
-    user: root
-    entrypoint: ["check-config-server-started.sh"]
     depends_on:
-      - config-server
+      config-server:
+        condition: service_healthy
     environment:
       - "JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n -Xms128m -Xmx256m"
       - "LOGGING_LEVEL_NET_SHYSHKIN_STUDY=debug"
@@ -30,7 +28,16 @@ services:
     ports:
       - "8080:8080"
     volumes:
-      - "./docker-logs:/workspace/config-server/logs"
+#      - "./docker-logs:/workspace/config-server/logs"
+      - "./config-server-install-curl-and-jk.sh:/usr/local/bin/config-server-install-curl-and-jk.sh"
+    user: root
+    entrypoint: [ "config-server-install-curl-and-jk.sh" ]
+    healthcheck:
+      test: curl -m 5 --silent --fail --request GET http://localhost:8080/actuator/health | jq --exit-status -n 'inputs | if has("status") then .status=="UP" else false end' > /dev/null || exit 1
+      interval: 10s
+      timeout: 2s
+      retries: 10
+      start_period: 20s
     environment:
       - "JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n -Xms128m -Xmx256m"
       - "ENCRYPT_KEY=${ENCRYPT_KEY}"
