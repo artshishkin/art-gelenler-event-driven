@@ -6,7 +6,7 @@ services:
     ports:
       - "8091:8091"
     volumes:
-      - "./docker-logs:/workspace/twitter-to-kafka-service/logs"
+      - "./docker-logs/twitter-to-kafka-service:/workspace/twitter-to-kafka-service/logs"
     depends_on:
       config-server:
         condition: service_healthy
@@ -28,7 +28,7 @@ services:
     ports:
       - "8080:8080"
     volumes:
-#      - "./docker-logs:/workspace/config-server/logs"
+      - "./docker-logs/config-server:/workspace/config-server/logs"
       - "./config-server-install-curl-and-jk.sh:/usr/local/bin/config-server-install-curl-and-jk.sh"
     user: root
     entrypoint: [ "config-server-install-curl-and-jk.sh" ]
