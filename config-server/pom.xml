@@ -42,6 +42,9 @@
                             <artifactId>lombok</artifactId>
                         </exclude>
                     </excludes>
+                    <image>
+                        <builder>gcr.io/paketo-buildpacks/builder:full-cf</builder>
+                    </image>
                     <imageName>${docker.image.prefix}/${docker.image.name}:${project.version}</imageName>
                     <pullPolicy>IF_NOT_PRESENT</pullPolicy>
                     <layers>
