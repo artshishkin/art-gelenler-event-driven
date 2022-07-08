@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.shyshkin.study.microservices.config.KafkaConfigData;
 import org.apache.kafka.clients.admin.AdminClient;
-import org.apache.kafka.clients.admin.CreateTopicsResult;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.clients.admin.TopicListing;
 import org.springframework.http.HttpStatus;
@@ -31,10 +30,14 @@ public class KafkaAdminClient {
     @Retryable(interceptor = "defaultRetryInterceptor")
     public void createTopics() {
 
-        CreateTopicsResult createTopicsResult;
 //        if (true) throw new RuntimeException("Fake exception");
 
-        createTopicsResult = this.doCreateTopics();
+        List<NewTopic> newTopics = kafkaConfigData
+                .getTopicNamesToCreate()
+                .stream()
+                .map(this::newTopic)
+                .collect(Collectors.toList());
+        var createTopicsResult = adminClient.createTopics(newTopics);
     }
 
     @Retryable(interceptor = "defaultRetryInterceptor")
@@ -55,15 +58,6 @@ public class KafkaAdminClient {
         }
     }
 
-    private CreateTopicsResult doCreateTopics() {
-        List<String> topicNamesToCreate = kafkaConfigData.getTopicNamesToCreate();
-        List<NewTopic> newTopics = topicNamesToCreate
-                .stream()
-                .map(this::newTopic)
-                .collect(Collectors.toList());
-        return adminClient.createTopics(newTopics);
-    }
-
     private NewTopic newTopic(String name) {
         return new NewTopic(
                 name,
@@ -73,9 +67,6 @@ public class KafkaAdminClient {
 
     @Retryable(interceptor = "defaultRetryInterceptor")
     public void checkTopicsCreated(Collection<TopicListing> topics) {
-
-//        if (true) throw new RuntimeException("Fake exception");
-
         for (String topic : kafkaConfigData.getTopicNamesToCreate()) {
             if (!isTopicCreated(topic, topics)) {
                 throw new RuntimeException("Topic is not created yet");
@@ -90,12 +81,6 @@ public class KafkaAdminClient {
 
     @Retryable(interceptor = "defaultRetryInterceptor")
     public Collection<TopicListing> getTopics() {
-        Collection<TopicListing> topicListings;
-        topicListings = this.doGetTopics();
-        return topicListings;
-    }
-
-    private Collection<TopicListing> doGetTopics() {
         try {
             Collection<TopicListing> topicListings = adminClient.listTopics()
                     .listings()
