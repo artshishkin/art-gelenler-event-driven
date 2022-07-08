@@ -14,8 +14,8 @@ spring:
   config:
     import: 'configserver:'
 
-  main:
-    allow-circular-references: true
+#  main:
+#    allow-circular-references: true
 
 #encrypt:
 #  key: ${ENCRYPT_KEY}

@@ -3,13 +3,10 @@ package net.shyshkin.study.microservices.kafka.client;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.shyshkin.study.microservices.config.KafkaConfigData;
-import net.shyshkin.study.microservices.config.RetryConfigData;
-import net.shyshkin.study.microservices.kafka.exception.KafkaClientException;
 import org.apache.kafka.clients.admin.AdminClient;
 import org.apache.kafka.clients.admin.CreateTopicsResult;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.clients.admin.TopicListing;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
@@ -28,14 +25,12 @@ public class KafkaAdminClient {
 
     private final KafkaConfigData kafkaConfigData;
 
-    private final RetryConfigData retryConfigData;
-
     private final AdminClient adminClient;
 
     private final WebClient webClient;
 
-    @Autowired
-    private KafkaAdminClient self;
+//    @Autowired
+//    private KafkaAdminClient self;
 
     @Retryable(
             maxAttemptsExpression = "#{@retryConfigData.getMaxAttempts()}",
@@ -43,15 +38,13 @@ public class KafkaAdminClient {
                     delayExpression = "#{@retryConfigData.getInitialIntervalMs()}",
                     multiplierExpression = "#{@retryConfigData.getMultiplier()}"
             ),
-            listeners = {"createTopicsRetryListener"},
-            exclude = {KafkaClientException.class}
+            listeners = {"createTopicsRetryListener"}
     )
     public void createTopics() {
 
         CreateTopicsResult createTopicsResult;
 
         createTopicsResult = this.doCreateTopics();
-        self.checkTopicsCreated();
     }
 
     @Retryable(
@@ -103,10 +96,9 @@ public class KafkaAdminClient {
             ),
             listeners = {"checkTopicsCreatedRetryListener"}
     )
-    public void checkTopicsCreated() {
-        Collection<TopicListing> topics = self.getTopics();
+    public void checkTopicsCreated(Collection<TopicListing> topics) {
 
-        if (true) throw new RuntimeException("Fake exception");
+//        if (true) throw new RuntimeException("Fake exception");
 
         for (String topic : kafkaConfigData.getTopicNamesToCreate()) {
             if (!isTopicCreated(topic, topics)) {
