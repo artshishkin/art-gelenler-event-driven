@@ -8,7 +8,6 @@ import org.apache.kafka.clients.admin.CreateTopicsResult;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.clients.admin.TopicListing;
 import org.springframework.http.HttpStatus;
-import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -29,12 +28,7 @@ public class KafkaAdminClient {
 
     private final WebClient webClient;
 
-//    @Autowired
-//    private KafkaAdminClient self;
-
-    @Retryable(
-            interceptor = "defaultRetryInterceptor"
-    )
+    @Retryable(interceptor = "defaultRetryInterceptor")
     public void createTopics() {
 
         CreateTopicsResult createTopicsResult;
@@ -43,14 +37,7 @@ public class KafkaAdminClient {
         createTopicsResult = this.doCreateTopics();
     }
 
-    @Retryable(
-            maxAttemptsExpression = "#{@retryConfigData.getMaxAttempts()}",
-            backoff = @Backoff(
-                    delayExpression = "#{@retryConfigData.getInitialIntervalMs()}",
-                    multiplierExpression = "#{@retryConfigData.getMultiplier()}"
-            ),
-            listeners = {"checkSchemaRegistryRetryListener"}
-    )
+    @Retryable(interceptor = "defaultRetryInterceptor")
     public void checkSchemaRegistry() {
         if (!getSchemaRegistryStatus().is2xxSuccessful()) {
             throw new RuntimeException();
@@ -84,14 +71,7 @@ public class KafkaAdminClient {
                 kafkaConfigData.getReplicationFactor());
     }
 
-    @Retryable(
-            maxAttemptsExpression = "#{@retryConfigData.getMaxAttempts()}",
-            backoff = @Backoff(
-                    delayExpression = "#{@retryConfigData.getInitialIntervalMs()}",
-                    multiplierExpression = "#{@retryConfigData.getMultiplier()}"
-            ),
-            listeners = {"checkTopicsCreatedRetryListener"}
-    )
+    @Retryable(interceptor = "defaultRetryInterceptor")
     public void checkTopicsCreated(Collection<TopicListing> topics) {
 
 //        if (true) throw new RuntimeException("Fake exception");
@@ -108,14 +88,7 @@ public class KafkaAdminClient {
         return topics.stream().anyMatch(topic -> topic.name().equals(topicName));
     }
 
-    @Retryable(
-            maxAttemptsExpression = "#{@retryConfigData.getMaxAttempts()}",
-            backoff = @Backoff(
-                    delayExpression = "#{@retryConfigData.getInitialIntervalMs()}",
-                    multiplierExpression = "#{@retryConfigData.getMultiplier()}"
-            ),
-            listeners = {"getTopicsRetryListener"}
-    )
+    @Retryable(interceptor = "defaultRetryInterceptor")
     public Collection<TopicListing> getTopics() {
         Collection<TopicListing> topicListings;
         topicListings = this.doGetTopics();

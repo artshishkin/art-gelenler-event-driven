@@ -2,7 +2,7 @@ package net.shyshkin.study.microservices.kafka.config;
 
 import lombok.RequiredArgsConstructor;
 import net.shyshkin.study.microservices.config.RetryConfigData;
-import net.shyshkin.study.microservices.kafka.listener.CreateTopicsRetryListener;
+import net.shyshkin.study.microservices.kafka.listener.DelegatingRetryListener;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.retry.annotation.EnableRetry;
@@ -18,7 +18,7 @@ public class RetryConfig {
     @Bean
     public RetryTemplate retryTemplate(
             RetryConfigData retryConfigData,
-            CreateTopicsRetryListener listener) {
+            DelegatingRetryListener listener) {
         return RetryTemplate.builder()
                 .maxAttempts(retryConfigData.getMaxAttempts())
                 .exponentialBackoff(retryConfigData.getInitialIntervalMs(), retryConfigData.getMultiplier(), retryConfigData.getMaxIntervalMs())
