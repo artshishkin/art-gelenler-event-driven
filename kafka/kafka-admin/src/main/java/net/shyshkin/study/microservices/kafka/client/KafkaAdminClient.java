@@ -33,16 +33,12 @@ public class KafkaAdminClient {
 //    private KafkaAdminClient self;
 
     @Retryable(
-            maxAttemptsExpression = "#{@retryConfigData.getMaxAttempts()}",
-            backoff = @Backoff(
-                    delayExpression = "#{@retryConfigData.getInitialIntervalMs()}",
-                    multiplierExpression = "#{@retryConfigData.getMultiplier()}"
-            ),
-            listeners = {"createTopicsRetryListener"}
+            interceptor = "defaultRetryInterceptor"
     )
     public void createTopics() {
 
         CreateTopicsResult createTopicsResult;
+//        if (true) throw new RuntimeException("Fake exception");
 
         createTopicsResult = this.doCreateTopics();
     }
