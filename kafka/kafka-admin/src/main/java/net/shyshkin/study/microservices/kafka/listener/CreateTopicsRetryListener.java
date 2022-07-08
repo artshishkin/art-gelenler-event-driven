@@ -26,6 +26,9 @@ public class CreateTopicsRetryListener extends RetryListenerSupport {
 
     @Override
     public <T, E extends Throwable> void close(RetryContext context, RetryCallback<T, E> callback, Throwable throwable) {
-        throw new KafkaClientException("Reached max number of retry for creating Kafka topic(s)!");
+
+        Object exhausted = context.getAttribute(RetryContext.EXHAUSTED);
+        if (exhausted != null && ((boolean) exhausted))
+            throw new KafkaClientException("Reached max number of retry for creating Kafka topic(s)!");
     }
 }
