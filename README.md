@@ -25,7 +25,9 @@ Tutorial -  Event-Driven Microservices: Spring Boot, Kafka and Elastic - from Al
 #### 19. Integrate Kafka modules with Microservice: Use Kafka as event store for service
 
 1. Kafkacat as consumer
-   - `docker run --tty --network host confluentinc/cp-kafkacat kafkacat -b localhost:29092 -C -t twitter-topic`
+   - `docker run --rm --tty --network host confluentinc/cp-kafkacat kafkacat -b localhost:29092 -C -t twitter-topic`
+   - `docker container ls -a --filter ancestor=confluentinc/cp-kafkacat` - list useless containers
+   - `docker container rm $(docker container ls -a --filter ancestor=confluentinc/cp-kafkacat -q)` - remove all containers by image name
 
 ### Section 4: Externalizing configuration with Spring Cloud Config Server
 
