@@ -36,6 +36,7 @@
         <module>app-config-data</module>
         <module>kafka</module>
         <module>config-server</module>
+        <module>kafka-to-elastic-service</module>
     </modules>
 
     <dependencyManagement>
@@ -65,6 +66,11 @@
             <dependency>
                 <groupId>net.shyshkin.study.microservices</groupId>
                 <artifactId>kafka-model</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.shyshkin.study.microservices</groupId>
+                <artifactId>kafka-consumer</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

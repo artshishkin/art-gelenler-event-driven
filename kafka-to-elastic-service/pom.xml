@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>art-gelenler-event-driven</artifactId>
+        <groupId>net.shyshkin.study.microservices</groupId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>kafka-to-elastic-service</artifactId>
+
+<dependencies>
+    <dependency>
+        <groupId>org.springframework.kafka</groupId>
+        <artifactId>spring-kafka</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>net.shyshkin.study.microservices</groupId>
+        <artifactId>app-config-data</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>net.shyshkin.study.microservices</groupId>
+        <artifactId>kafka-consumer</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>net.shyshkin.study.microservices</groupId>
+        <artifactId>kafka-admin</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>net.shyshkin.study.microservices</groupId>
+        <artifactId>kafka-model</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>io.confluent</groupId>
+        <artifactId>kafka-avro-serializer</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-starter-config</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-security</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-configuration-processor</artifactId>
+        <optional>true</optional>
+    </dependency>
+</dependencies>
+
+</project>
