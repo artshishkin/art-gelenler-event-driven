@@ -1,0 +1,20 @@
+server.port: 8092
+spring:
+  application:
+    name: kafka-to-elastic-service
+  profiles:
+    active: kafka_to_elastic
+  cloud:
+    config:
+#      fail-fast: true
+      name: kafka-to-elastic-service,config-client
+      uri: http://localhost:8080
+      username: spring_cloud_user
+      password: '{cipher}d0bb54467b358c6a4f2aecbdca486be7d41c0f81df2b5dd9c722b41888e7fe8f85240138e768ddeeef3ade2144534a9a'
+  config:
+    import: 'configserver:'
+
+#encrypt:
+#  key: ${ENCRYPT_KEY}
+
+
