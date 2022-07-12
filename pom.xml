@@ -37,6 +37,7 @@
         <module>kafka</module>
         <module>config-server</module>
         <module>kafka-to-elastic-service</module>
+        <module>elastic</module>
     </modules>
 
     <dependencyManagement>
