@@ -1,0 +1,5 @@
+### Get Elasticsearch home endpoint
+GET http://localhost:9200
+Accept: application/json
+
+###
