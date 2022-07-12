@@ -2,4 +2,55 @@
 GET http://localhost:9200
 Accept: application/json
 
+### Create twitter-index
+PUT http://localhost:9200/twitter-index
+Content-Type: application/json
+
+{
+    "mappings": {
+        "properties": {
+            "userId": {
+                "type": "long"
+            },
+            "id": {
+                "type": "text",
+                "fields": {
+                    "keyword": {
+                        "type": "keyword",
+                        "ignore_above": 256
+                    }
+                }
+            },
+            "createdAt": {
+                "type": "date",
+		"format": "yyyy-MM-dd'T'HH:mm:ssZZ"
+            },
+            "text": {
+                "type": "text",
+                "fields": {
+                    "keyword": {
+                        "type": "keyword",
+                        "ignore_above": 256
+                    }
+                }
+            }
+        }
+    }
+}
+
+### Create test document
+POST http://localhost:9200/twitter-index/_doc/1
+Content-Type: application/json
+
+{
+  "userId": "1",
+  "id": "1",
+  "createdAt": "2022-07-12T13:47:31+0000",
+  "text": "test multi word"
+}
+
+### Search for document
+GET http://localhost:9200/twitter-index/_search?q=id:1
+Accept: application/json
+
 ###
