@@ -80,6 +80,16 @@
                 <version>${project.version}</version>
             </dependency>
             <dependency>
+                <groupId>net.shyshkin.study.microservices</groupId>
+                <artifactId>elastic-config</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.shyshkin.study.microservices</groupId>
+                <artifactId>elastic-index-client</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.twitter4j</groupId>
                 <artifactId>twitter4j-stream</artifactId>
                 <version>${twitter4j.version}</version>

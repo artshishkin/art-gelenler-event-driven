@@ -36,6 +36,20 @@
         <groupId>io.confluent</groupId>
         <artifactId>kafka-avro-serializer</artifactId>
     </dependency>
+
+    <dependency>
+        <groupId>net.shyshkin.study.microservices</groupId>
+        <artifactId>elastic-config</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>net.shyshkin.study.microservices</groupId>
+        <artifactId>elastic-model</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>net.shyshkin.study.microservices</groupId>
+        <artifactId>elastic-index-client</artifactId>
+    </dependency>
+
     <dependency>
         <groupId>org.springframework.cloud</groupId>
         <artifactId>spring-cloud-starter-config</artifactId>
