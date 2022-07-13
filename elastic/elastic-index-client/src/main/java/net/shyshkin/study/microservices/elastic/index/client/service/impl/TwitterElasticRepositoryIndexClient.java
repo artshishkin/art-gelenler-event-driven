@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.shyshkin.study.microservices.elastic.index.client.repository.TwitterElasticsearchIndexRepository;
 import net.shyshkin.study.microservices.elastic.index.client.service.ElasticIndexClient;
 import net.shyshkin.study.microservices.elastic.model.index.impl.TwitterIndexModel;
-import org.springframework.context.annotation.Primary;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 @Slf4j
-@Primary
+@ConditionalOnProperty(name = "elastic-config.use-repository", havingValue = "true")
 @Service
 @RequiredArgsConstructor
 public class TwitterElasticRepositoryIndexClient implements ElasticIndexClient<TwitterIndexModel> {

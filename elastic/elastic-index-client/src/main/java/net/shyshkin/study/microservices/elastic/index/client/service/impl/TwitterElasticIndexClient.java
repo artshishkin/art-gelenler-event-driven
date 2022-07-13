@@ -6,6 +6,7 @@ import net.shyshkin.study.microservices.config.ElasticConfigData;
 import net.shyshkin.study.microservices.elastic.index.client.service.ElasticIndexClient;
 import net.shyshkin.study.microservices.elastic.index.client.util.ElasticIndexUtil;
 import net.shyshkin.study.microservices.elastic.model.index.impl.TwitterIndexModel;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.IndexedObjectInformation;
 import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
@@ -16,6 +17,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Slf4j
+@ConditionalOnProperty(name = "elastic-config.use-repository", havingValue = "false", matchIfMissing = true)
 @Service
 @RequiredArgsConstructor
 public class TwitterElasticIndexClient implements ElasticIndexClient<TwitterIndexModel> {
