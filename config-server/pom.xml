@@ -42,23 +42,10 @@
                             <artifactId>lombok</artifactId>
                         </exclude>
                     </excludes>
-                    <image>
-                        <builder>gcr.io/paketo-buildpacks/builder:full-cf</builder>
-                    </image>
-                    <imageName>${docker.image.prefix}/${docker.image.name}:${project.version}</imageName>
-                    <pullPolicy>IF_NOT_PRESENT</pullPolicy>
                     <layers>
                         <enabled>true</enabled>
                     </layers>
                 </configuration>
-                <executions>
-                    <execution>
-                        <phase>install</phase>
-                        <goals>
-                            <goal>build-image</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
     </build>

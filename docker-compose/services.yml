@@ -36,12 +36,12 @@ services:
     restart: always
     volumes:
       - "./docker-logs/config-server:/workspace/config-server/logs"
-    healthcheck:
-      test: curl -m 5 --silent --fail --request GET http://localhost:8080/actuator/health | jq --exit-status -n 'inputs | if has("status") then .status=="UP" else false end' > /dev/null || exit 1
-      interval: 10s
-      timeout: 2s
-      retries: 20
-      start_period: 20s
+#    healthcheck:
+#      test: curl -m 5 --silent --fail --request GET http://localhost:8080/actuator/health | jq --exit-status -n 'inputs | if has("status") then .status=="UP" else false end' > /dev/null || exit 1
+#      interval: 10s
+#      timeout: 2s
+#      retries: 20
+#      start_period: 20s
     environment:
       - "JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n -Xms128m -Xmx256m"
       - "ENCRYPT_KEY=${ENCRYPT_KEY}"
