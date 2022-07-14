@@ -11,11 +11,11 @@ services:
       config-server:
         condition: service_healthy
       kafka-broker-1:
-        condition: service_started
+        condition: service_healthy
       kafka-broker-2:
-        condition: service_started
+        condition: service_healthy
       kafka-broker-3:
-        condition: service_started
+        condition: service_healthy
     environment:
       - "JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n -Xms128m -Xmx256m"
       - "LOGGING_LEVEL_NET_SHYSHKIN_STUDY=debug"
@@ -69,11 +69,11 @@ services:
       elastic-3:
         condition: service_healthy
       kafka-broker-1:
-        condition: service_started
+        condition: service_healthy
       kafka-broker-2:
-        condition: service_started
+        condition: service_healthy
       kafka-broker-3:
-        condition: service_started
+        condition: service_healthy
     environment:
       - "JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n -Xms128m -Xmx256m"
       - "KAFKA-CONFIG_BOOTSTRAP-SERVERS=kafka-broker-1:9092, kafka-broker-2:9092, kafka-broker-3:9092"

@@ -45,6 +45,11 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,LISTENER_LOCAL:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_COMPRESSION_TYPE: producer
+    healthcheck:
+      test: [ "CMD", "nc", "-vz", "localhost", "9092" ]
+      interval: 20s
+      timeout: 10s
+      retries: 3
     networks:
       - ${GLOBAL_NETWORK:-kafka}
   kafka-broker-2:
@@ -61,6 +66,11 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,LISTENER_LOCAL:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_COMPRESSION_TYPE: producer
+    healthcheck:
+      test: [ "CMD", "nc", "-vz", "localhost", "9092" ]
+      interval: 20s
+      timeout: 10s
+      retries: 3
     networks:
       - ${GLOBAL_NETWORK:-kafka}
   kafka-broker-3:
@@ -77,5 +87,10 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,LISTENER_LOCAL:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_COMPRESSION_TYPE: producer
+    healthcheck:
+      test: [ "CMD", "nc", "-vz", "localhost", "9092" ]
+      interval: 20s
+      timeout: 10s
+      retries: 3
     networks:
       - ${GLOBAL_NETWORK:-kafka}
