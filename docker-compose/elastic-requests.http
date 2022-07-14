@@ -53,4 +53,8 @@ Content-Type: application/json
 GET http://localhost:9200/twitter-index/_search?q=id:1
 Accept: application/json
 
+### Search everything
+GET http://localhost:9200/twitter-index/_search
+Accept: application/json
+
 ###
