@@ -10,6 +10,12 @@ services:
     depends_on:
       config-server:
         condition: service_healthy
+      kafka-broker-1:
+        condition: service_started
+      kafka-broker-2:
+        condition: service_started
+      kafka-broker-3:
+        condition: service_started
     environment:
       - "JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n -Xms128m -Xmx256m"
       - "LOGGING_LEVEL_NET_SHYSHKIN_STUDY=debug"
@@ -43,5 +49,37 @@ services:
       - "GITHUB_ACCESS_TOKEN={cipher}43c0c0b04ad14146b1da3870650c6b39506c4763a53276eab40e47b9422fc6ef4a68e2bb44267abd6b39d73af9fce4bd9902b3638038526fac51dae2f00a7e53"
     networks:
       - ${GLOBAL_NETWORK:-services}
+
+  kafka-to-elastic-service:
+    image: ${GROUP_ID}/art-gelenler-kafka-to-elastic-service:${SERVICE_VERSION:-latest}
+    ports:
+      - "8092:8092"
+    volumes:
+      - "./docker-logs/kafka-to-elastic-service:/workspace/kafka-to-elastic-service/logs"
+    depends_on:
+      config-server:
+        condition: service_healthy
+      elastic-1:
+        condition: service_started
+      elastic-2:
+        condition: service_started
+      elastic-3:
+        condition: service_started
+      kafka-broker-1:
+        condition: service_started
+      kafka-broker-2:
+        condition: service_started
+      kafka-broker-3:
+        condition: service_started
+    environment:
+      - "JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n -Xms128m -Xmx256m"
+      - "KAFKA-CONFIG_BOOTSTRAP-SERVERS=kafka-broker-1:9092, kafka-broker-2:9092, kafka-broker-3:9092"
+      - "KAFKA-CONFIG_SCHEMA-REGISTRY_URL=http://schema-registry:8081"
+      - "ENCRYPT_KEY=${ENCRYPT_KEY}"
+      - "SPRING_CLOUD_CONFIG_URI=http://config-server:8080"
+      - "ELASTIC-CONFIG_CONNECTION-URL=http://elastic-1:9200"
+    networks:
+      - ${GLOBAL_NETWORK:-services}
+
 
 
