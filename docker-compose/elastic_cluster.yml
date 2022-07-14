@@ -55,6 +55,21 @@ services:
     networks:
       - ${GLOBAL_NETWORK:-elastic}
 
+  kibana:
+    image: docker.elastic.co/kibana/kibana:${ELASTIC_VERSION}
+    ports: ["5601:5601"]
+    restart: on-failure
+    depends_on:
+      - elastic-1
+      - elastic-2
+      - elastic-3
+    environment:
+      ELASTICSEARCH_HOSTS: '["http://elastic-1:9200","http://elastic-2:9200","http://elastic-3:9200"]'
+    volumes:
+      - gelenler-volume-kibana:/usr/share/kibana
+    networks:
+      - ${GLOBAL_NETWORK:-elastic}
+
 volumes:
   data01:
     driver: local
@@ -62,3 +77,5 @@ volumes:
     driver: local
   data03:
     driver: local
+  gelenler-volume-kibana:
+
