@@ -63,11 +63,11 @@ services:
       config-server:
         condition: service_healthy
       elastic-1:
-        condition: service_started
+        condition: service_healthy
       elastic-2:
-        condition: service_started
+        condition: service_healthy
       elastic-3:
-        condition: service_started
+        condition: service_healthy
       kafka-broker-1:
         condition: service_started
       kafka-broker-2:
