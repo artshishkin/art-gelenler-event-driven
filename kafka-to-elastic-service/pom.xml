@@ -63,6 +63,10 @@
             <artifactId>spring-boot-configuration-processor</artifactId>
             <optional>true</optional>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
@@ -77,20 +81,11 @@
                             <artifactId>lombok</artifactId>
                         </exclude>
                     </excludes>
-                    <imageName>${docker.image.prefix}/${docker.image.name}:${project.version}</imageName>
-                    <pullPolicy>IF_NOT_PRESENT</pullPolicy>
                     <layers>
                         <enabled>true</enabled>
+                        <includeLayerTools>true</includeLayerTools>
                     </layers>
                 </configuration>
-                <executions>
-                    <execution>
-                        <phase>install</phase>
-                        <goals>
-                            <goal>build-image</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
     </build>

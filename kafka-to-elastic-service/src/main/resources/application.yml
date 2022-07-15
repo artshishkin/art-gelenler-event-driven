@@ -14,6 +14,8 @@ spring:
   config:
     import: 'configserver:'
 
+management.health.elasticsearch.enabled: false
+
 #encrypt:
 #  key: ${ENCRYPT_KEY}
 

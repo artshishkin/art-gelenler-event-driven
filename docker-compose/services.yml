@@ -53,12 +53,12 @@ services:
   kafka-to-elastic-service:
     image: ${GROUP_ID}/art-gelenler-kafka-to-elastic-service:${SERVICE_VERSION:-latest}
     ports:
-      - "8092:8092"
+      - "8092:8080"
     volumes:
       - "./docker-logs/kafka-to-elastic-service:/workspace/kafka-to-elastic-service/logs"
-      - "./check-kafka-topics-created.sh:/usr/local/bin/check-kafka-topics-created.sh"
-    user: root
-    entrypoint: [ "check-kafka-topics-created.sh" ]
+#      - "./check-kafka-topics-created.sh:/usr/local/bin/check-kafka-topics-created.sh"
+#    user: root
+#    entrypoint: [ "check-kafka-topics-created.sh" ]
     depends_on:
       config-server:
         condition: service_healthy
