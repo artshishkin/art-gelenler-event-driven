@@ -1,15 +1,15 @@
 ### Get default client configuration
-GET http://localhost:8080/config-client/default
+GET http://localhost:8080/all/default
 Accept: application/json
 Authorization: Basic c3ByaW5nX2Nsb3VkX3VzZXI6c3ByaW5nQ2xvdWRfUHdkIQ==
 
 ### Get twitter_to_kafka client configuration
-GET http://localhost:8080/config-client/twitter_to_kafka
+GET http://localhost:8080/twitter-to-kafka-service/default
 Accept: application/json
 Authorization: Basic c3ByaW5nX2Nsb3VkX3VzZXI6c3ByaW5nQ2xvdWRfUHdkIQ==
 
 ### Get kafka_to_elastic client configuration
-GET http://localhost:8080/config-client/kafka_to_elastic
+GET http://localhost:8080/kafka-to-elastic-service/default
 Accept: application/json
 Authorization: Basic c3ByaW5nX2Nsb3VkX3VzZXI6c3ByaW5nQ2xvdWRfUHdkIQ==
 
