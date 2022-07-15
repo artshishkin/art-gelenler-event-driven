@@ -5,7 +5,7 @@ RUN java -Djarmode=layertools -jar ${project.build.finalName}.jar extract
 
 FROM openjdk:11-jre-slim
 
-RUN apt update && apt install -y curl
+RUN apt update && apt install -y curl && apt install -y kafkacat
 
 HEALTHCHECK  --interval=5s --timeout=2s --start-period=10s --retries=20 \
     CMD curl -f localhost:8080/actuator/health || false
@@ -16,10 +16,15 @@ LABEL PROJECT_NAME=${project.artifactId} \
 EXPOSE 8080
 
 ENV SERVER_PORT=8080
+ENV KAFKA_BROKER=kafka-broker-1:9092
 
 WORKDIR application
+
+ADD check-kafka-topics-created-from-docker.sh ./
+RUN chmod +x check-kafka-topics-created-from-docker.sh
+
 COPY --from=builder application/dependencies/ ./
 COPY --from=builder application/spring-boot-loader/ ./
 COPY --from=builder application/snapshot-dependencies/ ./
 COPY --from=builder application/application/ ./
-ENTRYPOINT ["java", "-Djava.security.egd=file:/dev/./urandom", "org.springframework.boot.loader.JarLauncher"]
+ENTRYPOINT ["./check-kafka-topics-created-from-docker.sh"]
