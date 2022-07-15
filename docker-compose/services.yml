@@ -4,7 +4,7 @@ services:
   twitter-to-kafka-service:
     image: ${GROUP_ID}/art-gelenler-twitter-to-kafka-service:${SERVICE_VERSION:-latest}
     ports:
-      - "8091:8091"
+      - "8091:8080"
     volumes:
       - "./docker-logs/twitter-to-kafka-service:/workspace/twitter-to-kafka-service/logs"
     depends_on:
