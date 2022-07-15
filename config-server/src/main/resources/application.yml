@@ -54,7 +54,6 @@ spring:
         git:
           uri: https://github.com/artshishkin/art-gelenler-event-driven-config-repo
           default-label: main
-          search-paths: '{config-client}'
           basedir: ${user.home}/config-repo-remote
           clone-on-start: true
           username: artshishkin
