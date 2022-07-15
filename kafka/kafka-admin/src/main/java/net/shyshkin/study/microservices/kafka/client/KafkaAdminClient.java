@@ -14,6 +14,9 @@ import reactor.core.publisher.Mono;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -38,6 +41,11 @@ public class KafkaAdminClient {
                 .map(this::newTopic)
                 .collect(Collectors.toList());
         var createTopicsResult = adminClient.createTopics(newTopics);
+        try {
+            createTopicsResult.all().get(1L, TimeUnit.SECONDS);
+        } catch (TimeoutException | InterruptedException | ExecutionException e) {
+            throw new RuntimeException("Exception while creating topics", e);
+        }
     }
 
     @Retryable(interceptor = "defaultRetryInterceptor")
