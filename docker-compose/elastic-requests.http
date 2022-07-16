@@ -7,35 +7,35 @@ PUT http://localhost:9200/twitter-index
 Content-Type: application/json
 
 {
-    "mappings": {
-        "properties": {
-            "userId": {
-                "type": "long"
-            },
-            "id": {
-                "type": "text",
-                "fields": {
-                    "keyword": {
-                        "type": "keyword",
-                        "ignore_above": 256
-                    }
-                }
-            },
-            "createdAt": {
-                "type": "date",
-		"format": "yyyy-MM-dd'T'HH:mm:ssZZ"
-            },
-            "text": {
-                "type": "text",
-                "fields": {
-                    "keyword": {
-                        "type": "keyword",
-                        "ignore_above": 256
-                    }
-                }
-            }
+  "mappings": {
+    "properties": {
+      "userId": {
+        "type": "long"
+      },
+      "id": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          }
         }
+      },
+      "createdAt": {
+        "type": "date",
+        "format": "yyyy-MM-dd'T'HH:mm:ssZZ"
+      },
+      "text": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          }
+        }
+      }
     }
+  }
 }
 
 ### Create test document
@@ -56,5 +56,125 @@ Accept: application/json
 ### Search everything
 GET http://localhost:9200/twitter-index/_search
 Accept: application/json
+
+### Specify size in query
+GET http://localhost:9200/twitter-index/_search?size=100
+Accept: application/json
+
+### Get data with id
+GET http://localhost:9200/twitter-index/_search?q=id:1
+Accept: application/json
+
+### Get data with text = test
+GET http://localhost:9200/twitter-index/_search?q=text:test
+Accept: application/json
+
+### Get data with text = Microservices
+GET http://localhost:9200/twitter-index/_search?q=text:Microservices&size=10
+Accept: application/json
+
+### Using POST to create Search request
+POST http://localhost:9200/twitter-index/_search
+Content-Type: application/json
+Accept: application/json
+
+{
+  "query": {
+    "term": {
+      "text": "test"
+    }
+  }
+}
+
+### Term Query - Returns documents that contain an exact term in a provided field (not recommended to text field)
+POST http://localhost:9200/twitter-index/_search
+Content-Type: application/json
+Accept: application/json
+
+{
+  "query": {
+    "term": {
+      "text": "test"
+    }
+  }
+}
+
+### Match Query - Returns documents that match a provided text, number, date or boolean value (recommended to text field)
+POST http://localhost:9200/twitter-index/_search
+Content-Type: application/json
+Accept: application/json
+
+{
+  "query": {
+    "match": {
+      "text": "elit ultricies Microservices"
+    }
+  }
+}
+
+### Term Query by Keywords - keyword saves the whole text instead of analizing it - exact term
+POST http://localhost:9200/twitter-index/_search
+Content-Type: application/json
+Accept: application/json
+
+{
+  "query": {
+    "term": {
+      "text.keyword": "test multi word"
+    }
+  }
+}
+
+### Wildcard Query - Returns documents that contain terms matching a wildcard pattern.
+POST http://localhost:9200/twitter-index/_search
+Content-Type: application/json
+Accept: application/json
+
+{
+  "query": {
+    "wildcard": {
+      "text": "te*"
+    }
+  }
+}
+
+### Query String Type - Use DSL Query inside query. Analyses input.
+POST http://localhost:9200/twitter-index/_search
+Content-Type: application/json
+Accept: application/json
+
+{
+  "query": {
+    "query_string": {
+      "query": "text:te*"
+    }
+  }
+}
+
+### Complex Queries - must=AND, should=OR
+POST http://localhost:9200/twitter-index/_search
+Content-Type: application/json
+Accept: application/json
+
+{
+  "from": 0,
+  "size": 20,
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "match": {
+            "text": "elit"
+          }
+        },
+        {
+          "match": {
+            "text": "Microservices"
+          }
+        }
+      ]
+    }
+  }
+}
 
 ###
