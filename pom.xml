@@ -28,6 +28,7 @@
         <kafka-avro-serializer.version>7.1.1</kafka-avro-serializer.version>
         <docker.image.prefix>artarkatesoft</docker.image.prefix>
         <docker.image.name>art-gelenler-${project.artifactId}</docker.image.name>
+        <testcontainers.version>1.17.3</testcontainers.version>
     </properties>
 
     <modules>
@@ -114,6 +115,13 @@
                 <groupId>io.confluent</groupId>
                 <artifactId>kafka-avro-serializer</artifactId>
                 <version>${kafka-avro-serializer.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.testcontainers</groupId>
+                <artifactId>testcontainers-bom</artifactId>
+                <version>${testcontainers.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>

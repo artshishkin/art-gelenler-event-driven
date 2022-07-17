@@ -1,0 +1,17 @@
+elastic-query-service:
+  version: v1
+
+server:
+  servlet:
+    context-path: /elastic-query-service
+
+elastic-query-config:
+  text-field: text
+  use-repository: true
+
+elastic-config:
+  index-name: twitter-index
+  connection-url: http://localhost:9200
+  connection-timeout-ms: 5000
+  socket-timeout-ms: 30000
+
