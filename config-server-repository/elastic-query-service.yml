@@ -1,3 +1,10 @@
+elastic-query-service:
+  version: v1
+
+server:
+  servlet:
+    context-path: /elastic-query-service
+
 elastic-query-config:
   text-field: text
   use-repository: true
