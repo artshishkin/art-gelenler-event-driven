@@ -8,6 +8,7 @@ import net.shyshkin.study.microservices.elastic.model.index.impl.TwitterIndexMod
 import net.shyshkin.study.microservices.elastic.query.client.exception.ElasticQueryClientException;
 import net.shyshkin.study.microservices.elastic.query.client.service.ElasticQueryClient;
 import net.shyshkin.study.microservices.elastic.query.client.util.ElasticQueryUtil;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.SearchHit;
 import org.springframework.data.elasticsearch.core.SearchHits;
@@ -22,6 +23,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@ConditionalOnProperty(name = "elastic-query-config.use-repository", havingValue = "false", matchIfMissing = true)
 public class TwitterElasticQueryClient implements ElasticQueryClient<TwitterIndexModel> {
 
     private final ElasticConfigData elasticConfigData;

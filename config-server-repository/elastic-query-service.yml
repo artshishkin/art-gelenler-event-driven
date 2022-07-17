@@ -1,5 +1,6 @@
 elastic-query-config:
   text-field: text
+  use-repository: true
 
 elastic-config:
   index-name: twitter-index

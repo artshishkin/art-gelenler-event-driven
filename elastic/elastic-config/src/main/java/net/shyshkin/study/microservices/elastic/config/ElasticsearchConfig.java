@@ -19,7 +19,7 @@ import java.util.Objects;
 
 @Configuration
 @RequiredArgsConstructor
-@EnableElasticsearchRepositories(basePackages = "net.shyshkin.study.microservices.elastic.index.client.repository")
+@EnableElasticsearchRepositories(basePackages = "net.shyshkin.study.microservices.elastic")
 public class ElasticsearchConfig extends AbstractElasticsearchConfiguration {
 
     private final ElasticConfigData elasticConfigData;
