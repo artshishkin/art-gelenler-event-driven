@@ -1,0 +1,8 @@
+### Get All documents
+GET http://localhost:8093/elastic-query-service/documents
+Accept: application/json
+
+###
+
+
+
