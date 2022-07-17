@@ -38,6 +38,7 @@
         <module>config-server</module>
         <module>kafka-to-elastic-service</module>
         <module>elastic</module>
+        <module>elastic-query-service</module>
     </modules>
 
     <dependencyManagement>
@@ -87,6 +88,11 @@
             <dependency>
                 <groupId>net.shyshkin.study.microservices</groupId>
                 <artifactId>elastic-index-client</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.shyshkin.study.microservices</groupId>
+                <artifactId>elastic-query-client</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
