@@ -2,11 +2,14 @@ package net.shyshkin.study.microservices.elasticqueryservice;
 
 import lombok.extern.slf4j.Slf4j;
 import net.shyshkin.study.microservices.config.UserConfigData;
+import net.shyshkin.study.microservices.elastic.model.index.impl.TwitterIndexModel;
+import net.shyshkin.study.microservices.elastic.query.client.service.ElasticQueryClient;
 import net.shyshkin.study.microservices.elasticqueryservice.model.ElasticQueryServiceRequestModel;
 import net.shyshkin.study.microservices.elasticqueryservice.model.ElasticQueryServiceResponseModel;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -23,6 +26,8 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.BDDMockito.anyString;
+import static org.mockito.BDDMockito.given;
 
 @Slf4j
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -43,15 +48,22 @@ class ElasticQueryServiceApplicationTests {
     @Autowired
     UserConfigData userConfigData;
 
+    @MockBean
+    ElasticQueryClient<TwitterIndexModel> elasticQueryClient;
+
     @Container
     static ElasticsearchContainer elasticsearchContainer = new ElasticsearchContainer();
 
     @Test
     void getAllDocuments_ok() {
 
+        //given
+        given(elasticQueryClient.getAllIndexModels())
+                .willReturn(List.of());
+
         //when
         var responseEntity = restTemplate
-                .withBasicAuth(userConfigData.getUsername(),userConfigData.getPassword())
+                .withBasicAuth(userConfigData.getUsername(), userConfigData.getPassword())
                 .exchange("/documents", HttpMethod.GET, null, RESPONSE_MODEL_LIST_TYPE);
 
         //then
@@ -75,10 +87,12 @@ class ElasticQueryServiceApplicationTests {
 
         //given
         String id = "123";
+        given(elasticQueryClient.getIndexModelById(anyString()))
+                .willReturn(TwitterIndexModel.builder().id(id).build());
 
         //when
         var responseEntity = restTemplate
-                .withBasicAuth(userConfigData.getUsername(),userConfigData.getPassword())
+                .withBasicAuth(userConfigData.getUsername(), userConfigData.getPassword())
                 .getForEntity("/documents/{id}", ElasticQueryServiceResponseModel.class, id);
 
         //then
@@ -93,6 +107,9 @@ class ElasticQueryServiceApplicationTests {
 
         //given
         String text = "some text to search";
+        given(elasticQueryClient.getIndexModelByText(anyString()))
+                .willReturn(List.of(TwitterIndexModel.builder().text(text).build()));
+
         var requestModel = ElasticQueryServiceRequestModel.builder()
                 .text(text)
                 .build();
@@ -100,7 +117,7 @@ class ElasticQueryServiceApplicationTests {
         //when
         HttpEntity<ElasticQueryServiceRequestModel> reqEntity = new HttpEntity<>(requestModel);
         var responseEntity = restTemplate
-                .withBasicAuth(userConfigData.getUsername(),userConfigData.getPassword())
+                .withBasicAuth(userConfigData.getUsername(), userConfigData.getPassword())
                 .exchange("/documents/get-document-by-text", HttpMethod.POST, reqEntity, RESPONSE_MODEL_LIST_TYPE);
 
         //then

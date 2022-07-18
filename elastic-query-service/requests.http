@@ -23,7 +23,7 @@ Authorization: Basic art artPassword
 {
   "id": null,
   "userId": null,
-  "text": "some text to search",
+  "text": "Microservices",
   "createdAt": null
 }
 
