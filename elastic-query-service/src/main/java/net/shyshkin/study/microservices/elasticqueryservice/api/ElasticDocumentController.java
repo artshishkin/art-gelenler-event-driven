@@ -22,7 +22,9 @@ public class ElasticDocumentController {
 
     @GetMapping("/{id}")
     public ElasticQueryServiceResponseModel getDocumentById(@PathVariable String id) {
-        ElasticQueryServiceResponseModel doc = ElasticQueryServiceResponseModel.builder().build();
+        ElasticQueryServiceResponseModel doc = ElasticQueryServiceResponseModel.builder()
+                .id(id)
+                .build();
         log.debug("Elasticsearch returned document with id {}", id);
         return doc;
     }
