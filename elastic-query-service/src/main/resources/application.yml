@@ -19,8 +19,8 @@ management.health.elasticsearch.enabled: false
 #  key: ${ENCRYPT_KEY}
 
 
-logging:
-  level:
-    org.elasticsearch.client: TRACE
-    org.apache.http: TRACE
-    org.springframework.data.elasticsearch: TRACE
+#logging:
+#  level:
+#    org.elasticsearch.client: TRACE
+#    org.apache.http: TRACE
+#    org.springframework.data.elasticsearch: TRACE

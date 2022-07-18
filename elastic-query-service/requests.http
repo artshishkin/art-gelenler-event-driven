@@ -27,6 +27,32 @@ Authorization: Basic art artPassword
   "createdAt": null
 }
 
+### Search for document by text - NOT VALID - null
+POST http://localhost:8093/elastic-query-service/documents/get-document-by-text
+Accept: application/json
+Content-Type: application/json
+Authorization: Basic art artPassword
+
+{
+  "id": null,
+  "userId": null,
+  "text": null,
+  "createdAt": null
+}
+
+### Search for document by text - NOT VALID - empty
+POST http://localhost:8093/elastic-query-service/documents/get-document-by-text
+Accept: application/json
+Content-Type: application/json
+Authorization: Basic art artPassword
+
+{
+  "id": null,
+  "userId": null,
+  "text": "",
+  "createdAt": null
+}
+
 ###
 
 

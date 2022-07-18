@@ -7,6 +7,7 @@ import net.shyshkin.study.microservices.elasticqueryservice.model.ElasticQuerySe
 import net.shyshkin.study.microservices.elasticqueryservice.model.ElasticQueryServiceResponseModel;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @Slf4j
@@ -33,7 +34,7 @@ public class ElasticDocumentController {
     }
 
     @PostMapping("/get-document-by-text")
-    public List<ElasticQueryServiceResponseModel> getDocumentsByText(@RequestBody ElasticQueryServiceRequestModel requestModel) {
+    public List<ElasticQueryServiceResponseModel> getDocumentsByText(@Valid @RequestBody ElasticQueryServiceRequestModel requestModel) {
         List<ElasticQueryServiceResponseModel> docs = elasticQueryService.getDocumentsByText(requestModel);
         log.debug("Elasticsearch returned {} documents for text `{}`", docs.size(), requestModel.getText());
         return docs;
