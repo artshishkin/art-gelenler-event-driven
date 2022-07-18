@@ -40,14 +40,13 @@ public class TwitterElasticQueryClient implements ElasticQueryClient<TwitterInde
 
     @Override
     public TwitterIndexModel getIndexModelById(String id) {
-        Query query = elasticQueryUtil.getSearchQueryById(id);
-        SearchHit<TwitterIndexModel> searchHit = elasticsearchOperations.searchOne(query, TwitterIndexModel.class, twitterIndexCoordinates);
-        if (searchHit == null) {
+        TwitterIndexModel searchResultModel = elasticsearchOperations.get(id, TwitterIndexModel.class, twitterIndexCoordinates);
+        if (searchResultModel == null) {
             log.error("No document found at elasticsearch with id `{}`", id);
             throw new ElasticQueryClientException("No document found at elasticsearch with id " + id);
         }
-        log.debug("Document with id {} retrieved successfully", searchHit.getId());
-        return searchHit.getContent();
+        log.debug("Document with id {} retrieved successfully", searchResultModel.getId());
+        return searchResultModel;
     }
 
     @Override

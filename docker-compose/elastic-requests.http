@@ -49,6 +49,10 @@ Content-Type: application/json
   "text": "test multi word"
 }
 
+### Get document with id = 1
+GET http://localhost:9200/twitter-index/_doc/1
+Accept: application/json
+
 ### Search for document
 GET http://localhost:9200/twitter-index/_search?q=id:1
 Accept: application/json

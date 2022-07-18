@@ -9,11 +9,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class ElasticQueryUtil<T extends IndexModel> {
 
-    public Query getSearchQueryById(String id) {
-        return new NativeSearchQueryBuilder()
-                .withIds(id)
-                .build();
-    }
+//    public Query getSearchQueryById(String id) {
+//        return new NativeSearchQueryBuilder()
+//                .withIds(id)
+//                .build();
+//    }
 
     public Query getSearchQueryByFieldText(String field, String text) {
         return new NativeSearchQueryBuilder()
