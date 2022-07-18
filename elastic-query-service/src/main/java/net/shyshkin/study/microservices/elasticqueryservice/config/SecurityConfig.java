@@ -1,5 +1,6 @@
 package net.shyshkin.study.microservices.elasticqueryservice.config;
 
+import net.shyshkin.study.microservices.config.UserConfigData;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -25,11 +26,11 @@ public class SecurityConfig {
     }
 
     @Bean
-    public InMemoryUserDetailsManager userDetailsService() {
+    public InMemoryUserDetailsManager userDetailsService(UserConfigData userConfigData) {
 
-        UserDetails user = User.withUsername("art")
-                .password("{noop}artPassword")
-                .roles("USER")
+        UserDetails user = User.withUsername(userConfigData.getUsername())
+                .password("{noop}" + userConfigData.getPassword())
+                .roles(userConfigData.getRoles())
                 .build();
         return new InMemoryUserDetailsManager(user);
     }

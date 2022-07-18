@@ -15,10 +15,10 @@ spring:
         git:
           #with common git repository - disadvantage - clone all the repo with submodules (longer)
           uri: @project.basedir@/../
-          default-label: main
           search-paths: config-server-repository
           basedir: ${user.home}/config-repo
           clone-on-start: true
+          default-label: main
       fail-fast: true
   security:
     user:

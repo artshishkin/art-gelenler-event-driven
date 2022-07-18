@@ -15,3 +15,8 @@ elastic-config:
   connection-timeout-ms: 5000
   socket-timeout-ms: 30000
 
+user-config:
+  username: art
+  password: '{cipher}f131e75d110494eb27823d8d6652f5a9d63bfa86e438d7f5dbe322b79493e79a'
+  roles:
+    - USER
