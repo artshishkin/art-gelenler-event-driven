@@ -1,6 +1,12 @@
+### Healthcheck
+GET http://localhost:8093/elastic-query-service/actuator/health
+Accept: application/json
+
 ### Get All documents
 GET http://localhost:8093/elastic-query-service/documents
 Accept: application/json
+#Authorization: Basic YXJ0OmFydFBhc3N3b3Jk
+Authorization: Basic art artPassword
 
 ###
 
