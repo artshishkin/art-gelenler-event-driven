@@ -68,7 +68,7 @@ class ElasticQueryServiceApplicationTests {
         //when
         var responseEntity = restTemplate
                 .withBasicAuth(userConfigData.getUsername(), userConfigData.getPassword())
-                .exchange("/documents", HttpMethod.GET, null, RESPONSE_MODEL_LIST_TYPE);
+                .exchange("/documents/v1", HttpMethod.GET, null, RESPONSE_MODEL_LIST_TYPE);
 
         //then
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -80,7 +80,7 @@ class ElasticQueryServiceApplicationTests {
 
         //when
         var responseEntity = restTemplate
-                .exchange("/documents", HttpMethod.GET, null, RESPONSE_MODEL_LIST_TYPE);
+                .exchange("/documents/v1", HttpMethod.GET, null, RESPONSE_MODEL_LIST_TYPE);
 
         //then
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
@@ -97,7 +97,7 @@ class ElasticQueryServiceApplicationTests {
         //when
         var responseEntity = restTemplate
                 .withBasicAuth(userConfigData.getUsername(), userConfigData.getPassword())
-                .getForEntity("/documents/{id}", ElasticQueryServiceResponseModel.class, id);
+                .getForEntity("/documents/v1/{id}", ElasticQueryServiceResponseModel.class, id);
 
         //then
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -122,7 +122,7 @@ class ElasticQueryServiceApplicationTests {
         HttpEntity<ElasticQueryServiceRequestModel> reqEntity = new HttpEntity<>(requestModel);
         var responseEntity = restTemplate
                 .withBasicAuth(userConfigData.getUsername(), userConfigData.getPassword())
-                .exchange("/documents/get-document-by-text", HttpMethod.POST, reqEntity, RESPONSE_MODEL_LIST_TYPE);
+                .exchange("/documents/v1/get-document-by-text", HttpMethod.POST, reqEntity, RESPONSE_MODEL_LIST_TYPE);
 
         //then
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -145,7 +145,7 @@ class ElasticQueryServiceApplicationTests {
             //when
             var responseEntity = restTemplate
                     .withBasicAuth(userConfigData.getUsername(), userConfigData.getPassword())
-                    .getForEntity("/documents/{id}", String.class, id);
+                    .getForEntity("/documents/v1/{id}", String.class, id);
 
             //then
             assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
@@ -164,7 +164,7 @@ class ElasticQueryServiceApplicationTests {
             //when
             var responseEntity = restTemplate
                     .withBasicAuth(userConfigData.getUsername(), userConfigData.getPassword())
-                    .getForEntity("/documents/{id}", String.class, id);
+                    .getForEntity("/documents/v1/{id}", String.class, id);
 
             //then
             assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
@@ -186,7 +186,7 @@ class ElasticQueryServiceApplicationTests {
             HttpEntity<ElasticQueryServiceRequestModel> reqEntity = new HttpEntity<>(requestModel);
             var responseEntity = restTemplate
                     .withBasicAuth(userConfigData.getUsername(), userConfigData.getPassword())
-                    .exchange("/documents/get-document-by-text", HttpMethod.POST, reqEntity, new ParameterizedTypeReference<Map<String, String>>() {
+                    .exchange("/documents/v1/get-document-by-text", HttpMethod.POST, reqEntity, new ParameterizedTypeReference<Map<String, String>>() {
                     });
 
             //then
@@ -206,7 +206,7 @@ class ElasticQueryServiceApplicationTests {
             //when
             var responseEntity = restTemplate
                     .withBasicAuth(userConfigData.getUsername(), userConfigData.getPassword())
-                    .getForEntity("/documents/{id}", String.class, id);
+                    .getForEntity("/documents/v1/{id}", String.class, id);
 
             //then
             assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
@@ -227,7 +227,7 @@ class ElasticQueryServiceApplicationTests {
             //when
             var responseEntity = restTemplate
                     .withBasicAuth(userConfigData.getUsername(), userConfigData.getPassword())
-                    .getForEntity("/documents/{id}", String.class, id);
+                    .getForEntity("/documents/v1/{id}", String.class, id);
 
             //then
             assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR);

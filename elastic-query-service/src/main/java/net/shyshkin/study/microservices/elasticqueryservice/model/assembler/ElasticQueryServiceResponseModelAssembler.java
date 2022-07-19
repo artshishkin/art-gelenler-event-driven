@@ -28,12 +28,12 @@ public class ElasticQueryServiceResponseModelAssembler extends RepresentationMod
     public ElasticQueryServiceResponseModel toModel(TwitterIndexModel entity) {
         ElasticQueryServiceResponseModel responseModel = twitterIndexMapper.toResponseModel(entity);
         Link selfLink = linkTo(methodOn(ElasticDocumentController.class).getDocumentById(entity.getId())).withSelfRel();
-        Link documentsLink = linkTo(ElasticDocumentController.class).withRel("documents");
+        Link documentsLink = linkTo(methodOn(ElasticDocumentController.class).getAllDocuments()).withRel("documents");
         responseModel.add(selfLink, documentsLink);
         return responseModel;
     }
 
-    public List<ElasticQueryServiceResponseModel> toModels(List<TwitterIndexModel> entities){
+    public List<ElasticQueryServiceResponseModel> toModels(List<TwitterIndexModel> entities) {
         return entities.stream()
                 .map(this::toModel)
                 .collect(Collectors.toList());

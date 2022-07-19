@@ -3,19 +3,19 @@ GET http://localhost:8093/elastic-query-service/actuator/health
 Accept: application/json
 
 ### Get All documents
-GET http://localhost:8093/elastic-query-service/documents
+GET http://localhost:8093/elastic-query-service/documents/v1
 Accept: application/json
 #Authorization: Basic YXJ0OmFydFBhc3N3b3Jk
 Authorization: Basic art artPassword
 
 ### Get document by id
-GET http://localhost:8093/elastic-query-service/documents/1
+GET http://localhost:8093/elastic-query-service/documents/v1/1
 Accept: application/json
 #Authorization: Basic YXJ0OmFydFBhc3N3b3Jk
 Authorization: Basic art artPassword
 
 ### Search for document by text
-POST http://localhost:8093/elastic-query-service/documents/get-document-by-text
+POST http://localhost:8093/elastic-query-service/documents/v1/get-document-by-text
 Accept: application/json
 Content-Type: application/json
 Authorization: Basic art artPassword
@@ -28,7 +28,7 @@ Authorization: Basic art artPassword
 }
 
 ### Search for document by text - NOT VALID - null
-POST http://localhost:8093/elastic-query-service/documents/get-document-by-text
+POST http://localhost:8093/elastic-query-service/documents/v1/get-document-by-text
 Accept: application/json
 Content-Type: application/json
 Authorization: Basic art artPassword
@@ -41,7 +41,7 @@ Authorization: Basic art artPassword
 }
 
 ### Search for document by text - NOT VALID - empty
-POST http://localhost:8093/elastic-query-service/documents/get-document-by-text
+POST http://localhost:8093/elastic-query-service/documents/v1/get-document-by-text
 Accept: application/json
 Content-Type: application/json
 Authorization: Basic art artPassword

@@ -18,7 +18,7 @@ public class ElasticDocumentController {
 
     private final ElasticQueryService elasticQueryService;
 
-    @GetMapping
+    @GetMapping("/v1")
     public List<ElasticQueryServiceResponseModel> getAllDocuments() {
 
         List<ElasticQueryServiceResponseModel> docs = elasticQueryService.getAllDocuments();
@@ -26,14 +26,14 @@ public class ElasticDocumentController {
         return docs;
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/v1/{id}")
     public ElasticQueryServiceResponseModel getDocumentById(@PathVariable String id) {
         ElasticQueryServiceResponseModel doc = elasticQueryService.getDocumentById(id);
         log.debug("Elasticsearch returned document with id {}", id);
         return doc;
     }
 
-    @PostMapping("/get-document-by-text")
+    @PostMapping("/v1/get-document-by-text")
     public List<ElasticQueryServiceResponseModel> getDocumentsByText(@Valid @RequestBody ElasticQueryServiceRequestModel requestModel) {
         List<ElasticQueryServiceResponseModel> docs = elasticQueryService.getDocumentsByText(requestModel);
         log.debug("Elasticsearch returned {} documents for text `{}`", docs.size(), requestModel.getText());
