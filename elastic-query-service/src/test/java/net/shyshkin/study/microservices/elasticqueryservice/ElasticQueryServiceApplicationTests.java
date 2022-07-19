@@ -6,6 +6,7 @@ import net.shyshkin.study.microservices.elastic.model.index.impl.TwitterIndexMod
 import net.shyshkin.study.microservices.elastic.query.client.service.ElasticQueryClient;
 import net.shyshkin.study.microservices.elasticqueryservice.model.ElasticQueryServiceRequestModel;
 import net.shyshkin.study.microservices.elasticqueryservice.model.ElasticQueryServiceResponseModel;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,13 +18,16 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.testcontainers.elasticsearch.ElasticsearchContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
+import java.io.FileNotFoundException;
 import java.util.List;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.anyString;
@@ -126,6 +130,112 @@ class ElasticQueryServiceApplicationTests {
                 .isNotNull()
                 .hasSize(1)
                 .allSatisfy(model -> assertThat(model.getText()).isEqualTo(text));
+    }
+
+    @Nested
+    class ControllerAdviceTests {
+
+        @Test
+        void accessDeniedTest() {
+            //given
+            String id = "123";
+            given(elasticQueryClient.getIndexModelById(anyString()))
+                    .willThrow(new AccessDeniedException("You have no permission to get document with id " + id));
+
+            //when
+            var responseEntity = restTemplate
+                    .withBasicAuth(userConfigData.getUsername(), userConfigData.getPassword())
+                    .getForEntity("/documents/{id}", String.class, id);
+
+            //then
+            assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+            assertThat(responseEntity.getBody())
+                    .isNotNull()
+                    .isEqualTo("You are not authorized to access this resource");
+        }
+
+        @Test
+        void illegalArgumentTest() {
+            //given
+            String id = "-123";
+            given(elasticQueryClient.getIndexModelById(anyString()))
+                    .willThrow(new IllegalArgumentException("ID can not be negative"));
+
+            //when
+            var responseEntity = restTemplate
+                    .withBasicAuth(userConfigData.getUsername(), userConfigData.getPassword())
+                    .getForEntity("/documents/{id}", String.class, id);
+
+            //then
+            assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+            assertThat(responseEntity.getBody())
+                    .isNotNull()
+                    .isEqualTo("Illegal argument: ID can not be negative");
+        }
+
+        @Test
+        void validationExceptionTest() {
+
+            //given
+            String text = "";
+            var requestModel = ElasticQueryServiceRequestModel.builder()
+                    .text(text)
+                    .build();
+
+            //when
+            HttpEntity<ElasticQueryServiceRequestModel> reqEntity = new HttpEntity<>(requestModel);
+            var responseEntity = restTemplate
+                    .withBasicAuth(userConfigData.getUsername(), userConfigData.getPassword())
+                    .exchange("/documents/get-document-by-text", HttpMethod.POST, reqEntity, new ParameterizedTypeReference<Map<String, String>>() {
+                    });
+
+            //then
+            assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+            assertThat(responseEntity.getBody())
+                    .isNotNull()
+                    .satisfies(map -> assertThat(map.get("text")).isNotEmpty());
+        }
+
+        @Test
+        void runtimeExceptionTest() {
+            //given
+            String id = "123";
+            given(elasticQueryClient.getIndexModelById(anyString()))
+                    .willThrow(new RuntimeException("Something bad"));
+
+            //when
+            var responseEntity = restTemplate
+                    .withBasicAuth(userConfigData.getUsername(), userConfigData.getPassword())
+                    .getForEntity("/documents/{id}", String.class, id);
+
+            //then
+            assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+            assertThat(responseEntity.getBody())
+                    .isNotNull()
+                    .isEqualTo("Service runtime exception: Something bad");
+        }
+
+        @Test
+        void anotherExceptionTest() {
+            //given
+            String id = "123";
+            given(elasticQueryClient.getIndexModelById(anyString()))
+                    .willAnswer(invocationOnMock -> {
+                        throw new FileNotFoundException("There is not file with id " + id);
+                    });
+
+            //when
+            var responseEntity = restTemplate
+                    .withBasicAuth(userConfigData.getUsername(), userConfigData.getPassword())
+                    .getForEntity("/documents/{id}", String.class, id);
+
+            //then
+            assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR);
+            assertThat(responseEntity.getBody())
+                    .isNotNull()
+                    .isEqualTo("A server error occurred!");
+        }
+
     }
 
     protected static class Initializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
