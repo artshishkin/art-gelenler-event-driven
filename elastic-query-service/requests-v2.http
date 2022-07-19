@@ -1,0 +1,6 @@
+### Get document by id
+GET http://localhost:8093/elastic-query-service/documents/1
+Accept: application/vnd.api.v2+json
+Authorization: Basic art artPassword
+
+
