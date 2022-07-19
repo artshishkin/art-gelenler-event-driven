@@ -6,6 +6,7 @@ import net.shyshkin.study.microservices.elastic.model.index.impl.TwitterIndexMod
 import net.shyshkin.study.microservices.elastic.query.client.service.ElasticQueryClient;
 import net.shyshkin.study.microservices.elasticqueryservice.model.ElasticQueryServiceRequestModel;
 import net.shyshkin.study.microservices.elasticqueryservice.model.ElasticQueryServiceResponseModel;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
@@ -57,6 +59,14 @@ class ElasticQueryServiceApplicationTests {
 
     @Container
     static ElasticsearchContainer elasticsearchContainer = new ElasticsearchContainer();
+
+    @BeforeEach
+    void setUp() {
+        restTemplate.getRestTemplate().setInterceptors(List.of((request, body, execution) -> {
+            request.getHeaders().set(HttpHeaders.ACCEPT, "application/vnd.api.v1+json");
+            return execution.execute(request, body);
+        }));
+    }
 
     @Test
     void getAllDocuments_ok() {

@@ -4,19 +4,19 @@ Accept: application/json
 
 ### Get All documents
 GET http://localhost:8093/elastic-query-service/documents
-Accept: application/json
+Accept: application/vnd.api.v1+json
 #Authorization: Basic YXJ0OmFydFBhc3N3b3Jk
 Authorization: Basic art artPassword
 
 ### Get document by id
 GET http://localhost:8093/elastic-query-service/documents/1
-Accept: application/json
+Accept: application/vnd.api.v1+json
 #Authorization: Basic YXJ0OmFydFBhc3N3b3Jk
 Authorization: Basic art artPassword
 
 ### Search for document by text
 POST http://localhost:8093/elastic-query-service/documents/get-document-by-text
-Accept: application/json
+Accept: application/vnd.api.v1+json
 Content-Type: application/json
 Authorization: Basic art artPassword
 
@@ -29,7 +29,7 @@ Authorization: Basic art artPassword
 
 ### Search for document by text - NOT VALID - null
 POST http://localhost:8093/elastic-query-service/documents/get-document-by-text
-Accept: application/json
+Accept: application/vnd.api.v1+json
 Content-Type: application/json
 Authorization: Basic art artPassword
 
@@ -42,7 +42,7 @@ Authorization: Basic art artPassword
 
 ### Search for document by text - NOT VALID - empty
 POST http://localhost:8093/elastic-query-service/documents/get-document-by-text
-Accept: application/json
+Accept: application/vnd.api.v1+json
 Content-Type: application/json
 Authorization: Basic art artPassword
 

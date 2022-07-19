@@ -12,7 +12,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("/documents")
+@RequestMapping(value = "/documents", produces = "application/vnd.api.v1+json")
 @RequiredArgsConstructor
 public class ElasticDocumentController {
 
