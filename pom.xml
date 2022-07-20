@@ -29,6 +29,7 @@
         <docker.image.prefix>artarkatesoft</docker.image.prefix>
         <docker.image.name>art-gelenler-${project.artifactId}</docker.image.name>
         <testcontainers.version>1.17.3</testcontainers.version>
+        <springdoc-openapi-ui.version>1.6.9</springdoc-openapi-ui.version>
     </properties>
 
     <modules>
@@ -115,6 +116,11 @@
                 <groupId>io.confluent</groupId>
                 <artifactId>kafka-avro-serializer</artifactId>
                 <version>${kafka-avro-serializer.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springdoc</groupId>
+                <artifactId>springdoc-openapi-ui</artifactId>
+                <version>${springdoc-openapi-ui.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.testcontainers</groupId>
