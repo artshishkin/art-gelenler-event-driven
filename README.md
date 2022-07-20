@@ -7,6 +7,7 @@
 ![Kafka][kafka]
 ![Elasticsearch][elasticsearch]
 ![OpenAPI][open-api]
+![Docker][docker]
 ![Project licence][licence]
 
 # art-gelenler-event-driven
@@ -78,3 +79,4 @@ Tutorial -  Event-Driven Microservices: Spring Boot, Kafka and Elastic - from Al
 [kafka]: https://img.shields.io/static/v1?label=&message=Kafka&labelColor=grey&color=white&cacheSeconds=60&logo=ApacheKafka
 [elasticsearch]: https://img.shields.io/static/v1?label=&message=Elasticsearch&labelColor=black&color=white&cacheSeconds=60&logo=elasticsearch
 [open-api]: https://img.shields.io/static/v1?label=&message=OpenAPI%203.0&labelColor=white&color=white&logo=openapiinitiative
+[docker]: https://img.shields.io/static/v1?label=&message=Docker&labelColor=white&color=white&logo=docker
