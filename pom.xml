@@ -41,6 +41,7 @@
         <module>kafka-to-elastic-service</module>
         <module>elastic</module>
         <module>elastic-query-service</module>
+        <module>elastic-query-web-client</module>
     </modules>
 
     <dependencyManagement>
