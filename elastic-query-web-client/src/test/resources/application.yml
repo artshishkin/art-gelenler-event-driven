@@ -6,6 +6,12 @@ spring:
   thymeleaf:
     cache: false
 
+user-config:
+  username: art
+  password: 'test'
+  roles:
+    - USER
+
 elastic-query-web-client:
   webclient:
     connect-timeout-ms: 10000
