@@ -21,3 +21,13 @@ elastic-query-web-client:
     content-type: 'application/vnd.api.v1+json'
     accept-type: 'application/vnd.api.v1+json'
     base-url: 'http://elastic-query-service/elastic-query-service/documents'
+
+---
+spring:
+  config:
+    activate:
+      on-profile: local
+elastic-query-web-client:
+  webclient:
+    base-url: 'http://localhost:8093/elastic-query-service/documents'
+

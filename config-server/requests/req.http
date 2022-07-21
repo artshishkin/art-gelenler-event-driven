@@ -18,6 +18,11 @@ GET http://localhost:8080/elastic-query-service/default
 Accept: application/json
 Authorization: Basic c3ByaW5nX2Nsb3VkX3VzZXI6c3ByaW5nQ2xvdWRfUHdkIQ==
 
+### Get elastic-query-web-client local configuration
+GET http://localhost:8080/elastic-query-web-client/local
+Accept: application/json
+Authorization: Basic c3ByaW5nX2Nsb3VkX3VzZXI6c3ByaW5nQ2xvdWRfUHdkIQ==
+
 ### Encrypt Password
 POST http://localhost:8080/encrypt
 Content-Type: text/plain
