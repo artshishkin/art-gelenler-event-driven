@@ -15,10 +15,10 @@ public class ElasticQueryWebClientConfigData {
 
     @Data
     public static class Webclient {
-        private Long connectTimeoutMs;
+        private Integer connectTimeoutMs;
         private Long readTimeoutMs;
         private Long writeTimeoutMs;
-        private Long maxInMemorySize;
+        private Integer maxInMemorySize;
         private String contentType;
         private String acceptType;
         private URI baseUrl;
