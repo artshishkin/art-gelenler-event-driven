@@ -5,6 +5,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
 import java.net.URI;
+import java.util.Map;
 
 @Data
 @Configuration
@@ -12,6 +13,7 @@ import java.net.URI;
 public class ElasticQueryWebClientConfigData {
 
     private Webclient webclient;
+    private Map<String, Query> queries;
 
     @Data
     public static class Webclient {
@@ -22,6 +24,13 @@ public class ElasticQueryWebClientConfigData {
         private String contentType;
         private String acceptType;
         private URI baseUrl;
+    }
+
+    @Data
+    public static class Query {
+        private String method;
+        private String uri;
+        private String accept;
     }
 
 }
