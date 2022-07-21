@@ -84,7 +84,7 @@ services:
     networks:
       - ${GLOBAL_NETWORK:-services}
 
-  elastic-query-service:
+  elastic-query-service-1:
     image: ${GROUP_ID}/art-gelenler-elastic-query-service:${SERVICE_VERSION:-latest}
     ports:
       - "8093:8080"
@@ -107,5 +107,27 @@ services:
     networks:
       - ${GLOBAL_NETWORK:-services}
 
+  elastic-query-service-2:
+    image: ${GROUP_ID}/art-gelenler-elastic-query-service:${SERVICE_VERSION:-latest}
+    ports:
+      - "8095:8080"
+    volumes:
+      - "./docker-logs/elastic-query-service:/workspace/elastic-query-service/logs"
+    depends_on:
+      config-server:
+        condition: service_healthy
+      elastic-1:
+        condition: service_healthy
+      elastic-2:
+        condition: service_healthy
+      elastic-3:
+        condition: service_healthy
+    environment:
+      - "JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n -Xms128m -Xmx256m"
+      - "ENCRYPT_KEY=${ENCRYPT_KEY}"
+      - "SPRING_CLOUD_CONFIG_URI=http://config-server:8080"
+      - "ELASTIC-CONFIG_CONNECTION-URL=http://elastic-1:9200"
+    networks:
+      - ${GLOBAL_NETWORK:-services}
 
 
