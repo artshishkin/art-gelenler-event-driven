@@ -1,14 +1,18 @@
 package net.shyshkin.study.microservices.elasticquerywebclient.service.impl;
 
 import net.shyshkin.study.microservices.config.ElasticQueryWebClientConfigData;
+import net.shyshkin.study.microservices.elasticquerywebclient.exception.ElasticQueryWebClientException;
 import net.shyshkin.study.microservices.elasticquerywebclient.model.ElasticQueryWebClientRequestModel;
 import net.shyshkin.study.microservices.elasticquerywebclient.model.ElasticQueryWebClientResponseModel;
 import net.shyshkin.study.microservices.elasticquerywebclient.service.ElasticWebClient;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 import java.util.Objects;
@@ -36,7 +40,22 @@ public class TwitterElasticWebClient implements ElasticWebClient {
                 .uri(queryParams.getUri())
                 .accept(MediaType.parseMediaType(queryParams.getAccept()))
                 .bodyValue(requestModel)
-                .exchangeToMono(clientResponse -> clientResponse.bodyToMono(RESPONSE_MODEL_LIST_TYPE))
+                .retrieve()
+                .onStatus(
+                        HttpStatus.UNAUTHORIZED::equals,
+                        clientResponse -> Mono.just(new BadCredentialsException("Not authenticated"))
+                )
+                .onStatus(
+                        HttpStatus::is4xxClientError,
+                        clientResponse -> Mono.just(
+                                new ElasticQueryWebClientException(clientResponse.statusCode().getReasonPhrase())
+                        )
+                )
+                .onStatus(
+                        HttpStatus::is5xxServerError,
+                        clientResponse -> Mono.just(new Exception(clientResponse.statusCode().getReasonPhrase()))
+                )
+                .bodyToMono(RESPONSE_MODEL_LIST_TYPE)
                 .block();
     }
 }
