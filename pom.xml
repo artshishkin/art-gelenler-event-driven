@@ -42,6 +42,7 @@
         <module>elastic</module>
         <module>elastic-query-service</module>
         <module>elastic-query-web-client</module>
+        <module>reactive-elastic-query-service</module>
     </modules>
 
     <dependencyManagement>

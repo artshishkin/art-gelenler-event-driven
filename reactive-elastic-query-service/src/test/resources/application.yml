@@ -1,0 +1,33 @@
+elastic-query-service:
+  back-pressure-delay-ms: 500
+
+elastic-query-config:
+  text-field: text
+  use-repository: true
+
+elastic-config:
+  index-name: twitter-index
+  connection-url: http://localhost:9200
+  connection-timeout-ms: 5000
+  socket-timeout-ms: 30000
+
+user-config:
+  username: art
+  password: 'artPassword'
+  roles:
+    - USER
+
+spring:
+  webflux:
+    base-path: /reactive-elastic-query-service
+  codec:
+    max-in-memory-size: 25MB
+  elasticsearch:
+    webclient:
+      max-in-memory-size: 25MB
+    uris: ${elastic-config.connection-url}
+#  data:
+#    elasticsearch:
+#      client:
+#        reactive:
+#          max-in-memory-size: 25MB

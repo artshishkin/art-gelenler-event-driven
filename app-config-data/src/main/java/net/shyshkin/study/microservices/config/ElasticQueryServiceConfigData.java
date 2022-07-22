@@ -10,5 +10,6 @@ import org.springframework.context.annotation.Configuration;
 public class ElasticQueryServiceConfigData {
 
     private String version;
+    private Long backPressureDelayMs;
 
 }
