@@ -1,0 +1,59 @@
+### Healthcheck
+GET http://localhost:8096/reactive-elastic-query-service/actuator/health
+Accept: application/json
+
+### Get All documents
+GET http://localhost:8096/reactive-elastic-query-service/documents
+Accept: text/event-stream
+#Authorization: Basic YXJ0OmFydFBhc3N3b3Jk
+Authorization: Basic art artPassword
+
+### Get document by id
+GET http://localhost:8096/reactive-elastic-query-service/documents/1
+Accept: text/event-stream
+#Authorization: Basic YXJ0OmFydFBhc3N3b3Jk
+Authorization: Basic art artPassword
+
+### Search for document by text
+POST http://localhost:8096/reactive-elastic-query-service/documents/get-document-by-text
+Accept: text/event-stream
+Content-Type: application/json
+Authorization: Basic art artPassword
+
+{
+  "id": null,
+  "userId": null,
+  "text": "Microservices",
+  "createdAt": null
+}
+
+### Search for document by text - NOT VALID - null
+POST http://localhost:8096/reactive-elastic-query-service/documents/get-document-by-text
+Accept: text/event-stream
+Content-Type: application/json
+Authorization: Basic art artPassword
+
+{
+  "id": null,
+  "userId": null,
+  "text": null,
+  "createdAt": null
+}
+
+### Search for document by text - NOT VALID - empty
+POST http://localhost:8096/reactive-elastic-query-service/documents/get-document-by-text
+Accept: text/event-stream
+Content-Type: application/json
+Authorization: Basic art artPassword
+
+{
+  "id": null,
+  "userId": null,
+  "text": "",
+  "createdAt": null
+}
+
+###
+
+
+
