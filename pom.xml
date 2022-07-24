@@ -30,6 +30,7 @@
         <docker.image.name>art-gelenler-${project.artifactId}</docker.image.name>
         <testcontainers.version>1.17.3</testcontainers.version>
         <springdoc-openapi-ui.version>1.6.9</springdoc-openapi-ui.version>
+        <awaitility.version>4.2.0</awaitility.version>
     </properties>
 
     <modules>
@@ -130,6 +131,12 @@
                 <version>${testcontainers.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.awaitility</groupId>
+                <artifactId>awaitility</artifactId>
+                <version>${awaitility.version}</version>
+                <scope>test</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>
