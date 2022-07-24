@@ -1,7 +1,7 @@
 package net.shyshkin.study.microservices.elasticqueryservice.business;
 
-import net.shyshkin.study.microservices.elasticqueryservice.model.ElasticQueryServiceRequestModel;
-import net.shyshkin.study.microservices.elasticqueryservice.model.ElasticQueryServiceResponseModel;
+import net.shyshkin.study.microservices.elasticqueryservicecommon.model.ElasticQueryServiceRequestModel;
+import net.shyshkin.study.microservices.elasticqueryservicecommon.model.ElasticQueryServiceResponseModel;
 
 import java.util.List;
 

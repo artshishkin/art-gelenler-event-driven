@@ -5,9 +5,9 @@ import lombok.extern.slf4j.Slf4j;
 import net.shyshkin.study.microservices.elastic.model.index.impl.TwitterIndexModel;
 import net.shyshkin.study.microservices.elastic.query.client.service.ElasticQueryClient;
 import net.shyshkin.study.microservices.elasticqueryservice.business.ElasticQueryService;
-import net.shyshkin.study.microservices.elasticqueryservice.model.ElasticQueryServiceRequestModel;
-import net.shyshkin.study.microservices.elasticqueryservice.model.ElasticQueryServiceResponseModel;
 import net.shyshkin.study.microservices.elasticqueryservice.model.assembler.ElasticQueryServiceResponseModelAssembler;
+import net.shyshkin.study.microservices.elasticqueryservicecommon.model.ElasticQueryServiceRequestModel;
+import net.shyshkin.study.microservices.elasticqueryservicecommon.model.ElasticQueryServiceResponseModel;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

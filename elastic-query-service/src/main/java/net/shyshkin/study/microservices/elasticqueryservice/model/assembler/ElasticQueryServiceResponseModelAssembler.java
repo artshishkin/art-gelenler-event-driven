@@ -2,8 +2,8 @@ package net.shyshkin.study.microservices.elasticqueryservice.model.assembler;
 
 import net.shyshkin.study.microservices.elastic.model.index.impl.TwitterIndexModel;
 import net.shyshkin.study.microservices.elasticqueryservice.api.ElasticDocumentController;
-import net.shyshkin.study.microservices.elasticqueryservice.mapper.TwitterIndexMapper;
-import net.shyshkin.study.microservices.elasticqueryservice.model.ElasticQueryServiceResponseModel;
+import net.shyshkin.study.microservices.elasticqueryservicecommon.mapper.TwitterIndexMapper;
+import net.shyshkin.study.microservices.elasticqueryservicecommon.model.ElasticQueryServiceResponseModel;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.stereotype.Component;

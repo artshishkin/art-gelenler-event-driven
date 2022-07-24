@@ -1,20 +1,21 @@
-package net.shyshkin.study.microservices.elasticqueryservice.model;
+package net.shyshkin.study.microservices.elasticqueryservicecommon.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotBlank;
+import java.time.ZonedDateTime;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ElasticQueryServiceRequestModel {
+public class ElasticQueryServiceResponseModel {
 
     private String id;
-    @NotBlank
+    private Long userId;
     private String text;
+    private ZonedDateTime createdAt;
 
 }

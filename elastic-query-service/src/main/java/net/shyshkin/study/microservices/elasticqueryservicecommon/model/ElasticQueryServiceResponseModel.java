@@ -1,4 +1,4 @@
-package net.shyshkin.study.microservices.elasticqueryservice.model;
+package net.shyshkin.study.microservices.elasticqueryservicecommon.model;
 
 import lombok.*;
 import org.springframework.hateoas.RepresentationModel;

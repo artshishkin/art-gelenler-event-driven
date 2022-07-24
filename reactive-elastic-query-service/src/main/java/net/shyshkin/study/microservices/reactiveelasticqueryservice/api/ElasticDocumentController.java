@@ -2,9 +2,9 @@ package net.shyshkin.study.microservices.reactiveelasticqueryservice.api;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.shyshkin.study.microservices.elasticqueryservicecommon.model.ElasticQueryServiceRequestModel;
+import net.shyshkin.study.microservices.elasticqueryservicecommon.model.ElasticQueryServiceResponseModel;
 import net.shyshkin.study.microservices.reactiveelasticqueryservice.business.ElasticQueryService;
-import net.shyshkin.study.microservices.reactiveelasticqueryservice.model.ElasticQueryServiceRequestModel;
-import net.shyshkin.study.microservices.reactiveelasticqueryservice.model.ElasticQueryServiceResponseModel;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;

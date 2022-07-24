@@ -3,11 +3,11 @@ package net.shyshkin.study.microservices.reactiveelasticqueryservice.business.im
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.shyshkin.study.microservices.elastic.model.index.impl.TwitterIndexModel;
+import net.shyshkin.study.microservices.elasticqueryservicecommon.mapper.TwitterIndexMapper;
+import net.shyshkin.study.microservices.elasticqueryservicecommon.model.ElasticQueryServiceRequestModel;
+import net.shyshkin.study.microservices.elasticqueryservicecommon.model.ElasticQueryServiceResponseModel;
 import net.shyshkin.study.microservices.reactiveelasticqueryservice.business.ElasticQueryService;
 import net.shyshkin.study.microservices.reactiveelasticqueryservice.business.ReactiveElasticQueryClient;
-import net.shyshkin.study.microservices.reactiveelasticqueryservice.mapper.TwitterIndexMapper;
-import net.shyshkin.study.microservices.reactiveelasticqueryservice.model.ElasticQueryServiceRequestModel;
-import net.shyshkin.study.microservices.reactiveelasticqueryservice.model.ElasticQueryServiceResponseModel;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;

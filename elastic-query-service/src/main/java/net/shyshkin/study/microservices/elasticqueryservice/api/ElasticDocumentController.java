@@ -8,9 +8,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.shyshkin.study.microservices.elasticqueryservice.business.ElasticQueryService;
-import net.shyshkin.study.microservices.elasticqueryservice.model.ElasticQueryServiceRequestModel;
-import net.shyshkin.study.microservices.elasticqueryservice.model.ElasticQueryServiceResponseModel;
 import net.shyshkin.study.microservices.elasticqueryservice.model.ElasticQueryServiceResponseModelV2;
+import net.shyshkin.study.microservices.elasticqueryservicecommon.model.ElasticQueryServiceRequestModel;
+import net.shyshkin.study.microservices.elasticqueryservicecommon.model.ElasticQueryServiceResponseModel;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
