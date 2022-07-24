@@ -119,6 +119,19 @@ class ReactiveElasticQueryServiceApplicationTests {
                 );
     }
 
+    @Test
+    @Order(40)
+    void getAllDocuments_unauthorized_401() {
+
+        //when
+        webTestClient
+                .get().uri("/documents")
+                .exchange()
+
+                //then
+                .expectStatus().isUnauthorized();
+    }
+
     protected static class Initializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
 
         @Override
