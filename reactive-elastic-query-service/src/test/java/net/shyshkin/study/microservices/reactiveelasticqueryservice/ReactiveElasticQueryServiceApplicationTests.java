@@ -3,6 +3,7 @@ package net.shyshkin.study.microservices.reactiveelasticqueryservice;
 import lombok.extern.slf4j.Slf4j;
 import net.shyshkin.study.microservices.config.UserConfigData;
 import net.shyshkin.study.microservices.elastic.model.index.impl.TwitterIndexModel;
+import net.shyshkin.study.microservices.reactiveelasticqueryservice.model.ElasticQueryServiceRequestModel;
 import net.shyshkin.study.microservices.reactiveelasticqueryservice.model.ElasticQueryServiceResponseModel;
 import net.shyshkin.study.microservices.reactiveelasticqueryservice.repository.TwitterElasticReactiveQueryRepository;
 import org.awaitility.Awaitility;
@@ -165,6 +166,56 @@ class ReactiveElasticQueryServiceApplicationTests {
 
         //when
         webTestClient.get().uri("/documents/{id}", id)
+                .headers(httpHeaders -> httpHeaders.setBasicAuth(userConfigData.getUsername(), userConfigData.getPassword()))
+                .exchange()
+
+                //then
+                .expectStatus().isOk()
+                .expectBodyList(ElasticQueryServiceResponseModel.class)
+                .hasSize(0);
+    }
+
+    @Test
+    @Order(60)
+    void getDocumentByText_present() {
+
+        //given
+        String text = "some text";
+        var requestModel = ElasticQueryServiceRequestModel.builder()
+                .text(text)
+                .build();
+
+        //when
+        webTestClient.post().uri("/documents/get-document-by-text")
+                .bodyValue(requestModel)
+                .headers(httpHeaders -> httpHeaders.setBasicAuth(userConfigData.getUsername(), userConfigData.getPassword()))
+                .exchange()
+
+                //then
+                .expectStatus().isOk()
+                .expectBodyList(ElasticQueryServiceResponseModel.class)
+                .hasSize(1)
+                .value(list -> assertThat(list.get(0))
+                        .isNotNull()
+                        .hasNoNullFieldsOrProperties()
+                        .hasFieldOrPropertyWithValue("id", "1")
+                        .hasFieldOrPropertyWithValue("text", "Some test text")
+                );
+    }
+
+    @Test
+    @Order(61)
+    void getDocumentByText_absent() {
+
+        //given
+        String text = "absent";
+        var requestModel = ElasticQueryServiceRequestModel.builder()
+                .text(text)
+                .build();
+
+        //when
+        webTestClient.post().uri("/documents/get-document-by-text")
+                .bodyValue(requestModel)
                 .headers(httpHeaders -> httpHeaders.setBasicAuth(userConfigData.getUsername(), userConfigData.getPassword()))
                 .exchange()
 
