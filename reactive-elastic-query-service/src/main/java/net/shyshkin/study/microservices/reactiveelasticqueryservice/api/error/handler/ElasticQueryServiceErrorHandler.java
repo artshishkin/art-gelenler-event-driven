@@ -8,6 +8,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.bind.support.WebExchangeBindException;
 
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -33,6 +34,15 @@ public class ElasticQueryServiceErrorHandler {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Map<String, String> handle(MethodArgumentNotValidException e) {
+        log.error("Method argument validation exception", e);
+        return e.getAllErrors()
+                .stream()
+                .collect(Collectors.toMap(err -> ((FieldError) err).getField(), err -> err.getDefaultMessage()));
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Map<String, String> handle(WebExchangeBindException e) {
         log.error("Method argument validation exception", e);
         return e.getAllErrors()
                 .stream()
