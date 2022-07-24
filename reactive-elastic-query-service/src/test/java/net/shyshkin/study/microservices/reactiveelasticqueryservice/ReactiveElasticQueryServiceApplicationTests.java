@@ -132,6 +132,48 @@ class ReactiveElasticQueryServiceApplicationTests {
                 .expectStatus().isUnauthorized();
     }
 
+    @Test
+    @Order(50)
+    void getDocumentById_present() {
+
+        //given
+        String id = "1";
+
+        //when
+        webTestClient.get().uri("/documents/{id}", id)
+                .headers(httpHeaders -> httpHeaders.setBasicAuth(userConfigData.getUsername(), userConfigData.getPassword()))
+                .exchange()
+
+                //then
+                .expectStatus().isOk()
+                .expectBodyList(ElasticQueryServiceResponseModel.class)
+                .hasSize(1)
+                .value(list -> assertThat(list.get(0))
+                        .isNotNull()
+                        .hasNoNullFieldsOrProperties()
+                        .hasFieldOrPropertyWithValue("id", "1")
+                        .hasFieldOrPropertyWithValue("text", "Some test text")
+                );
+    }
+
+    @Test
+    @Order(51)
+    void getDocumentById_absent() {
+
+        //given
+        String id = "100";
+
+        //when
+        webTestClient.get().uri("/documents/{id}", id)
+                .headers(httpHeaders -> httpHeaders.setBasicAuth(userConfigData.getUsername(), userConfigData.getPassword()))
+                .exchange()
+
+                //then
+                .expectStatus().isOk()
+                .expectBodyList(ElasticQueryServiceResponseModel.class)
+                .hasSize(0);
+    }
+
     protected static class Initializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
 
         @Override
