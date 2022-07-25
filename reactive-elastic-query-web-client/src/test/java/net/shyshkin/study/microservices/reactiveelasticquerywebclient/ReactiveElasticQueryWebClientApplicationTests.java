@@ -3,15 +3,18 @@ package net.shyshkin.study.microservices.reactiveelasticquerywebclient;
 import lombok.extern.slf4j.Slf4j;
 import net.shyshkin.study.microservices.config.ElasticQueryWebClientConfigData;
 import net.shyshkin.study.microservices.config.UserConfigData;
+import net.shyshkin.study.microservices.reactiveelasticquerywebclient.service.ElasticWebClient;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import org.springframework.util.LinkedMultiValueMap;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -33,6 +36,12 @@ class ReactiveElasticQueryWebClientApplicationTests {
 
     @Autowired
     UserConfigData userConfigData;
+
+    @MockBean
+    ElasticWebClient elasticWebClient;
+
+    static String csrfValue;
+    static LinkedMultiValueMap<String, String> cookiesWithSession;
 
     @Test
     @Order(10)
@@ -88,6 +97,43 @@ class ReactiveElasticQueryWebClientApplicationTests {
                             .contains("<input type=\"hidden\" name=\"_csrf\" value=\"")
                             .contains("<p>Hello <span>art</span><a href=\"/reactive-elastic-query-web-client/home\"> Let's get start searching!</a></p>")
                     ;
+                });
+    }
+
+    @Test
+    @Order(40)
+    void searchPage() {
+
+        //when
+        webClient.get().uri("/home")
+                .headers(httpHeaders -> httpHeaders.setBasicAuth(userConfigData.getUsername(), userConfigData.getPassword()))
+                .exchange()
+
+                //then
+                .expectStatus().isOk()
+                .expectCookie().value("SESSION", value -> {
+                    log.debug("Session cookie: {}", value);
+                    cookiesWithSession = new LinkedMultiValueMap<>();
+                    cookiesWithSession.add("SESSION", value);
+                })
+                .expectBody(String.class)
+                .value(htmlContent -> {
+                    log.debug("Full html page: {}", htmlContent);
+                    assertThat(htmlContent)
+                            .contains("<title>Twitter Search Engine</title>")
+                            .contains("<a class=\"nav-link\" href=\"/reactive-elastic-query-web-client/\">Main page</a>")
+                            .contains("<a class=\"nav-link\" href=\"/reactive-elastic-query-web-client/home\">Search page</a>")
+                            .contains("<input type=\"hidden\" name=\"_csrf\" value=\"")
+                            .contains("<input class=\"form-control\" type=\"text\" id=\"text\" placeholder=\"Enter text to search\" name=\"text\" value=\"\">")
+                            .contains("<input class=\"btn btn-dark\" type=\"submit\" value=\"Search\">")
+                    ;
+                    int formIndex = htmlContent.indexOf("action=\"/reactive-elastic-query-web-client/query-by-text\"");
+                    int csrfIndex = htmlContent.indexOf("name=\"_csrf\"", formIndex);
+                    int valueIndex = htmlContent.indexOf("value=", csrfIndex);
+                    int csrfStart = htmlContent.indexOf("\"", valueIndex) + 1;
+                    int csrfStop = htmlContent.indexOf("\"", csrfStart);
+                    csrfValue = htmlContent.substring(csrfStart, csrfStop);
+                    log.debug("CSRF: {}", csrfValue);
                 });
     }
 
