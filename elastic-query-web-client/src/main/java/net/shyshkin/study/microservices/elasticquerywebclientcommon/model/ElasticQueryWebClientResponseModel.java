@@ -1,4 +1,4 @@
-package net.shyshkin.study.microservices.reactiveelasticquerywebclient.model;
+package net.shyshkin.study.microservices.elasticquerywebclientcommon.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

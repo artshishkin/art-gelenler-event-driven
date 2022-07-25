@@ -1,4 +1,4 @@
-package net.shyshkin.study.microservices.reactiveelasticquerywebclient.exception;
+package net.shyshkin.study.microservices.elasticquerywebclientcommon.exception;
 
 public class ElasticQueryWebClientException extends RuntimeException{
 

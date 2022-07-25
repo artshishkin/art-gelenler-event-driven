@@ -1,10 +1,10 @@
 package net.shyshkin.study.microservices.elasticquerywebclient.service.impl;
 
 import net.shyshkin.study.microservices.config.ElasticQueryWebClientConfigData;
-import net.shyshkin.study.microservices.elasticquerywebclient.exception.ElasticQueryWebClientException;
-import net.shyshkin.study.microservices.elasticquerywebclient.model.ElasticQueryWebClientRequestModel;
-import net.shyshkin.study.microservices.elasticquerywebclient.model.ElasticQueryWebClientResponseModel;
 import net.shyshkin.study.microservices.elasticquerywebclient.service.ElasticWebClient;
+import net.shyshkin.study.microservices.elasticquerywebclientcommon.exception.ElasticQueryWebClientException;
+import net.shyshkin.study.microservices.elasticquerywebclientcommon.model.ElasticQueryWebClientRequestModel;
+import net.shyshkin.study.microservices.elasticquerywebclientcommon.model.ElasticQueryWebClientResponseModel;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;

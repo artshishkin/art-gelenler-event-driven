@@ -2,8 +2,8 @@ package net.shyshkin.study.microservices.reactiveelasticquerywebclient.controlle
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.shyshkin.study.microservices.reactiveelasticquerywebclient.model.ElasticQueryWebClientRequestModel;
-import net.shyshkin.study.microservices.reactiveelasticquerywebclient.model.ElasticQueryWebClientResponseModel;
+import net.shyshkin.study.microservices.elasticquerywebclientcommon.model.ElasticQueryWebClientRequestModel;
+import net.shyshkin.study.microservices.elasticquerywebclientcommon.model.ElasticQueryWebClientResponseModel;
 import net.shyshkin.study.microservices.reactiveelasticquerywebclient.service.ElasticWebClient;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

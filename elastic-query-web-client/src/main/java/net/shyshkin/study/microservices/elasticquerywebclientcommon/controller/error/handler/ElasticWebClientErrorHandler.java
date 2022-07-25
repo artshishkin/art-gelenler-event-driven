@@ -1,7 +1,7 @@
-package net.shyshkin.study.microservices.elasticquerywebclient.controller.error.handler;
+package net.shyshkin.study.microservices.elasticquerywebclientcommon.controller.error.handler;
 
 import lombok.extern.slf4j.Slf4j;
-import net.shyshkin.study.microservices.elasticquerywebclient.model.ElasticQueryWebClientRequestModel;
+import net.shyshkin.study.microservices.elasticquerywebclientcommon.model.ElasticQueryWebClientRequestModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.ui.Model;
