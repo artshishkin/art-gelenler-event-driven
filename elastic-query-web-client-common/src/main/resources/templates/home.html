@@ -1,6 +1,11 @@
 <div th:replace="header"></div>
 
 <div class="container">
+    <!--/*@thymesVar id="searchText" type="java.lang.String"*/-->
+    <!--/*@thymesVar id="elasticQueryWebClientRequestModel" type="net.shyshkin.study.microservices.elasticquerywebclientcommon.model.ElasticQueryWebClientRequestModel"*/-->
+    <!--/*@thymesVar id="elasticQueryWebClientResponseModels" type="java.util.List<net.shyshkin.study.microservices.elasticquerywebclientcommon.model.ElasticQueryWebClientResponseModel>"*/-->
+    <!--/*@thymesVar id="elasticQueryWebClientResponseModel" type="net.shyshkin.study.microservices.elasticquerywebclientcommon.model.ElasticQueryWebClientResponseModel"*/-->
+    <!--/*@thymesVar id="error" type="java.lang.String"*/-->
     <h1>Query Client</h1>
     <div class="mx-auto mt-5">
         <form class="col-12" action="#" th:action="@{/query-by-text}" th:object="${elasticQueryWebClientRequestModel}" method="post">
