@@ -9,6 +9,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.thymeleaf.spring5.context.webflux.IReactiveDataDriverContextVariable;
+import org.thymeleaf.spring5.context.webflux.ReactiveDataDriverContextVariable;
 import reactor.core.publisher.Flux;
 
 import javax.validation.Valid;
@@ -44,7 +46,11 @@ public class QueryController {
         log.debug("Searching for {}", searchText);
 
         Flux<ElasticQueryWebClientResponseModel> responseModels = elasticWebClient.getDataByText(requestModel);
-        model.addAttribute("elasticQueryWebClientResponseModels", responseModels);
+
+        IReactiveDataDriverContextVariable reactiveData =
+                new ReactiveDataDriverContextVariable(responseModels.log(), 1);
+
+        model.addAttribute("elasticQueryWebClientResponseModels", reactiveData);
         model.addAttribute("searchText", searchText);
         model.addAttribute("elasticQueryWebClientRequestModel",
                 ElasticQueryWebClientRequestModel.builder().build());
