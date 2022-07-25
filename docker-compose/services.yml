@@ -154,3 +154,47 @@ services:
     networks:
       - ${GLOBAL_NETWORK:-services}
 
+  reactive-elastic-query-service:
+    image: ${GROUP_ID}/art-gelenler-reactive-elastic-query-service:${SERVICE_VERSION:-latest}
+    ports:
+      - "8096:8080"
+    volumes:
+      - "./docker-logs/reactive-elastic-query-service:/workspace/reactive-elastic-query-service/logs"
+    depends_on:
+      config-server:
+        condition: service_healthy
+      elastic-1:
+        condition: service_healthy
+      elastic-2:
+        condition: service_healthy
+      elastic-3:
+        condition: service_healthy
+    environment:
+      - "JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n -Xms128m -Xmx256m"
+      - "ENCRYPT_KEY=${ENCRYPT_KEY}"
+      - "SPRING_CLOUD_CONFIG_URI=http://config-server:8080"
+      - "ELASTIC-CONFIG_CONNECTION-URL=http://elastic-1:9200"
+    networks:
+      - ${GLOBAL_NETWORK:-services}
+
+  reactive-elastic-query-web-client:
+    image: ${GROUP_ID}/art-gelenler-reactive-elastic-query-web-client:${SERVICE_VERSION:-latest}
+    ports:
+      - "8098:8080"
+    volumes:
+      - "./docker-logs/reactive-elastic-query-web-client:/workspace/reactive-elastic-query-web-client/logs"
+    depends_on:
+      config-server:
+        condition: service_healthy
+      reactive-elastic-query-service:
+        condition: service_healthy
+    environment:
+      - "JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n -Xms128m -Xmx256m"
+      - "ENCRYPT_KEY=${ENCRYPT_KEY}"
+      - "SPRING_CLOUD_CONFIG_URI=http://config-server:8080"
+      - "elastic-query-web-client.webclient.instances[0].host=reactive-elastic-query-service"
+      - "elastic-query-web-client.webclient.instances[0].port=8080"
+      - "elastic-query-web-client.webclient.base-url=http://reactive-elastic-query-service:8080/reactive-elastic-query-service/documents"
+    networks:
+      - ${GLOBAL_NETWORK:-services}
+
