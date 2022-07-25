@@ -3,6 +3,8 @@ package net.shyshkin.study.microservices.reactiveelasticquerywebclient;
 import lombok.extern.slf4j.Slf4j;
 import net.shyshkin.study.microservices.config.ElasticQueryWebClientConfigData;
 import net.shyshkin.study.microservices.config.UserConfigData;
+import net.shyshkin.study.microservices.reactiveelasticquerywebclient.model.ElasticQueryWebClientRequestModel;
+import net.shyshkin.study.microservices.reactiveelasticquerywebclient.model.ElasticQueryWebClientResponseModel;
 import net.shyshkin.study.microservices.reactiveelasticquerywebclient.service.ElasticWebClient;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
@@ -15,9 +17,18 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.reactive.function.BodyInserters;
+import reactor.core.publisher.Flux;
+
+import java.time.ZonedDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
 
 @Slf4j
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -137,5 +148,52 @@ class ReactiveElasticQueryWebClientApplicationTests {
                 });
     }
 
+    @Test
+    @Order(50)
+    void getDocumentByText() {
+
+        //given
+        String searchText = "test";
+        var expectedRequestModel = ElasticQueryWebClientRequestModel.builder()
+                .text(searchText)
+                .build();
+        ElasticQueryWebClientResponseModel expectedResponseModel = ElasticQueryWebClientResponseModel.builder()
+                .text("Some " + searchText + " text")
+                .id("123")
+                .userId(321L)
+                .createdAt(ZonedDateTime.now().minusDays(1))
+                .build();
+        given(elasticWebClient.getDataByText(any(ElasticQueryWebClientRequestModel.class)))
+                .willReturn(Flux.just(expectedResponseModel));
+
+        //when
+
+        MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
+        formData.add("_csrf", csrfValue); //from previous test
+        formData.add("text", searchText);
+
+        webClient.post().uri("/query-by-text")
+                .headers(httpHeaders -> httpHeaders.setBasicAuth(userConfigData.getUsername(), userConfigData.getPassword()))
+                .cookies(cookies -> cookies.addAll(cookiesWithSession))
+                .body(BodyInserters.fromFormData(formData))
+                .exchange()
+
+                //then
+                .expectStatus().isOk()
+                .expectBody(String.class)
+                .value(html -> {
+                    log.debug("Full html page: {}", html);
+                    assertThat(html)
+                            .contains("<title>Twitter Search Engine</title>")
+                            .contains("<a class=\"nav-link\" href=\"/reactive-elastic-query-web-client/\">Main page</a>")
+                            .contains("<a class=\"nav-link\" href=\"/reactive-elastic-query-web-client/home\">Search page</a>")
+                            .contains("<h1>Query Client</h1>")
+                            .contains("<th scope=\"row\">" + expectedResponseModel.getId() + "</th>")
+                            .contains("<td>" + expectedResponseModel.getUserId() + "</td>")
+                            .contains("<td>" + expectedResponseModel.getText() + "</td>")
+                    ;
+                });
+        then(elasticWebClient).should().getDataByText(eq(expectedRequestModel));
+    }
 
 }
