@@ -1,0 +1,5 @@
+
+### Get openid-configuration
+GET http://localhost:8081/realms/gelenler-tutorial/.well-known/openid-configuration
+Accept: application/json
+
