@@ -1,0 +1,46 @@
+version: '3.8'
+
+volumes:
+  keycloak_postgres_data:
+    driver: local
+
+services:
+  postgres:
+    image: postgres:${POSTGRES_VERSION:-latest}
+    volumes:
+      - keycloak_postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: keycloak
+      POSTGRES_PASSWORD: password
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready", "-d", "db_prod" ]
+      interval: 10s
+      timeout: 60s
+      retries: 10
+      start_period: 20s
+    networks:
+      - ${GLOBAL_NETWORK:-elastic}
+
+  # Open http://localhost:8080/auth and login as user 'admin' with password 'Pa55w0rd'.
+  keycloak-authorization-server:
+    build:
+      dockerfile: Dockerfile
+      args:
+        KEYCLOAK_VERSION: ${KEYCLOAK_VERSION}
+    command:
+      - "export --dir /tmp/export --users realm_file"
+    environment:
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://postgres:5432/keycloak
+      KC_DB_USERNAME: keycloak
+      KC_DB_PASSWORD: password
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: Pa55w0rd
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - ${GLOBAL_NETWORK:-elastic}
+    volumes:
+      - ./export:/tmp/export

@@ -178,3 +178,9 @@
     - Audience: 2 values:
       - `kafka-streams-service`
       - `analitics-service`
+
+### 2. Export Realm
+
+- Start exporting with compose file [keycloak-postgres-export.yml](/docker-compose/keycloak_auth_server-export.yml)
+    - From folder ./docker-compose run
+    - `docker-compose -f common.yml -f auth-server/keycloak-postgres-export.yml --env-file .env up -d`
