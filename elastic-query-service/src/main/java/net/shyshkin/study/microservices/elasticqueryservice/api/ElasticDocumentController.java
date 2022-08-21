@@ -11,12 +11,14 @@ import net.shyshkin.study.microservices.elasticqueryservice.business.ElasticQuer
 import net.shyshkin.study.microservices.elasticqueryservice.model.ElasticQueryServiceResponseModelV2;
 import net.shyshkin.study.microservices.elasticqueryservicecommon.model.ElasticQueryServiceRequestModel;
 import net.shyshkin.study.microservices.elasticqueryservicecommon.model.ElasticQueryServiceResponseModel;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
 
 @Slf4j
+@PreAuthorize("isAuthenticated()")
 @RestController
 @RequestMapping(value = "/documents", produces = "application/vnd.api.v1+json")
 @RequiredArgsConstructor
@@ -87,6 +89,7 @@ public class ElasticDocumentController {
         return v2;
     }
 
+    @PreAuthorize("hasRole('APP_USER_ROLE') || hasAuthority('SCOPE_APP_USER_ROLE')")
     @Operation(summary = "Get elastic document by text")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Successful response", content = {
