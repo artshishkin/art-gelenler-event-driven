@@ -1,20 +1,28 @@
 package net.shyshkin.study.microservices.elasticqueryservice.config;
 
-import net.shyshkin.study.microservices.config.UserConfigData;
+import lombok.RequiredArgsConstructor;
+import net.shyshkin.study.microservices.elasticqueryservice.security.TwitterQueryUserDetailsService;
+import net.shyshkin.study.microservices.elasticqueryservice.security.TwitterQueryUserJwtConverter;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2ResourceServerProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.convert.converter.Converter;
+import org.springframework.security.authentication.AbstractAuthenticationToken;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
+@EnableGlobalMethodSecurity(prePostEnabled = true)
+@RequiredArgsConstructor
 public class SecurityConfig {
+
+    private final TwitterQueryUserDetailsService userDetailsService;
+    private final OAuth2ResourceServerProperties oAuth2ResourceServerProperties;
 
     @Value("${security.paths-to-ignore}")
     private String[] pathsToIgnore;
@@ -22,30 +30,27 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+        http
                 .authorizeHttpRequests((authz) -> authz
                         .antMatchers("/actuator/health").permitAll()
-                        .antMatchers("/**").hasRole("USER")
+                        .anyRequest().authenticated()
                 )
-                .httpBasic()
-                .and()
                 .csrf().disable();
+        http
+                .oauth2ResourceServer()
+                .jwt()
+                .jwtAuthenticationConverter(twitterQueryUserJwtConverter());
+
         return http.build();
     }
 
     @Bean
-    public InMemoryUserDetailsManager userDetailsService(UserConfigData userConfigData) {
-
-        UserDetails user = User.withUsername(userConfigData.getUsername())
-                .password(passwordEncoder().encode(userConfigData.getPassword()))
-                .roles(userConfigData.getRoles())
-                .build();
-        return new InMemoryUserDetailsManager(user);
+    Converter<Jwt, ? extends AbstractAuthenticationToken> twitterQueryUserJwtConverter() {
+        return new TwitterQueryUserJwtConverter(userDetailsService);
     }
 
-    @Bean
-    protected PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
