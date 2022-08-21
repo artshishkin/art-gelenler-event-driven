@@ -176,8 +176,8 @@
     - Mappers are almost the same as for client 1
     - but
     - Audience: 2 values:
-      - `kafka-streams-service`
-      - `analitics-service`
+        - `kafka-streams-service`
+        - `analitics-service`
 
 ### 2. Export Realm
 
@@ -191,4 +191,91 @@
     - From folder ./docker-compose run
     - `docker-compose -f common.yml -f keycloak_auth_server-import.yml --env-file .env up -d`
 
+### 4. Request Access Token - Password grant_type
+
+1. Through IntelliJ IDEA HttpClient
+    - use [1 GET Access Token - Password grant_type](/docker-compose/oauth-requests.http)
+2. Through Postman or curl
+
+```shell script
+curl --location --request POST 'http://localhost:8081/realms/gelenler-tutorial/protocol/openid-connect/token' \
+--header 'Content-Type: application/x-www-form-urlencoded' \
+--data-urlencode 'grant_type=password' \
+--data-urlencode 'username=app.user' \
+--data-urlencode 'password=123' \
+--data-urlencode 'client_id=elastic-query-web-client' \
+--data-urlencode 'client_secret=hKeXincDbrZvb9rnoJgAAqN8YsWNQPR2' \
+--data-urlencode 'scope=openid profile'
+```
+
+- Response
+
+```json
+{
+  "access_token": "eyJh...viFF8VGGQ",
+  "expires_in": 300,
+  "refresh_expires_in": 1800,
+  "refresh_token": "eyJhbG...YSYyqqI",
+  "token_type": "Bearer",
+  "id_token": "eyJhb...ZAMasfZeTFA",
+  "not-before-policy": 0,
+  "session_state": "d89742d1-7b3a-4429-8255-dc6cfcf99511",
+  "scope": "openid profile app_user_role email"
+}
+```
+
+- View Access Token - [https://jwt.io](https://jwt.io)
+    - "scope": "openid profile email",
+    - "email_verified": false,
+    - "name": "App User",
+    - "preferred_username": "app.user",
+    - "given_name": "App",
+    - "family_name": "User",
+    - "email": "app.user@gmail.com"
+
+```json
+{
+  "exp": 1661066442,
+  "iat": 1661066142,
+  "jti": "6fed3124-e36c-4d9e-902b-4e25f1f82191",
+  "iss": "http://localhost:8081/realms/gelenler-tutorial",
+  "aud": [
+    "elastic-query-service",
+    "account"
+  ],
+  "sub": "ca496e25-08dd-4fef-8eaf-67d02a599807",
+  "typ": "Bearer",
+  "azp": "elastic-query-web-client",
+  "session_state": "d89742d1-7b3a-4429-8255-dc6cfcf99511",
+  "acr": "1",
+  "realm_access": {
+    "roles": [
+      "default-roles-gelenler-tutorial",
+      "app_user_role",
+      "offline_access",
+      "uma_authorization"
+    ]
+  },
+  "resource_access": {
+    "account": {
+      "roles": [
+        "manage-account",
+        "manage-account-links",
+        "view-profile"
+      ]
+    }
+  },
+  "scope": "openid profile app_user_role email",
+  "sid": "d89742d1-7b3a-4429-8255-dc6cfcf99511",
+  "email_verified": false,
+  "name": "App User",
+  "groups": [
+    "app_user_group"
+  ],
+  "preferred_username": "app.user",
+  "given_name": "App",
+  "family_name": "User",
+  "email": "app.user@gmail.com"
+}
+```
 

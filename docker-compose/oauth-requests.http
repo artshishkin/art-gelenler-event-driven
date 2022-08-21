@@ -3,3 +3,28 @@
 GET http://localhost:8081/realms/gelenler-tutorial/.well-known/openid-configuration
 Accept: application/json
 
+# To get JWT access token we can use
+# 1 Password Grant Type (simpler, just for testing)
+# or
+# 2 Authorization code Grant Type
+
+> {%
+   client.global.set("client_id", "elastic-query-web-client");
+   client.global.set("client_secret", "hKeXincDbrZvb9rnoJgAAqN8YsWNQPR2");
+   client.global.set("username", "app.user");
+   client.global.set("password", "123");
+%}
+
+### 1 GET Access Token - Password grant_type
+POST http://localhost:8081/realms/gelenler-tutorial/protocol/openid-connect/token
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=password&client_id={{client_id}}&client_secret={{client_secret}}&scope=openid profile&username={{username}}&password={{password}}
+
+> {% client.global.set("access_token", response.body.access_token); %}
+
+
+### Get userinfo
+GET http://localhost:8081/realms/gelenler-tutorial/protocol/openid-connect/userinfo
+Accept: application/json
+Authorization: Bearer {{access_token}}
