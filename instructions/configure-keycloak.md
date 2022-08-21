@@ -181,6 +181,14 @@
 
 ### 2. Export Realm
 
-- Start exporting with compose file [keycloak-postgres-export.yml](/docker-compose/keycloak_auth_server-export.yml)
+- Start exporting with compose file [keycloak_auth_server-export.yml](/docker-compose/keycloak_auth_server-export.yml)
     - From folder ./docker-compose run
-    - `docker-compose -f common.yml -f auth-server/keycloak-postgres-export.yml --env-file .env up -d`
+    - `docker-compose -f common.yml -f keycloak_auth_server-export.yml --env-file .env up -d`
+
+### 3. Import realm
+
+- Start import with compose file [keycloak_auth_server-import.yml](/docker-compose/keycloak_auth_server-import.yml)
+    - From folder ./docker-compose run
+    - `docker-compose -f common.yml -f keycloak_auth_server-import.yml --env-file .env up -d`
+
+
