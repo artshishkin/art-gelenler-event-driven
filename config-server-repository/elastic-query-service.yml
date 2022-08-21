@@ -1,6 +1,13 @@
 elastic-query-service:
   version: v1
 
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8081/realms/gelenler-tutorial
+
 server:
   servlet:
     context-path: /elastic-query-service
