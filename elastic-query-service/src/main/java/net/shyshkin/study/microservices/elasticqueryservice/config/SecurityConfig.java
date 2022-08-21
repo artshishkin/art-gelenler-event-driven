@@ -1,8 +1,10 @@
 package net.shyshkin.study.microservices.elasticqueryservice.config;
 
 import lombok.RequiredArgsConstructor;
+import net.shyshkin.study.microservices.elasticqueryservice.security.AudienceValidator;
 import net.shyshkin.study.microservices.elasticqueryservice.security.TwitterQueryUserDetailsService;
 import net.shyshkin.study.microservices.elasticqueryservice.security.TwitterQueryUserJwtConverter;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2ResourceServerProperties;
 import org.springframework.context.annotation.Bean;
@@ -13,7 +15,9 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.core.DelegatingOAuth2TokenValidator;
+import org.springframework.security.oauth2.core.OAuth2TokenValidator;
+import org.springframework.security.oauth2.jwt.*;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
@@ -51,6 +55,15 @@ public class SecurityConfig {
         return new TwitterQueryUserJwtConverter(userDetailsService);
     }
 
+    @Bean
+    JwtDecoder jwtDecoder(@Qualifier("elastic-query-service-audience-validator") AudienceValidator audienceValidator) {
+        String issuerUri = oAuth2ResourceServerProperties.getJwt().getIssuerUri();
+        NimbusJwtDecoder jwtDecoder = JwtDecoders.fromOidcIssuerLocation(issuerUri);
+        OAuth2TokenValidator<Jwt> withIssuer = JwtValidators.createDefaultWithIssuer(issuerUri);
+        DelegatingOAuth2TokenValidator<Jwt> withAudience = new DelegatingOAuth2TokenValidator<>(withIssuer, audienceValidator);
+        jwtDecoder.setJwtValidator(withAudience);
+        return jwtDecoder;
+    }
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
