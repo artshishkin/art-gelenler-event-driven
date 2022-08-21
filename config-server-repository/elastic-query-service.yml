@@ -1,5 +1,6 @@
 elastic-query-service:
   version: v1
+  custom-audience: elastic-query-service
 
 spring:
   security:
