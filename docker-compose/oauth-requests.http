@@ -23,6 +23,24 @@ grant_type=password&client_id={{client_id}}&client_secret={{client_secret}}&scop
 
 > {% client.global.set("access_token", response.body.access_token); %}
 
+### 2 GET Authorization code (Authorization code Grant Type) - manually in browser
+GET http://localhost:8081/realms/gelenler-tutorial/protocol/openid-connect/auth?response_type=code&client_id=elastic-query-web-client&scope=openid profile&state=jskd879sdkj&redirect_uri=http://localhost:8083/no_matter_callback
+Accept: */*
+
+# Sign In using
+# username = app.user
+# password = 123
+
+# Copy code from redirect URI
+
+### 2 Get Access token (Authorization code Grant Type)
+POST http://localhost:8081/realms/gelenler-tutorial/protocol/openid-connect/token
+Content-Type: application/x-www-form-urlencoded
+#Authorization: Basic {{client_id}} {{client_secret}}
+
+grant_type=authorization_code&client_id={{client_id}}&client_secret={{client_secret}}&scope=openid%20profile&redirect_uri=http://localhost:8083/no_matter_callback&code=7d66e739-b4d9-4f70-9f1d-9a12cbba907e.b2988770-69cf-4714-bfa4-b8aef1c56bb7.edb3f3e3-55bb-4e05-ad00-793c69f30ddc
+
+> {% client.global.set("access_token", response.body.access_token); %}
 
 ### Get userinfo
 GET http://localhost:8081/realms/gelenler-tutorial/protocol/openid-connect/userinfo

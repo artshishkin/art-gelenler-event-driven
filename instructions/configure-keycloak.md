@@ -279,3 +279,40 @@ curl --location --request POST 'http://localhost:8081/realms/gelenler-tutorial/p
 }
 ```
 
+### 5. Request Access Token - Authorization Code grant_type
+
+- Use Browser to Get URI
+    -  `http://localhost:8081/realms/gelenler-tutorial/protocol/openid-connect/auth?response_type=code&client_id=elastic-query-web-client&scope=openid profile&state=jskd879sdkj&redirect_uri=http://localhost:8083/no_matter_callback`
+- Will redirect to Keycloak login page
+    -  enter username and password
+- Will redirect to `http://localhost:8083/no_matter_callback`
+    -  `http://localhost:8083/no_matter_callback?state=jskd879sdkj&session_state=44b74481-cf7d-443a-a138-9efdcd9c4d95&code=8f6f6c61-db23-4418-9db0-7069ff07e8ff.44b74481-cf7d-443a-a138-9efdcd9c4d95.c10b3c5f-fcc4-40fd-890e-dcbd7b18e6b2`
+- Copy code and make POST request
+    - using IntelliJ IDEA HttpClient
+        - [2 Get Access token (Authorization code Grant Type)](/docker-compose/oauth-requests.http)
+    - using Postman or curl
+```shell script
+ curl --location --request POST 'http://localhost:8081/realms/gelenler-tutorial/protocol/openid-connect/token' \
+ --header 'Content-Type: application/x-www-form-urlencoded' \
+ --data-urlencode 'grant_type=authorization_code' \
+ --data-urlencode 'client_id=elastic-query-web-client' \
+ --data-urlencode 'client_secret=hKeXincDbrZvb9rnoJgAAqN8YsWNQPR2' \
+ --data-urlencode 'code=8f6f6c61-db23-4418-9db0-7069ff07e8ff.44b74481-cf7d-443a-a138-9efdcd9c4d95.c10b3c5f-fcc4-40fd-890e-dcbd7b18e6b2' \
+ --data-urlencode 'redirect_uri=http://localhost:8083/no_matter_callback'
+```
+-  Will receive response
+```json
+{
+  "access_token": "eyJhbGciO...2XVw",
+  "expires_in": 300,
+  "refresh_expires_in": 1800,
+  "refresh_token": "eyJhb...HyZlatxI",
+  "token_type": "Bearer",
+  "id_token": "eyJhbGc...APJUiZg",
+  "not-before-policy": 0,
+  "session_state": "b2988770-69cf-4714-bfa4-b8aef1c56bb7",
+  "scope": "openid profile app_admin_role email"
+}
+
+```
+
