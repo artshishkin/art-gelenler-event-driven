@@ -46,7 +46,7 @@ services:
       - "JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n -Xms128m -Xmx256m"
       - "ENCRYPT_KEY=${ENCRYPT_KEY}"
       - "SPRING_PROFILES_ACTIVE=separate-remote-git-repo"
-      - "GITHUB_ACCESS_TOKEN={cipher}43c0c0b04ad14146b1da3870650c6b39506c4763a53276eab40e47b9422fc6ef4a68e2bb44267abd6b39d73af9fce4bd9902b3638038526fac51dae2f00a7e53"
+      - "GITHUB_ACCESS_TOKEN={cipher}cbd922760a25785f8fd3b774c1d159cd7c291c9e14338287adb1aa3ed69793765b2a3f56db1c2498300236bfa11e6a981bfcb0aecdaee7abe38b50017ef0cfe4"
     networks:
       - ${GLOBAL_NETWORK:-services}
 
