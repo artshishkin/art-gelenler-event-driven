@@ -9,10 +9,9 @@ import net.shyshkin.study.microservices.elastic.query.client.service.ElasticQuer
 import net.shyshkin.study.microservices.elasticqueryservicecommon.model.ElasticQueryServiceRequestModel;
 import net.shyshkin.study.microservices.elasticqueryservicecommon.model.ElasticQueryServiceResponseModel;
 import org.apache.commons.io.FilenameUtils;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -42,8 +41,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.BDDMockito.anyString;
-import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.*;
 
 @Slf4j
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -127,6 +125,23 @@ class ElasticQueryServiceApplicationTests {
         //when
         var responseEntity = testRestTemplate
                 .exchange("/documents", HttpMethod.GET, null, RESPONSE_MODEL_LIST_TYPE);
+
+        //then
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+    }
+
+    @Test
+    void getAllDocuments_withStaleToken_thenUnauthorized_401() {
+
+        //given
+        String staleAccessToken = "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICItWmI0NFJ3dW9Eb1hrM3c5SzR0bG1aN1Zad29NMmpKazBackVvc0V3TDFJIn0.eyJleHAiOjE2NjExOTAzMTcsImlhdCI6MTY2MTE5MDAxNywianRpIjoiMmYyOWVkNWQtMDNmMy00ZmRlLThlODctYjQ5NjkzMmUzYzY1IiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo1NDQ5NC9yZWFsbXMvZ2VsZW5sZXItdHV0b3JpYWwiLCJhdWQiOlsiZWxhc3RpYy1xdWVyeS1zZXJ2aWNlIiwiYWNjb3VudCJdLCJzdWIiOiJjYTQ5NmUyNS0wOGRkLTRmZWYtOGVhZi02N2QwMmE1OTk4MDciLCJ0eXAiOiJCZWFyZXIiLCJhenAiOiJlbGFzdGljLXF1ZXJ5LXdlYi1jbGllbnQiLCJzZXNzaW9uX3N0YXRlIjoiZjg3NjRhODYtYWQzYi00NjdhLThmNzctNDlhYjM0N2YyZWJiIiwiYWNyIjoiMSIsInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJkZWZhdWx0LXJvbGVzLWdlbGVubGVyLXR1dG9yaWFsIiwiYXBwX3VzZXJfcm9sZSIsIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iXX0sInJlc291cmNlX2FjY2VzcyI6eyJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50IiwibWFuYWdlLWFjY291bnQtbGlua3MiLCJ2aWV3LXByb2ZpbGUiXX19LCJzY29wZSI6Im9wZW5pZCBwcm9maWxlIGFwcF91c2VyX3JvbGUgZW1haWwiLCJzaWQiOiJmODc2NGE4Ni1hZDNiLTQ2N2EtOGY3Ny00OWFiMzQ3ZjJlYmIiLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsIm5hbWUiOiJBcHAgVXNlciIsImdyb3VwcyI6WyJhcHBfdXNlcl9ncm91cCJdLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJhcHAudXNlciIsImdpdmVuX25hbWUiOiJBcHAiLCJmYW1pbHlfbmFtZSI6IlVzZXIiLCJlbWFpbCI6ImFwcC51c2VyQGdtYWlsLmNvbSJ9.aMjSDR2R4FUDgS-dkvFaZyprKBXhZ0UkJO061q-V0TFEJohclGl15Jb96IskNIa5ofQ64VAx8ADqdGxzroasKde_qPgG2wC2nXdJ48Yf0p0qCSHqMtU5aqK3HF0MStVZ-u4ntOvOf0NEjYVCQUjG6UQN_OCLVbSi5gcJc3l7-CK4Loosx5jeWgFYi3rA0_ucYCYxWkQhkuhyWdtsWWAW3H7UzCmfv7-xI2QNarTEucSVm7Xnhh79q3f8oLa2QcCk1j_aU1AeOwxyfMcpewdL3dU5vEzJw1S62njhTMJwjGrBuRTaUmkXDa16k0X3lgQLPubKchY47XKMCAlvCZbBnQ";
+        var requestEntity = RequestEntity.get("/documents")
+                .headers(h -> h.setBearerAuth(staleAccessToken))
+                .build();
+
+        //when
+        var responseEntity = testRestTemplate
+                .exchange(requestEntity, RESPONSE_MODEL_LIST_TYPE);
 
         //then
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
@@ -293,6 +308,70 @@ class ElasticQueryServiceApplicationTests {
             assertThat(responseEntity.getBody())
                     .isNotNull()
                     .isEqualTo("A server error occurred!");
+        }
+
+    }
+
+    @Nested
+    class AuthorityTests {
+
+        @Test
+        @DisplayName("When user with ROLE USER requests documents by text then response should be success")
+        void whenGettingDocumentsByText_byUser_thenShouldCallElasticQueryClient() {
+
+            //given
+            String text = "some text to search";
+            given(elasticQueryClient.getIndexModelByText(anyString()))
+                    .willReturn(List.of(TwitterIndexModel.builder().text(text).build()));
+
+            var requestModel = ElasticQueryServiceRequestModel.builder()
+                    .text(text)
+                    .build();
+            var requestEntity = RequestEntity.post("/documents/get-document-by-text")
+                    .headers(h -> h.setBearerAuth(getJwtAccessToken(APP_USER_USERNAME, APP_USER_PASSWORD)))
+                    .body(requestModel);
+
+            //when
+            var responseEntity = testRestTemplate
+                    .exchange(requestEntity, RESPONSE_MODEL_LIST_TYPE);
+
+            //then
+            assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+            assertThat(responseEntity.getBody())
+                    .isNotNull()
+                    .hasSize(1)
+                    .allSatisfy(model -> assertThat(model.getText()).isEqualTo(text));
+            then(elasticQueryClient).should().getIndexModelByText(eq(text));
+        }
+
+        @ParameterizedTest
+        @DisplayName("When user with ROLE ADMIN or SUPERUSER requests documents by text then access should be denied")
+        @CsvSource({
+                APP_ADMIN_USERNAME + "," + APP_ADMIN_PASSWORD,
+                APP_SUPER_USER_USERNAME + "," + APP_SUPER_USER_PASSWORD
+        })
+        void whenGettingDocumentsByText_byNoUser_thenShouldBeAccessDenied(String username, String password) {
+            String text = "some text to search";
+            given(elasticQueryClient.getIndexModelByText(anyString()))
+                    .willReturn(List.of(TwitterIndexModel.builder().text(text).build()));
+
+            var requestModel = ElasticQueryServiceRequestModel.builder()
+                    .text(text)
+                    .build();
+            var requestEntity = RequestEntity.post("/documents/get-document-by-text")
+                    .headers(h -> h.setBearerAuth(getJwtAccessToken(username, password)))
+                    .body(requestModel);
+
+            //when
+            var responseEntity = testRestTemplate
+                    .exchange(requestEntity, String.class);
+
+            //then
+            assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+            assertThat(responseEntity.getBody())
+                    .isNotNull()
+                    .isEqualTo("You are not authorized to access this resource");
+            then(elasticQueryClient).shouldHaveNoInteractions();
         }
 
     }

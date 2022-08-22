@@ -12,6 +12,8 @@ import net.shyshkin.study.microservices.elasticqueryservice.model.ElasticQuerySe
 import net.shyshkin.study.microservices.elasticqueryservicecommon.model.ElasticQueryServiceRequestModel;
 import net.shyshkin.study.microservices.elasticqueryservicecommon.model.ElasticQueryServiceResponseModel;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -103,6 +105,8 @@ public class ElasticDocumentController {
     @PostMapping("/get-document-by-text")
     public List<ElasticQueryServiceResponseModel> getDocumentsByText(@Valid @RequestBody ElasticQueryServiceRequestModel requestModel) {
         List<ElasticQueryServiceResponseModel> docs = elasticQueryService.getDocumentsByText(requestModel);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        log.debug("Auth: {}", authentication);
         log.debug("Elasticsearch returned {} documents for text `{}`", docs.size(), requestModel.getText());
         return docs;
     }
