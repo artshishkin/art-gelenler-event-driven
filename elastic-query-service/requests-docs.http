@@ -2,10 +2,10 @@
 GET http://localhost:8093/elastic-query-service/api-docs
 Accept: application/json
 
-### Get Open API 3.0 documentation as YAML file
+### Get Open API 3.0 documentation as YAML file (Get token first through [/docker-compose/oauth-requests.http](/docker-compose/oauth-requests.http))
 GET http://localhost:8093/elastic-query-service/api-docs.yaml
-Authorization: Basic art artPassword
+Authorization: Bearer {{access_token}}
 
-### Open Swagger UI with Basic Auth
+### Open Swagger UI with Auth (Get token first through [/docker-compose/oauth-requests.http](/docker-compose/oauth-requests.http))
 GET http://localhost:8093/elastic-query-service/swagger-ui.html
-Authorization: Basic art artPassword
+Authorization: Bearer {{access_token}}

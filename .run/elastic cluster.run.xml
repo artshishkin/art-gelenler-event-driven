@@ -1,0 +1,16 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="elastic cluster" type="docker-deploy" factoryName="docker-compose.yml" server-name="Docker">
+    <deployment type="docker-compose.yml">
+      <settings>
+        <option name="envFilePath" value="C:\Users\Admin\IdeaProjects\Study\AliGelenler\art-gelenler-event-driven\docker-compose\.env" />
+        <option name="secondarySourceFiles">
+          <list>
+            <option value="docker-compose/elastic_cluster.yml" />
+          </list>
+        </option>
+        <option name="sourceFilePath" value="docker-compose/common.yml" />
+      </settings>
+    </deployment>
+    <method v="2" />
+  </configuration>
+</component>

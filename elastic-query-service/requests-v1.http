@@ -2,23 +2,24 @@
 GET http://localhost:8093/elastic-query-service/actuator/health
 Accept: application/json
 
+# Get token first through [/docker-compose/oauth-requests.http](/docker-compose/oauth-requests.http)
 ### Get All documents
 GET http://localhost:8093/elastic-query-service/documents
 Accept: application/vnd.api.v1+json
 #Authorization: Basic YXJ0OmFydFBhc3N3b3Jk
-Authorization: Basic art artPassword
+#Authorization: Basic art artPassword
+Authorization: Bearer {{access_token}}
 
 ### Get document by id
-GET http://localhost:8093/elastic-query-service/documents/1
+GET http://localhost:8093/elastic-query-service/documents/4602089694534990078
 Accept: application/vnd.api.v1+json
-#Authorization: Basic YXJ0OmFydFBhc3N3b3Jk
-Authorization: Basic art artPassword
+Authorization: Bearer {{access_token}}
 
 ### Search for document by text
 POST http://localhost:8093/elastic-query-service/documents/get-document-by-text
 Accept: application/vnd.api.v1+json
 Content-Type: application/json
-Authorization: Basic art artPassword
+Authorization: Bearer {{access_token}}
 
 {
   "id": null,
@@ -31,7 +32,7 @@ Authorization: Basic art artPassword
 POST http://localhost:8093/elastic-query-service/documents/get-document-by-text
 Accept: application/vnd.api.v1+json
 Content-Type: application/json
-Authorization: Basic art artPassword
+Authorization: Bearer {{access_token}}
 
 {
   "id": null,
@@ -44,7 +45,7 @@ Authorization: Basic art artPassword
 POST http://localhost:8093/elastic-query-service/documents/get-document-by-text
 Accept: application/vnd.api.v1+json
 Content-Type: application/json
-Authorization: Basic art artPassword
+Authorization: Bearer {{access_token}}
 
 {
   "id": null,
