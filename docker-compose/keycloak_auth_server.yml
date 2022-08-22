@@ -26,7 +26,7 @@ services:
     networks:
       - ${GLOBAL_NETWORK:-elastic}
 
-  # Open http://localhost:8080/auth and login as user 'admin' with password 'Pa55w0rd'.
+  # Open http://localhost:8181/admin and login as user 'admin' with password 'Pa55w0rd'.
   keycloak-authorization-server:
     image: quay.io/keycloak/keycloak:${KEYCLOAK_VERSION:-latest}
     hostname: keycloak-server
@@ -40,7 +40,7 @@ services:
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: Pa55w0rd
     ports:
-      - 8081:8080
+      - 8181:8080
     depends_on:
       - postgres
     networks:

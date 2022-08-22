@@ -22,7 +22,7 @@ services:
     networks:
       - ${GLOBAL_NETWORK:-elastic}
 
-  # Open http://localhost:8080/auth and login as user 'admin' with password 'Pa55w0rd'.
+  # Open http://localhost:8181/admin and login as user 'admin' with password 'Pa55w0rd'.
   keycloak-authorization-server:
     build:
       dockerfile: Dockerfile

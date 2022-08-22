@@ -1,6 +1,6 @@
 
 ### Get openid-configuration
-GET http://localhost:8081/realms/gelenler-tutorial/.well-known/openid-configuration
+GET http://localhost:8181/realms/gelenler-tutorial/.well-known/openid-configuration
 Accept: application/json
 
 # To get JWT access token we can use
@@ -16,7 +16,7 @@ Accept: application/json
 %}
 
 ### 1 GET Access Token - Password grant_type
-POST http://localhost:8081/realms/gelenler-tutorial/protocol/openid-connect/token
+POST http://localhost:8181/realms/gelenler-tutorial/protocol/openid-connect/token
 Content-Type: application/x-www-form-urlencoded
 
 grant_type=password&client_id={{client_id}}&client_secret={{client_secret}}&scope=openid profile&username={{username}}&password={{password}}
@@ -24,7 +24,7 @@ grant_type=password&client_id={{client_id}}&client_secret={{client_secret}}&scop
 > {% client.global.set("access_token", response.body.access_token); %}
 
 ### 2 GET Authorization code (Authorization code Grant Type) - manually in browser
-GET http://localhost:8081/realms/gelenler-tutorial/protocol/openid-connect/auth?response_type=code&client_id=elastic-query-web-client&scope=openid profile&state=jskd879sdkj&redirect_uri=http://localhost:8083/no_matter_callback
+GET http://localhost:8181/realms/gelenler-tutorial/protocol/openid-connect/auth?response_type=code&client_id=elastic-query-web-client&scope=openid profile&state=jskd879sdkj&redirect_uri=http://localhost:8083/no_matter_callback
 Accept: */*
 
 # Sign In using
@@ -34,7 +34,7 @@ Accept: */*
 # Copy code from redirect URI
 
 ### 2 Get Access token (Authorization code Grant Type)
-POST http://localhost:8081/realms/gelenler-tutorial/protocol/openid-connect/token
+POST http://localhost:8181/realms/gelenler-tutorial/protocol/openid-connect/token
 Content-Type: application/x-www-form-urlencoded
 #Authorization: Basic {{client_id}} {{client_secret}}
 
@@ -43,6 +43,6 @@ grant_type=authorization_code&client_id={{client_id}}&client_secret={{client_sec
 > {% client.global.set("access_token", response.body.access_token); %}
 
 ### Get userinfo
-GET http://localhost:8081/realms/gelenler-tutorial/protocol/openid-connect/userinfo
+GET http://localhost:8181/realms/gelenler-tutorial/protocol/openid-connect/userinfo
 Accept: application/json
 Authorization: Bearer {{access_token}}

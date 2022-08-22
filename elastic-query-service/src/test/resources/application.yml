@@ -7,7 +7,7 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://localhost:8081/realms/gelenler-tutorial
+          issuer-uri: http://localhost:8181/realms/gelenler-tutorial
 
 server:
   servlet:
