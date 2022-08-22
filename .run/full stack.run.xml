@@ -1,0 +1,27 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="full stack" type="docker-deploy" factoryName="docker-compose.yml" server-name="Docker">
+    <deployment type="docker-compose.yml">
+      <settings>
+        <option name="envFilePath" value="C:\Users\Admin\IdeaProjects\Study\AliGelenler\art-gelenler-event-driven\docker-compose\.env" />
+        <option name="envVars">
+          <list>
+            <DockerEnvVarImpl>
+              <option name="name" value="ENCRYPT_KEY" />
+              <option name="value" value="jcePassword" />
+            </DockerEnvVarImpl>
+          </list>
+        </option>
+        <option name="secondarySourceFiles">
+          <list>
+            <option value="docker-compose/kafka_cluster.yml" />
+            <option value="docker-compose/elastic_cluster.yml" />
+            <option value="docker-compose/services.yml" />
+            <option value="docker-compose/keycloak_auth_server-import.yml" />
+          </list>
+        </option>
+        <option name="sourceFilePath" value="docker-compose/common.yml" />
+      </settings>
+    </deployment>
+    <method v="2" />
+  </configuration>
+</component>

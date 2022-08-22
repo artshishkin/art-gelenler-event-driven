@@ -104,6 +104,7 @@ services:
       - "ENCRYPT_KEY=${ENCRYPT_KEY}"
       - "SPRING_CLOUD_CONFIG_URI=http://config-server:8080"
       - "ELASTIC-CONFIG_CONNECTION-URL=http://elastic-1:9200"
+      - "spring.security.oauth2.resourceserver.jwt.issuer-uri=http://keycloak-authorization-server:8080/realms/gelenler-tutorial"
     networks:
       - ${GLOBAL_NETWORK:-services}
 
@@ -127,6 +128,7 @@ services:
       - "ENCRYPT_KEY=${ENCRYPT_KEY}"
       - "SPRING_CLOUD_CONFIG_URI=http://config-server:8080"
       - "ELASTIC-CONFIG_CONNECTION-URL=http://elastic-1:9200"
+      - "spring.security.oauth2.resourceserver.jwt.issuer-uri=http://keycloak-authorization-server:8080/realms/gelenler-tutorial"
     networks:
       - ${GLOBAL_NETWORK:-services}
 
