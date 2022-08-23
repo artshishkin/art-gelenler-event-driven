@@ -409,6 +409,166 @@ class ElasticQueryServiceApplicationTests {
 
     }
 
+    @Nested
+    class HasPermissionTests {
+
+        @Test
+        @DisplayName("When user with ROLE USER requests all documents to which he has access then response should be success")
+        void whenUserGetsAllDocumentsHeHasAccessTo_thenShouldReturnSuccessfully() {
+
+            //given
+            String documentIdForUser = "6210305696719765116";
+            given(elasticQueryClient.getAllIndexModels())
+                    .willReturn(List.of(TwitterIndexModel.builder()
+                            .id(documentIdForUser)
+                            .text("NO matter")
+                            .build()));
+            var requestEntity = RequestEntity.get("/documents")
+                    .headers(h -> h.setBearerAuth(getJwtAccessToken(APP_USER_USERNAME, APP_USER_PASSWORD)))
+                    .build();
+
+            //when
+            var responseEntity = testRestTemplate
+                    .exchange(requestEntity, RESPONSE_MODEL_LIST_TYPE);
+
+            //then
+            assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+            assertThat(responseEntity.getBody())
+                    .hasSize(1)
+                    .allSatisfy(resp -> assertThat(resp.getId()).isEqualTo(documentIdForUser));
+        }
+
+        @Test
+        @DisplayName("When user with ROLE USER requests all documents to which he has access then response should be success")
+        void whenUserGetsAllDocuments_butHasNoAccessToALLOfThem_thenShouldBeAccessDenied() {
+
+            //given
+            String documentIdForUser = "6210305696719765116";
+            String documentIdUserHasNoAccessTo = "7836132853803420909";
+            given(elasticQueryClient.getAllIndexModels())
+                    .willReturn(List.of(
+                            TwitterIndexModel.builder().id(documentIdForUser).text("NO matter").build(),
+                            TwitterIndexModel.builder().id(documentIdUserHasNoAccessTo).text("NO matter").build()
+                    ));
+            var requestEntity = RequestEntity.get("/documents")
+                    .headers(h -> h.setBearerAuth(getJwtAccessToken(APP_USER_USERNAME, APP_USER_PASSWORD)))
+                    .build();
+
+            //when
+            var responseEntity = testRestTemplate
+                    .exchange(requestEntity, String.class);
+
+            //then
+            assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+            assertThat(responseEntity.getBody())
+                    .isEqualTo("You are not authorized to access this resource");
+        }
+
+        @Test
+        @DisplayName("When user with ROLE USER requests document by id to which he has access then response should be success")
+        void whenUserGetsDocumentByIdHeHasAccessTo_thenShouldReturnSuccessfully() {
+
+            //given
+            String documentIdForUser = "6210305696719765116";
+            given(elasticQueryClient.getIndexModelById(anyString()))
+                    .willReturn(TwitterIndexModel.builder().id(documentIdForUser).build());
+            var requestEntity = RequestEntity.get("/documents/{id}", documentIdForUser)
+                    .headers(h -> h.setBearerAuth(getJwtAccessToken(APP_USER_USERNAME, APP_USER_PASSWORD)))
+                    .build();
+
+            //when
+            var responseEntity = testRestTemplate
+                    .exchange(requestEntity, ElasticQueryServiceResponseModel.class);
+
+            //then
+            assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+            assertThat(responseEntity.getBody())
+                    .isNotNull()
+                    .hasFieldOrPropertyWithValue("id", documentIdForUser);
+        }
+
+        @Test
+        @DisplayName("When user with ROLE USER requests document by id to which he has NO access then response should be denied")
+        void whenUserGetsDocumentByIdHeHasNOAccessTo_thenShouldBeAccessDenied() {
+
+            //given
+            String documentIdForUser = "7836132853803420909";
+            given(elasticQueryClient.getIndexModelById(anyString()))
+                    .willReturn(TwitterIndexModel.builder().id(documentIdForUser).build());
+            var requestEntity = RequestEntity.get("/documents/{id}", documentIdForUser)
+                    .headers(h -> h.setBearerAuth(getJwtAccessToken(APP_USER_USERNAME, APP_USER_PASSWORD)))
+                    .build();
+
+            //when
+            var responseEntity = testRestTemplate
+                    .exchange(requestEntity, String.class);
+
+            //then
+            assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+            assertThat(responseEntity.getBody())
+                    .isEqualTo("You are not authorized to access this resource");
+        }
+
+        @Test
+        @DisplayName("When user with ROLE USER requests document by text to which he has access then response should be success")
+        void whenUserGetsDocumentByTextHeHasAccessTo_thenShouldReturnSuccessfully() {
+
+            //given
+            String text = "some text to search";
+            given(elasticQueryClient.getIndexModelByText(anyString()))
+                    .willReturn(List.of(
+                            TwitterIndexModel.builder().id("6210305696719765116").text(text).build()
+                    ));
+
+            var requestModel = ElasticQueryServiceRequestModel.builder()
+                    .text(text)
+                    .build();
+            HttpHeaders httpHeaders = new HttpHeaders();
+            httpHeaders.setBearerAuth(getJwtAccessToken(APP_USER_USERNAME, APP_USER_PASSWORD));
+
+            //when
+            HttpEntity<ElasticQueryServiceRequestModel> reqEntity = new HttpEntity<>(requestModel, httpHeaders);
+            var responseEntity = testRestTemplate
+                    .exchange("/documents/get-document-by-text", HttpMethod.POST, reqEntity, RESPONSE_MODEL_LIST_TYPE);
+
+            //then
+            assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+            assertThat(responseEntity.getBody())
+                    .isNotNull()
+                    .hasSize(1)
+                    .allSatisfy(model -> assertThat(model.getText()).isEqualTo(text));
+        }
+
+        @Test
+        @DisplayName("When user with ROLE USER requests document by text to even ONE of which he has NO access then response should be Access Denied")
+        void whenUserGetsDocumentByTextHeHasNOAccessTo_thenShouldBeAccessDenied() {
+
+            //given
+            String text = "some text to search";
+            given(elasticQueryClient.getIndexModelByText(anyString()))
+                    .willReturn(List.of(
+                            TwitterIndexModel.builder().id("6210305696719765116").text(text).build(),
+                            TwitterIndexModel.builder().id("7836132853803420909").text(text).build()
+                    ));
+
+            var requestModel = ElasticQueryServiceRequestModel.builder()
+                    .text(text)
+                    .build();
+            HttpHeaders httpHeaders = new HttpHeaders();
+            httpHeaders.setBearerAuth(getJwtAccessToken(APP_USER_USERNAME, APP_USER_PASSWORD));
+
+            //when
+            HttpEntity<ElasticQueryServiceRequestModel> reqEntity = new HttpEntity<>(requestModel, httpHeaders);
+            var responseEntity = testRestTemplate
+                    .exchange("/documents/get-document-by-text", HttpMethod.POST, reqEntity, String.class);
+
+            //then
+            assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+            assertThat(responseEntity.getBody())
+                    .isEqualTo("You are not authorized to access this resource");
+        }
+    }
+
     protected static class Initializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
 
         @Override
