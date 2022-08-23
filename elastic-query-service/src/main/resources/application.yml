@@ -12,23 +12,6 @@ spring:
       password: '{cipher}d0bb54467b358c6a4f2aecbdca486be7d41c0f81df2b5dd9c722b41888e7fe8f85240138e768ddeeef3ade2144534a9a'
   config:
     import: 'configserver:'
-  jpa:
-    open-in-view: false
-    show-sql: true
-    database: POSTGRESQL
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQL95Dialect
-  datasource:
-    driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:25432/postgres?currentSchema=public&binaryTransfer=true&reWriteBatchedInserts=true
-    username: keycloak
-    password: '{cipher}1f1c2d807682cfed8604459dd74615a1e80713d53179ba7d3a1166eece8dd256'
-  sql:
-    init:
-      schema-locations: classpath:init-schema.sql
-      data-locations: classpath:init-data.sql
-      mode: always
 
 management.health.elasticsearch.enabled: false
 

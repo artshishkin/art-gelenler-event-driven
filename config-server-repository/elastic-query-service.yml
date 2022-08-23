@@ -8,6 +8,23 @@ spring:
       resourceserver:
         jwt:
           issuer-uri: http://localhost:8181/realms/gelenler-tutorial
+  jpa:
+    open-in-view: false
+    show-sql: true
+    database: POSTGRESQL
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQL95Dialect
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:25432/postgres?currentSchema=public&binaryTransfer=true&reWriteBatchedInserts=true
+    username: keycloak
+    password: '{cipher}1f1c2d807682cfed8604459dd74615a1e80713d53179ba7d3a1166eece8dd256'
+  sql:
+    init:
+      schema-locations: classpath:init-schema.sql
+      data-locations: classpath:init-data.sql
+      mode: always
 
 server:
   servlet:
