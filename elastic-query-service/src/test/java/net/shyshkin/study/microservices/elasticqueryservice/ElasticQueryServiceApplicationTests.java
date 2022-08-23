@@ -155,7 +155,7 @@ class ElasticQueryServiceApplicationTests {
         given(elasticQueryClient.getIndexModelById(anyString()))
                 .willReturn(TwitterIndexModel.builder().id(id).build());
         var requestEntity = RequestEntity.get("/documents/{id}", id)
-                .headers(h -> h.setBearerAuth(getJwtAccessToken(APP_USER_USERNAME, APP_USER_PASSWORD)))
+                .headers(h -> h.setBearerAuth(getJwtAccessToken(APP_SUPER_USER_USERNAME, APP_SUPER_USER_PASSWORD)))
                 .build();
 
         //when
@@ -181,7 +181,7 @@ class ElasticQueryServiceApplicationTests {
                 .text(text)
                 .build();
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setBearerAuth(getJwtAccessToken(APP_USER_USERNAME, APP_USER_PASSWORD));
+        httpHeaders.setBearerAuth(getJwtAccessToken(APP_SUPER_USER_USERNAME, APP_SUPER_USER_PASSWORD));
 
         //when
         HttpEntity<ElasticQueryServiceRequestModel> reqEntity = new HttpEntity<>(requestModel, httpHeaders);
@@ -227,7 +227,7 @@ class ElasticQueryServiceApplicationTests {
             given(elasticQueryClient.getIndexModelById(anyString()))
                     .willThrow(new IllegalArgumentException("ID can not be negative"));
             var requestEntity = RequestEntity.get("/documents/{id}", id)
-                    .headers(h -> h.setBearerAuth(getJwtAccessToken(APP_USER_USERNAME, APP_USER_PASSWORD)))
+                    .headers(h -> h.setBearerAuth(getJwtAccessToken(APP_SUPER_USER_USERNAME, APP_SUPER_USER_PASSWORD)))
                     .build();
 
             //when
@@ -250,7 +250,7 @@ class ElasticQueryServiceApplicationTests {
                     .text(text)
                     .build();
             var requestEntity = RequestEntity.post("/documents/get-document-by-text")
-                    .headers(h -> h.setBearerAuth(getJwtAccessToken(APP_USER_USERNAME, APP_USER_PASSWORD)))
+                    .headers(h -> h.setBearerAuth(getJwtAccessToken(APP_SUPER_USER_USERNAME, APP_SUPER_USER_PASSWORD)))
                     .body(requestModel);
 
             //when
@@ -272,7 +272,7 @@ class ElasticQueryServiceApplicationTests {
             given(elasticQueryClient.getIndexModelById(anyString()))
                     .willThrow(new RuntimeException("Something bad"));
             var requestEntity = RequestEntity.get("/documents/{id}", id)
-                    .headers(h -> h.setBearerAuth(getJwtAccessToken(APP_USER_USERNAME, APP_USER_PASSWORD)))
+                    .headers(h -> h.setBearerAuth(getJwtAccessToken(APP_SUPER_USER_USERNAME, APP_SUPER_USER_PASSWORD)))
                     .build();
 
             //when
@@ -322,7 +322,9 @@ class ElasticQueryServiceApplicationTests {
             //given
             String text = "some text to search";
             given(elasticQueryClient.getIndexModelByText(anyString()))
-                    .willReturn(List.of(TwitterIndexModel.builder().text(text).build()));
+                    .willReturn(List.of(TwitterIndexModel.builder()
+                            .id("6210305696719765116")
+                            .text(text).build()));
 
             var requestModel = ElasticQueryServiceRequestModel.builder()
                     .text(text)
@@ -345,10 +347,9 @@ class ElasticQueryServiceApplicationTests {
         }
 
         @ParameterizedTest
-        @DisplayName("When user with ROLE ADMIN or SUPERUSER requests documents by text then access should be denied")
+        @DisplayName("When user with ROLE ADMIN requests documents by text then access should be denied")
         @CsvSource({
                 APP_ADMIN_USERNAME + "," + APP_ADMIN_PASSWORD,
-                APP_SUPER_USER_USERNAME + "," + APP_SUPER_USER_PASSWORD
         })
         void whenGettingDocumentsByText_byNoUser_thenShouldBeAccessDenied(String username, String password) {
             String text = "some text to search";
@@ -372,6 +373,38 @@ class ElasticQueryServiceApplicationTests {
                     .isNotNull()
                     .isEqualTo("You are not authorized to access this resource");
             then(elasticQueryClient).shouldHaveNoInteractions();
+        }
+
+        @Test
+        @DisplayName("When user with ROLE SUPER USER requests documents by text then response should be success")
+        void whenGettingDocumentsByText_bySuperUser_thenShouldCallElasticQueryClient() {
+
+            //given
+            String text = "some text to search";
+            given(elasticQueryClient.getIndexModelByText(anyString()))
+                    .willReturn(List.of(TwitterIndexModel.builder()
+                            .text(text)
+                            .id("ANY ID")
+                            .build()));
+
+            var requestModel = ElasticQueryServiceRequestModel.builder()
+                    .text(text)
+                    .build();
+            var requestEntity = RequestEntity.post("/documents/get-document-by-text")
+                    .headers(h -> h.setBearerAuth(getJwtAccessToken(APP_SUPER_USER_USERNAME, APP_SUPER_USER_PASSWORD)))
+                    .body(requestModel);
+
+            //when
+            var responseEntity = testRestTemplate
+                    .exchange(requestEntity, RESPONSE_MODEL_LIST_TYPE);
+
+            //then
+            assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+            assertThat(responseEntity.getBody())
+                    .isNotNull()
+                    .hasSize(1)
+                    .allSatisfy(model -> assertThat(model.getText()).isEqualTo(text));
+            then(elasticQueryClient).should().getIndexModelByText(eq(text));
         }
 
     }

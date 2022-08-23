@@ -11,6 +11,8 @@ import net.shyshkin.study.microservices.elasticqueryservice.business.ElasticQuer
 import net.shyshkin.study.microservices.elasticqueryservice.model.ElasticQueryServiceResponseModelV2;
 import net.shyshkin.study.microservices.elasticqueryservicecommon.model.ElasticQueryServiceRequestModel;
 import net.shyshkin.study.microservices.elasticqueryservicecommon.model.ElasticQueryServiceResponseModel;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -28,6 +30,7 @@ public class ElasticDocumentController {
 
     private final ElasticQueryService elasticQueryService;
 
+    @PostAuthorize("hasPermission(returnObject,'READ')")
     @Operation(summary = "Get all elastic documents")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Successful response", content = {
@@ -39,13 +42,14 @@ public class ElasticDocumentController {
             @ApiResponse(responseCode = "500", description = "Internal server error.")
     })
     @GetMapping
-    public List<ElasticQueryServiceResponseModel> getAllDocuments() {
+    public ResponseEntity<List<ElasticQueryServiceResponseModel>> getAllDocuments() {
 
         List<ElasticQueryServiceResponseModel> docs = elasticQueryService.getAllDocuments();
         log.debug("Elasticsearch returned {} documents", docs.size());
-        return docs;
+        return ResponseEntity.ok(docs);
     }
 
+    @PreAuthorize("hasPermission(#id,'ElasticQueryServiceResponseModel','READ')")
     @Operation(summary = "Get elastic document by id")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Successful response", content = {
@@ -91,7 +95,8 @@ public class ElasticDocumentController {
         return v2;
     }
 
-    @PreAuthorize("hasRole('APP_USER_ROLE') || hasAuthority('SCOPE_APP_USER_ROLE')")
+    @PreAuthorize("hasRole('APP_USER_ROLE') || hasRole('APP_SUPER_USER_ROLE') || hasAuthority('SCOPE_APP_USER_ROLE')")
+    @PostAuthorize("hasPermission(returnObject,'READ')")
     @Operation(summary = "Get elastic document by text")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Successful response", content = {
@@ -103,12 +108,12 @@ public class ElasticDocumentController {
             @ApiResponse(responseCode = "500", description = "Internal server error.")
     })
     @PostMapping("/get-document-by-text")
-    public List<ElasticQueryServiceResponseModel> getDocumentsByText(@Valid @RequestBody ElasticQueryServiceRequestModel requestModel) {
+    public ResponseEntity<List<ElasticQueryServiceResponseModel>> getDocumentsByText(@Valid @RequestBody ElasticQueryServiceRequestModel requestModel) {
         List<ElasticQueryServiceResponseModel> docs = elasticQueryService.getDocumentsByText(requestModel);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         log.debug("Auth: {}", authentication);
         log.debug("Elasticsearch returned {} documents for text `{}`", docs.size(), requestModel.getText());
-        return docs;
+        return ResponseEntity.ok(docs);
     }
 
 }
