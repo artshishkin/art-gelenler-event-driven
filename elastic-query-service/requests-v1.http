@@ -11,7 +11,7 @@ Accept: application/vnd.api.v1+json
 Authorization: Bearer {{access_token}}
 
 ### Get document by id
-GET http://localhost:8093/elastic-query-service/documents/4602089694534990078
+GET http://localhost:8093/elastic-query-service/documents/6210305696719765116
 Accept: application/vnd.api.v1+json
 Authorization: Bearer {{access_token}}
 
