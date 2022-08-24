@@ -1,5 +1,8 @@
 server.port: 8094
 
+app.redirect.host.uri: http://localhost:${server.port}
+app.oauth.baseUri: http://localhost:8181
+
 spring:
   application:
     name: elastic-query-web-client
@@ -12,6 +15,20 @@ spring:
       password: '{cipher}d0bb54467b358c6a4f2aecbdca486be7d41c0f81df2b5dd9c722b41888e7fe8f85240138e768ddeeef3ade2144534a9a'
   config:
     import: 'configserver:'
+
+  security:
+    oauth2:
+      client:
+        registration:
+          keycloak:
+            client-id: elastic-query-web-client
+            client-secret: '{cipher}abf8f35bff2605204a1447a025263fa6981088d142a1cb87c9af3d282b6ddc978607d7261aade78834fc90fea21d9f31f931446cbbf60db612a0685ea0219b59'
+            authorization-grant-type: authorization_code
+            scope: openid,profile
+            redirect-uri: ${app.redirect.host.uri}/elastic-query-web-client/login/oauth2/code/{registrationId}
+        provider:
+          keycloak:
+            issuer-uri: ${app.oauth.baseUri}/realms/gelenler-tutorial
 
 #encrypt:
 #  key: ${ENCRYPT_KEY}
