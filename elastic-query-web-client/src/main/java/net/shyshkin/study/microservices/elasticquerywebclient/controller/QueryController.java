@@ -5,6 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import net.shyshkin.study.microservices.elasticquerywebclient.service.ElasticWebClient;
 import net.shyshkin.study.microservices.elasticquerywebclientcommon.model.ElasticQueryWebClientRequestModel;
 import net.shyshkin.study.microservices.elasticquerywebclientcommon.model.ElasticQueryWebClientResponseModel;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,6 +44,9 @@ public class QueryController {
     public String queryByText(@Valid ElasticQueryWebClientRequestModel requestModel, Model model) {
         String searchText = requestModel.getText();
         log.debug("Searching for {}", searchText);
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        log.debug("Authentication: {}", authentication);
 
         List<ElasticQueryWebClientResponseModel> responseModels = elasticWebClient.getDataByText(requestModel);
         model.addAttribute("elasticQueryWebClientResponseModels", responseModels);
