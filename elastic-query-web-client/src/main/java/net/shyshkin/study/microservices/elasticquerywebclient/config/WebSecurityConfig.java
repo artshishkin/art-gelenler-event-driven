@@ -1,13 +1,15 @@
 package net.shyshkin.study.microservices.elasticquerywebclient.config;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper;
+import org.springframework.security.oauth2.client.oidc.web.logout.OidcClientInitiatedLogoutSuccessHandler;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.oauth2.core.oidc.user.OidcUserAuthority;
 import org.springframework.security.web.SecurityFilterChain;
 
@@ -16,8 +18,18 @@ import java.util.Set;
 
 @Slf4j
 @Configuration
-@RequiredArgsConstructor
 public class WebSecurityConfig {
+
+    private final ClientRegistrationRepository clientRegistrationRepository;
+    private final String logoutSuccessUri;
+
+    public WebSecurityConfig(
+            ClientRegistrationRepository clientRegistrationRepository,
+            @Value("${app.security.logout-success-uri}") String logoutSuccessUri
+    ) {
+        this.clientRegistrationRepository = clientRegistrationRepository;
+        this.logoutSuccessUri = logoutSuccessUri;
+    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -30,8 +42,17 @@ public class WebSecurityConfig {
                 );
         http.oauth2Client()
                 .and()
-                .oauth2Login();
+                .oauth2Login()
+                .and()
+                .logout().logoutSuccessHandler(oidcLogoutSuccessHandler())
+        ;
         return http.build();
+    }
+
+    OidcClientInitiatedLogoutSuccessHandler oidcLogoutSuccessHandler() {
+        var oidcLogoutSuccessHandler = new OidcClientInitiatedLogoutSuccessHandler(clientRegistrationRepository);
+        oidcLogoutSuccessHandler.setPostLogoutRedirectUri(logoutSuccessUri);
+        return oidcLogoutSuccessHandler;
     }
 
     @Bean

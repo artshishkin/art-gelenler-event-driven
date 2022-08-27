@@ -2,7 +2,9 @@ server.port: 8094
 
 app.redirect.host.uri: http://localhost:${server.port}
 app.oauth.baseUri: http://localhost:8181
-app.security.default-client-registration-id: keycloak
+app.security:
+  default-client-registration-id: keycloak
+  logout-success-uri: http://localhost:${server.port}/elastic-query-web-client
 
 spring:
   application:
