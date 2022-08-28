@@ -33,6 +33,7 @@
         <awaitility.version>4.2.0</awaitility.version>
         <testcontainers-keycloak.version>2.3.0</testcontainers-keycloak.version>
         <docker-maven-plugin.version>0.40.2</docker-maven-plugin.version>
+        <jacoco-maven-plugin.version>0.8.8</jacoco-maven-plugin.version>
     </properties>
 
     <modules>
@@ -267,7 +268,7 @@
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.8.5</version>
+                <version>${jacoco-maven-plugin.version}</version>
                 <executions>
                     <!--
                         Prepares the property pointing to the JaCoCo runtime agent which
