@@ -5,7 +5,7 @@ name: Tested on JVM 17 (MacOS)
 
 on:
   push:
-    branches: [ main, mac-fabric8-conflict, java-versions ]
+    branches: [ main, mac-fabric8-conflict, docker-caching ]
   pull_request:
     branches: [ main ]
 
@@ -30,6 +30,10 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
           cache: maven
+      - name: Cache Docker images.
+        uses: ScribeMD/docker-cache@0.2.2
+        with:
+          key: docker-${{ runner.os }}-${{ hashFiles( docker-compose/.env ) }}
 #      - name: Cache local Maven repository
 #        uses: actions/cache@v3
 #        with:
