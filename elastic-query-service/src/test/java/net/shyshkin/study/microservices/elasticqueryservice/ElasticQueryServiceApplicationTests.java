@@ -92,7 +92,8 @@ class ElasticQueryServiceApplicationTests {
             .withAdminUsername("admin")
             .withAdminPassword("Pa55w0rd")
             .withRealmImportFile(".") //fake insert to enable flag --import realm
-            .withCopyFileToContainer(MountableFile.forHostPath(REALM_FILE_PATH), DEFAULT_REALM_IMPORT_FILES_LOCATION + FilenameUtils.getName(REALM_FILE_PATH));
+            .withCopyFileToContainer(MountableFile.forHostPath(REALM_FILE_PATH), DEFAULT_REALM_IMPORT_FILES_LOCATION + FilenameUtils.getName(REALM_FILE_PATH))
+            .withStartupTimeout(Duration.ofMinutes(4));
 
     @BeforeEach
     void setUp() {
