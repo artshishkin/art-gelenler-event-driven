@@ -19,7 +19,7 @@ jobs:
       - name: Load .env file
         uses: xom9ikk/dotenv@v1.0.2
         with:
-          path: docker-compose/.env
+          path: docker-compose/
       - uses: docker-practice/actions-setup-docker@master
       - run: set -x
       - name: Print Docker version
