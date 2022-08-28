@@ -24,10 +24,34 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
           cache: maven
-      - name: Cache Docker images.
-        uses: ScribeMD/docker-cache@0.2.2
+#      - name: Cache Docker images.
+#        uses: ScribeMD/docker-cache@0.2.2
+#        with:
+#          key: docker-${{ runner.os }}-${{ hashFiles( 'docker-compose/.env' ) }}
+
+      - run: mkdir -p ~/image-cache
+
+      - id: image-cache
+        uses: actions/cache@v1
         with:
-          key: docker-${{ runner.os }}-${{ hashFiles( 'docker-compose/.env' ) }}
+          path: ~/image-cache
+          # Adjust key to meet your cache time requirements e.g.
+          # ${{ hashFiles(*) }} can be useful here to invalidate
+          # cache on file changes
+          key: docker-cache-${{ runner.os }}-${{ hashFiles( 'docker-compose/.env' ) }}
+
+      - if: steps.image-cache.outputs.cache-hit != 'true'
+        run: |
+          docker pull docker.elastic.co/elasticsearch/elasticsearch:7.17.3
+          docker save -o ~/image-cache/elasticsearch.tar docker.elastic.co/elasticsearch/elasticsearch:7.17.3
+          docker pull quay.io/keycloak/keycloak:19.0.1
+          docker save -o ~/image-cache/keycloak.tar quay.io/keycloak/keycloak:19.0.1
+
+      - if: steps.image-cache.outputs.cache-hit == 'true'
+        run: |
+          docker load -i ~/image-cache/elasticsearch.tar
+          docker load -i ~/image-cache/keycloak.tar
+
 #      - name: Cache local Maven repository
 #        uses: actions/cache@v3
 #        with:
