@@ -83,7 +83,7 @@ class ElasticQueryServiceApplicationTests {
     ElasticQueryClient<TwitterIndexModel> elasticQueryClient;
 
     @Container
-    static ElasticsearchContainer elasticsearchContainer = new ElasticsearchContainer();
+    static ElasticsearchContainer elasticsearchContainer = new ElasticsearchContainer("docker.elastic.co/elasticsearch/elasticsearch:" + getVersion("ELASTIC_VERSION"));
 
     @Container
     static KeycloakContainer keycloakContainer = new KeycloakContainer("quay.io/keycloak/keycloak:" + getVersion("KEYCLOAK_VERSION"))
