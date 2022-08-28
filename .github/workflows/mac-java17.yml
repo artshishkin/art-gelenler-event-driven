@@ -20,6 +20,10 @@ jobs:
       - run: set -x
       - name: Print Docker version
         run: docker --version
+      - name: Pull docker images
+        run: |
+          docker pull docker.elastic.co/elasticsearch/elasticsearch:7.17.3
+          docker pull quay.io/keycloak/keycloak:19.0.1
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
