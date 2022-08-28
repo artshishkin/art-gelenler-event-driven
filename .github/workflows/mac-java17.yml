@@ -33,7 +33,7 @@ jobs:
       - name: Cache Docker images.
         uses: ScribeMD/docker-cache@0.2.2
         with:
-          key: docker-${{ runner.os }}-${{ hashFiles( docker-compose/.env ) }}
+          key: docker-${{ runner.os }}-${{ hashFiles( 'docker-compose/.env' ) }}
 #      - name: Cache local Maven repository
 #        uses: actions/cache@v3
 #        with:
