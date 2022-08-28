@@ -30,15 +30,11 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
           cache: maven
-#      - name: Cache Docker images.
-#        uses: ScribeMD/docker-cache@0.2.2
-#        with:
-#          key: docker-${{ runner.os }}-${{ hashFiles( 'docker-compose/.env' ) }}
 
       - run: mkdir -p ~/image-cache
 
       - id: image-cache
-        uses: actions/cache@v1
+        uses: actions/cache@v3
         with:
           path: ~/image-cache
           # Adjust key to meet your cache time requirements e.g.
@@ -47,6 +43,7 @@ jobs:
           key: docker-cache-${{ runner.os }}-${{ hashFiles( 'docker-compose/.env' ) }}
 
       - if: steps.image-cache.outputs.cache-hit != 'true'
+        name: Pull docker images
         run: |
           docker pull docker.elastic.co/elasticsearch/elasticsearch:7.17.3
           docker save -o ~/image-cache/elasticsearch.tar docker.elastic.co/elasticsearch/elasticsearch:7.17.3
@@ -54,6 +51,7 @@ jobs:
           docker save -o ~/image-cache/keycloak.tar quay.io/keycloak/keycloak:19.0.1
 
       - if: steps.image-cache.outputs.cache-hit == 'true'
+        name: Restore docker images from cache
         run: |
           docker load -i ~/image-cache/elasticsearch.tar
           docker load -i ~/image-cache/keycloak.tar
