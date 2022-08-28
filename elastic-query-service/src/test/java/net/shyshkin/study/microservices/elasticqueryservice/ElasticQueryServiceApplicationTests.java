@@ -37,6 +37,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
+import java.time.Duration;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -83,7 +84,8 @@ class ElasticQueryServiceApplicationTests {
     ElasticQueryClient<TwitterIndexModel> elasticQueryClient;
 
     @Container
-    static ElasticsearchContainer elasticsearchContainer = new ElasticsearchContainer();
+    static ElasticsearchContainer elasticsearchContainer = new ElasticsearchContainer("docker.elastic.co/elasticsearch/elasticsearch:" + getVersion("ELASTIC_VERSION"))
+            .withStartupTimeout(Duration.ofSeconds(120));
 
     @Container
     static KeycloakContainer keycloakContainer = new KeycloakContainer("quay.io/keycloak/keycloak:" + getVersion("KEYCLOAK_VERSION"))
