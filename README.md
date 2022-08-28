@@ -1,8 +1,8 @@
 [![CircleCI](https://circleci.com/gh/artshishkin/art-gelenler-event-driven.svg?style=svg)](https://circleci.com/gh/artshishkin/art-gelenler-event-driven)
 [![codecov](https://codecov.io/gh/artshishkin/art-gelenler-event-driven/branch/main/graph/badge.svg?token=U5YRYVEM7N)](https://codecov.io/gh/artshishkin/art-gelenler-event-driven)
-[![Tested on Ubuntu Java 11](https://github.com/artshishkin/art-gelenler-event-driven/actions/workflows/ubuntu-java11.yml/badge.svg)](https://github.com/artshishkin/art-gelenler-event-driven/actions/workflows/ubuntu-java11.yml)
-[![Tested on Ubuntu Java 17](https://github.com/artshishkin/art-gelenler-event-driven/actions/workflows/ubuntu-java17.yml/badge.svg)](https://github.com/artshishkin/art-gelenler-event-driven/actions/workflows/ubuntu-java17.yml)
-[![Tested on Mac Java 17](https://github.com/artshishkin/art-gelenler-event-driven/actions/workflows/mac-java17.yml/badge.svg)](https://github.com/artshishkin/art-gelenler-event-driven/actions/workflows/mac-java17.yml)
+[![Tested on JVM 11 (Ubuntu)](https://github.com/artshishkin/art-gelenler-event-driven/actions/workflows/ubuntu-java11.yml/badge.svg)](https://github.com/artshishkin/art-gelenler-event-driven/actions/workflows/ubuntu-java11.yml)
+[![Tested on JVM 17 (Ubuntu)](https://github.com/artshishkin/art-gelenler-event-driven/actions/workflows/ubuntu-java17.yml/badge.svg)](https://github.com/artshishkin/art-gelenler-event-driven/actions/workflows/ubuntu-java17.yml)
+[![Tested on JVM 17 (MacOS)](https://github.com/artshishkin/art-gelenler-event-driven/actions/workflows/mac-java17.yml/badge.svg)](https://github.com/artshishkin/art-gelenler-event-driven/actions/workflows/mac-java17.yml)
 [![GitHub issues](https://img.shields.io/github/issues/artshishkin/art-gelenler-event-driven)](https://github.com/artshishkin/art-gelenler-event-driven/issues)
 ![Spring Boot version][springver]
 ![Twitter4J][twitter4j]
