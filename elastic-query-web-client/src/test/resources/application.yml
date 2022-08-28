@@ -2,9 +2,28 @@ server:
   servlet:
     context-path: /elastic-query-web-client
 
+app.redirect.host.uri: http://localhost:${server.port}
+app.oauth.baseUri: http://localhost:8181
+app.security:
+  default-client-registration-id: keycloak
+  logout-success-uri: http://localhost:${server.port}/elastic-query-web-client
+
 spring:
   thymeleaf:
     cache: false
+  security:
+    oauth2:
+      client:
+        registration:
+          keycloak:
+            client-id: elastic-query-web-client
+            client-secret: 'hKeXincDbrZvb9rnoJgAAqN8YsWNQPR2'
+            authorization-grant-type: authorization_code
+            scope: openid,profile
+            redirect-uri: '{baseUrl}/login/oauth2/code/{registrationId}'
+        provider:
+          keycloak:
+            issuer-uri: ${app.oauth.baseUri}/realms/gelenler-tutorial
 
 user-config:
   username: art
