@@ -63,5 +63,8 @@ spring:
       on-profile: local
 elastic-query-web-client:
   webclient:
-    base-url: 'http://localhost:8093/elastic-query-service/documents'
+    instances:
+      - id: elastic-query-service-1
+        host: localhost
+        port: 8093
 
