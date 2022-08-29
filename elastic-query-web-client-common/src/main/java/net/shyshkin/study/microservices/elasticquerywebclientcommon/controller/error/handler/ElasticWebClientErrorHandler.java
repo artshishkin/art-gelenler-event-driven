@@ -49,7 +49,7 @@ public class ElasticWebClientErrorHandler {
     @ExceptionHandler
     public String handle(RuntimeException e, Model model) {
         log.error("Service runtime exception!", e);
-        model.addAttribute("error", HttpStatus.BAD_REQUEST.getReasonPhrase());
+        model.addAttribute("error", "Could not get response! " + e.getMessage());
         model.addAttribute("error_description", "Service runtime exception: " + e.getMessage());
         model.addAttribute("elasticQueryWebClientRequestModel",
                 ElasticQueryWebClientRequestModel.builder().build());
