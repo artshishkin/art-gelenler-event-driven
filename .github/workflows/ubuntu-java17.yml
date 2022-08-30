@@ -5,7 +5,7 @@ name: Tested on JVM 17 (Ubuntu)
 
 on:
   push:
-    branches: [ main, mac-fabric8-conflict, docker-caching, github-env-file ]
+    branches: [ main, testing-web-client ]
   pull_request:
     branches: [ main ]
 
