@@ -1,12 +1,7 @@
 package net.shyshkin.study.microservices.elasticquerywebclient;
 
-import com.gargoylesoftware.htmlunit.NicelyResynchronizingAjaxController;
-import com.gargoylesoftware.htmlunit.Page;
-import com.gargoylesoftware.htmlunit.ScriptException;
-import com.gargoylesoftware.htmlunit.WebClient;
-import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
-import com.gargoylesoftware.htmlunit.html.HtmlInput;
-import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import com.gargoylesoftware.htmlunit.*;
+import com.gargoylesoftware.htmlunit.html.*;
 import com.gargoylesoftware.htmlunit.javascript.DefaultJavaScriptErrorListener;
 import com.gargoylesoftware.htmlunit.util.Cookie;
 import dasniko.testcontainers.keycloak.KeycloakContainer;
@@ -129,6 +124,7 @@ class ElasticQueryWebClientApplicationTests {
                 scriptException.printStackTrace();
             }
         });
+        this.htmlUnitWebClient.setCssErrorHandler(new SilentCssErrorHandler()); //skip CSS warnings and errors
         this.htmlUnitWebClient.getCookieManager().clearCookies();    // log out
     }
 
@@ -284,6 +280,46 @@ class ElasticQueryWebClientApplicationTests {
         then(elasticWebClient).should().getDataByText(eq(expectedRequestModel));
     }
 
+    @Test
+    @Order(60)
+    @DisplayName("When login with correct credentials, accessing Home page, searching by text then should query backend service to search by text")
+    void fullWorkflowTest() throws IOException {
+
+        //given
+        String queryByTextPageUrl = baseUri + "/home";
+        String searchText = "test";
+        var expectedRequestModel = ElasticQueryWebClientRequestModel.builder()
+                .text(searchText)
+                .build();
+        ElasticQueryWebClientResponseModel expectedResponseModel = ElasticQueryWebClientResponseModel.builder()
+                .text("Some " + searchText + " text")
+                .id("123")
+                .userId(321L)
+                .createdAt(ZonedDateTime.now().minusDays(1))
+                .build();
+        given(elasticWebClient.getDataByText(any(ElasticQueryWebClientRequestModel.class)))
+                .willReturn(List.of(expectedResponseModel));
+
+        //when
+        HtmlPage page = htmlUnitWebClient.getPage(queryByTextPageUrl);
+        assertLoginPage(page);
+        page = signIn(page, APP_SUPER_USER_USERNAME, APP_SUPER_USER_PASSWORD);
+        assertHomePage(page);
+
+        HtmlInput searchTextInput = page.querySelector("input[id=\"text\"]");
+        searchTextInput.type(searchText);
+        HtmlInput searchButton = page.querySelector("input[value=\"Search\"]");
+        page = searchButton.click();
+
+        //then
+        then(elasticWebClient).should().getDataByText(eq(expectedRequestModel));
+        log.debug("page content:\n{}", page.getWebResponse().getContentAsString());
+
+        HtmlTable resultTable = page.querySelector("table");
+        HtmlTableCell searchResultText = resultTable.getCellAt(1, 2);
+
+        assertThat(searchResultText.getTextContent()).isEqualTo(expectedResponseModel.getText());
+    }
 
     private static <P extends Page> P signIn(HtmlPage page, String username, String password) throws IOException {
         HtmlInput usernameInput = page.querySelector("input[name=\"username\"]");
