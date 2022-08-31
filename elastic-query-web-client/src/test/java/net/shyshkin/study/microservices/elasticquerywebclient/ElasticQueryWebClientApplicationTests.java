@@ -21,6 +21,9 @@ import org.springframework.boot.test.util.TestPropertyValues;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.core.env.Environment;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
+import org.springframework.security.oauth2.client.web.OAuth2AuthorizedClientRepository;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
@@ -47,10 +50,10 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 
 @Slf4j
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @TestPropertySource(properties = {
-        "spring.cloud.config.enabled=false"
+        "spring.cloud.config.enabled=false",
+        "server.port=8094"
 })
 @ActiveProfiles("local")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -74,6 +77,15 @@ class ElasticQueryWebClientApplicationTests {
 
     @LocalServerPort
     int serverPort;
+
+    @Autowired
+    ClientRegistrationRepository clientRegistrationRepository;
+
+    @Autowired
+    OAuth2AuthorizedClientRepository authorizedClientRepository;
+
+    @Autowired
+    Environment environment;
 
     @Autowired
     ElasticQueryWebClientConfigData elasticQueryWebClientConfigData;
@@ -216,7 +228,7 @@ class ElasticQueryWebClientApplicationTests {
         page = signIn(page, APP_SUPER_USER_USERNAME, APP_SUPER_USER_PASSWORD);
 
         //then
-        log.debug("page content:\n{}", page.getWebResponse().getContentAsString());
+        logPageContent(page);
         assertHomePage(page);
 
         HtmlInput csrfHiddenInput = page.querySelector("input[name=\"_csrf\"]");
@@ -313,12 +325,38 @@ class ElasticQueryWebClientApplicationTests {
 
         //then
         then(elasticWebClient).should().getDataByText(eq(expectedRequestModel));
-        log.debug("page content:\n{}", page.getWebResponse().getContentAsString());
+        logPageContent(page);
 
         HtmlTable resultTable = page.querySelector("table");
         HtmlTableCell searchResultText = resultTable.getCellAt(1, 2);
 
         assertThat(searchResultText.getTextContent()).isEqualTo(expectedResponseModel.getText());
+    }
+
+    @Test
+    @Order(70)
+    @DisplayName("When login and logout then should redirect to login page when trying to access home page")
+    void logoutTest() throws IOException {
+
+        //given
+        String queryByTextPageUrl = baseUri + "/home";
+        HtmlPage page = htmlUnitWebClient.getPage(queryByTextPageUrl);
+        assertLoginPage(page);
+        page = signIn(page, APP_SUPER_USER_USERNAME, APP_SUPER_USER_PASSWORD);
+        assertHomePage(page);
+
+        //when
+        logPageContent(page);
+        page = logout(page);
+
+        //then
+        assertIndexPage(page);
+        page = htmlUnitWebClient.getPage(queryByTextPageUrl);
+        assertLoginPage(page);
+    }
+
+    private void logPageContent(HtmlPage page) {
+        log.debug("page content:\n{}", page.getWebResponse().getContentAsString());
     }
 
     private static <P extends Page> P signIn(HtmlPage page, String username, String password) throws IOException {
@@ -329,6 +367,11 @@ class ElasticQueryWebClientApplicationTests {
         usernameInput.type(username);
         passwordInput.type(password);
         return signInButton.click();
+    }
+
+    private <P extends Page> P logout(HtmlPage page) throws IOException {
+        HtmlButton logoutButton = page.querySelector("button[id=\"logout-button\"]");
+        return logoutButton.click();
     }
 
     private static void assertLoginPage(HtmlPage page) {
@@ -343,6 +386,21 @@ class ElasticQueryWebClientApplicationTests {
         assertThat(usernameInput).isNotNull();
         assertThat(passwordInput).isNotNull();
         assertThat(signInButton.getValueAttribute()).isEqualToIgnoringCase("Sign In");
+    }
+
+    private static void assertIndexPage(HtmlPage page) {
+
+        assertThat(page.getUrl().toString()).endsWith("/elastic-query-web-client/");
+        assertThat(page.getWebResponse().getContentAsString())
+                .contains("<p>Please <a href=\"/elastic-query-web-client/home\">login</a> to start searching</p>");
+
+        String title = page.getTitleText();
+        assertThat(title).isEqualTo("Twitter Search Engine");
+
+        var loginButton = page.getElementById("login-button");
+        assertThat(loginButton)
+                .isNotNull()
+                .satisfies(button -> assertThat(button.getTextContent()).isEqualTo("Login"));
     }
 
     private static void assertHomePage(HtmlPage page) {
