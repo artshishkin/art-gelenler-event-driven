@@ -918,7 +918,7 @@
     "alwaysDisplayInConsole" : false,
     "clientAuthenticatorType" : "client-secret",
     "secret" : "M7zv7wiwWhTWyeM8VnUAMDtbCpfXYPy3",
-    "redirectUris" : [ ],
+    "redirectUris" : [ "http://host.testcontainers.internal:*", "http://localhost:*", "http://host.docker.internal:*" ],
     "webOrigins" : [ ],
     "notBefore" : 0,
     "bearerOnly" : false,
