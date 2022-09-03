@@ -26,5 +26,6 @@ RUN chmod +x check-kafka-topics-created-from-docker.sh
 COPY --from=builder application/dependencies/ ./
 COPY --from=builder application/spring-boot-loader/ ./
 COPY --from=builder application/snapshot-dependencies/ ./
+RUN true #Fake layer to fix GitHub issue `layer does not exist`
 COPY --from=builder application/application/ ./
 ENTRYPOINT ["./check-kafka-topics-created-from-docker.sh"]
