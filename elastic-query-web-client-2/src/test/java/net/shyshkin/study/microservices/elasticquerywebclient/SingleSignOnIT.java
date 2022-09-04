@@ -140,7 +140,7 @@ class SingleSignOnIT {
                             "}"
                     )
                     .withExposedPorts(8080)
-                    .waitingFor(Wait.forHealthcheck())
+                    .waitingFor(Wait.forHealthcheck().withStartupTimeout(Duration.ofMinutes(3)))
                     .start();
         }
 
