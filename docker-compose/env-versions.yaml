@@ -1,0 +1,8 @@
+ELASTIC_VERSION: 7.17.3
+KEYCLOAK_VERSION: 19.0.1
+KAFKA_VERSION: 5.0.4
+SERVICE_VERSION: 0.0.1-SNAPSHOT
+POSTGRES_VERSION: 14.4
+GLOBAL_NETWORK: application
+GROUP_ID: artarkatesoft
+# When change version you must duplicate them into env-versions.yaml for correct badges
