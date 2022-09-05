@@ -91,7 +91,7 @@ class ElasticQueryServiceApplicationTests {
         keycloakContainer = new KeycloakContainer("quay.io/keycloak/keycloak:" + getVersion("KEYCLOAK_VERSION"))
                 .withAdminUsername("admin")
                 .withAdminPassword("Pa55w0rd")
-                .withRealmImportFile(".") //fake insert to enable flag --import realm
+                .withRealmImportFile("fake-realm.json") //fake insert to enable flag --import realm
                 .withCopyFileToContainer(
                         MountableFile.forHostPath(Path.of(REALM_FILE_PATH).toAbsolutePath().normalize()),
                         DEFAULT_REALM_IMPORT_FILES_LOCATION + FilenameUtils.getName(REALM_FILE_PATH))
