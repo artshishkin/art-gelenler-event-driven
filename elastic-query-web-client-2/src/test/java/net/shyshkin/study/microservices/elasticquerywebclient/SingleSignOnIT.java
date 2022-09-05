@@ -25,7 +25,6 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.MountableFile;
 
 import java.io.IOException;
-import java.nio.file.Path;
 import java.time.Duration;
 import java.util.UUID;
 
@@ -71,7 +70,7 @@ class SingleSignOnIT {
                 .withAdminPassword("Pa55w0rd")
                 .withRealmImportFile("fake-realm.json") //fake insert to enable flag --import realm
                 .withCopyFileToContainer(
-                        MountableFile.forHostPath(Path.of(REALM_FILE_PATH).toAbsolutePath().normalize()),
+                        MountableFile.forHostPath(REALM_FILE_PATH),
                         DEFAULT_REALM_IMPORT_FILES_LOCATION + FilenameUtils.getName(REALM_FILE_PATH))
                 .withReuse(true)
                 .withStartupTimeout(Duration.ofMinutes(4));
