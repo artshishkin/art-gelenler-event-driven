@@ -6,10 +6,9 @@ import com.gargoylesoftware.htmlunit.html.HtmlButton;
 import com.gargoylesoftware.htmlunit.html.HtmlInput;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.gargoylesoftware.htmlunit.javascript.DefaultJavaScriptErrorListener;
-import dasniko.testcontainers.keycloak.KeycloakContainer;
 import lombok.extern.slf4j.Slf4j;
+import net.shyshkin.study.microservices.test.KeycloakAbstractTest;
 import net.shyshkin.study.microservices.util.VersionUtil;
-import org.apache.commons.io.FilenameUtils;
 import org.junit.jupiter.api.*;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.util.TestPropertyValues;
@@ -22,7 +21,6 @@ import org.springframework.test.context.TestPropertySource;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import org.testcontainers.utility.MountableFile;
 
 import java.io.IOException;
 import java.time.Duration;
@@ -40,7 +38,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @Testcontainers
 @ContextConfiguration(initializers = SingleSignOnIT.Initializer.class)
-class SingleSignOnIT {
+class SingleSignOnIT extends KeycloakAbstractTest {
 
     private static final String REALM_NAME = "gelenler-tutorial";
 
@@ -51,9 +49,6 @@ class SingleSignOnIT {
     private static final String APP_SUPER_USER_USERNAME = "app.superuser";
     private static final String APP_SUPER_USER_PASSWORD = "345";
 
-    private static final String REALM_FILE_PATH = "../docker-compose/export/gelenler-tutorial-realm.json";
-    private static final String DEFAULT_REALM_IMPORT_FILES_LOCATION = "/opt/keycloak/data/import/";
-
     private String client1BaseUri;
     private String client2BaseUri;
 
@@ -61,21 +56,6 @@ class SingleSignOnIT {
     int serverPort;
 
     WebClient htmlUnitWebClient;
-
-    static KeycloakContainer keycloakContainer;
-
-    static {
-        keycloakContainer = new KeycloakContainer("quay.io/keycloak/keycloak:" + VersionUtil.getVersion("KEYCLOAK_VERSION"))
-                .withAdminUsername("admin")
-                .withAdminPassword("Pa55w0rd")
-                .withRealmImportFile("fake-realm.json") //fake insert to enable flag --import realm
-                .withCopyFileToContainer(
-                        MountableFile.forHostPath(REALM_FILE_PATH),
-                        DEFAULT_REALM_IMPORT_FILES_LOCATION + FilenameUtils.getName(REALM_FILE_PATH))
-                .withReuse(true)
-                .withStartupTimeout(Duration.ofMinutes(4));
-        keycloakContainer.start();
-    }
 
     private GenericContainer<?> elasticQueryWebClient_1 = new GenericContainer<>("artarkatesoft/art-gelenler-elastic-query-web-client:" + VersionUtil.getVersion("SERVICE_VERSION"));
 

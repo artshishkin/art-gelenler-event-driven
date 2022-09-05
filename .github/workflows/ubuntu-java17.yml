@@ -5,7 +5,7 @@ name: Tested on JVM 17 (Ubuntu)
 
 on:
   push:
-    branches: [ main, reuse-container ]
+    branches: [ main, common-test-module ]
   pull_request:
     branches: [ main ]
 

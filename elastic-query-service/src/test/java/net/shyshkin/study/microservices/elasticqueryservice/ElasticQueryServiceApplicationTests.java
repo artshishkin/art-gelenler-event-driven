@@ -1,15 +1,14 @@
 package net.shyshkin.study.microservices.elasticqueryservice;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import dasniko.testcontainers.keycloak.KeycloakContainer;
 import lombok.extern.slf4j.Slf4j;
 import net.shyshkin.study.microservices.config.UserConfigData;
 import net.shyshkin.study.microservices.elastic.model.index.impl.TwitterIndexModel;
 import net.shyshkin.study.microservices.elastic.query.client.service.ElasticQueryClient;
 import net.shyshkin.study.microservices.elasticqueryservicecommon.model.ElasticQueryServiceRequestModel;
 import net.shyshkin.study.microservices.elasticqueryservicecommon.model.ElasticQueryServiceResponseModel;
+import net.shyshkin.study.microservices.test.KeycloakAbstractTest;
 import net.shyshkin.study.microservices.util.VersionUtil;
-import org.apache.commons.io.FilenameUtils;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -31,7 +30,6 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.testcontainers.elasticsearch.ElasticsearchContainer;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import org.testcontainers.utility.MountableFile;
 
 import java.io.FileNotFoundException;
 import java.time.Duration;
@@ -51,7 +49,7 @@ import static org.mockito.BDDMockito.*;
 })
 @Testcontainers
 @ContextConfiguration(initializers = ElasticQueryServiceApplicationTests.Initializer.class)
-class ElasticQueryServiceApplicationTests {
+class ElasticQueryServiceApplicationTests extends KeycloakAbstractTest {
 
     private static final String CLIENT_ID = "elastic-query-web-client";
     private static final String CLIENT_SECRET = "hKeXincDbrZvb9rnoJgAAqN8YsWNQPR2";
@@ -67,9 +65,6 @@ class ElasticQueryServiceApplicationTests {
     private static final ParameterizedTypeReference<List<ElasticQueryServiceResponseModel>> RESPONSE_MODEL_LIST_TYPE = new ParameterizedTypeReference<>() {
     };
 
-    private static final String REALM_FILE_PATH = "../docker-compose/export/gelenler-tutorial-realm.json";
-    private static final String DEFAULT_REALM_IMPORT_FILES_LOCATION = "/opt/keycloak/data/import/";
-
     @Autowired
     TestRestTemplate testRestTemplate;
 
@@ -81,22 +76,10 @@ class ElasticQueryServiceApplicationTests {
 
     static ElasticsearchContainer elasticsearchContainer;
 
-    static KeycloakContainer keycloakContainer;
-
     static {
-        keycloakContainer = new KeycloakContainer("quay.io/keycloak/keycloak:" + VersionUtil.getVersion("KEYCLOAK_VERSION"))
-                .withAdminUsername("admin")
-                .withAdminPassword("Pa55w0rd")
-                .withRealmImportFile("fake-realm.json") //fake insert to enable flag --import realm
-                .withCopyFileToContainer(
-                        MountableFile.forHostPath(REALM_FILE_PATH),
-                        DEFAULT_REALM_IMPORT_FILES_LOCATION + FilenameUtils.getName(REALM_FILE_PATH))
-                .withReuse(true)
-                .withStartupTimeout(Duration.ofMinutes(4));
         elasticsearchContainer = new ElasticsearchContainer("docker.elastic.co/elasticsearch/elasticsearch:" + VersionUtil.getVersion("ELASTIC_VERSION"))
                 .withReuse(true)
                 .withStartupTimeout(Duration.ofMinutes(3));
-        keycloakContainer.start();
         elasticsearchContainer.start();
     }
 

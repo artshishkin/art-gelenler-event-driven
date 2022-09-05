@@ -4,15 +4,13 @@ import com.gargoylesoftware.htmlunit.*;
 import com.gargoylesoftware.htmlunit.html.*;
 import com.gargoylesoftware.htmlunit.javascript.DefaultJavaScriptErrorListener;
 import com.gargoylesoftware.htmlunit.util.Cookie;
-import dasniko.testcontainers.keycloak.KeycloakContainer;
 import lombok.extern.slf4j.Slf4j;
 import net.shyshkin.study.microservices.config.ElasticQueryWebClientConfigData;
 import net.shyshkin.study.microservices.config.UserConfigData;
 import net.shyshkin.study.microservices.elasticquerywebclient.service.ElasticWebClient;
 import net.shyshkin.study.microservices.elasticquerywebclientcommon.model.ElasticQueryWebClientRequestModel;
 import net.shyshkin.study.microservices.elasticquerywebclientcommon.model.ElasticQueryWebClientResponseModel;
-import net.shyshkin.study.microservices.util.VersionUtil;
-import org.apache.commons.io.FilenameUtils;
+import net.shyshkin.study.microservices.test.KeycloakAbstractTest;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -32,10 +30,8 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import org.testcontainers.utility.MountableFile;
 
 import java.io.IOException;
-import java.time.Duration;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Set;
@@ -58,7 +54,7 @@ import static org.mockito.BDDMockito.then;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @Testcontainers
 @ContextConfiguration(initializers = ElasticQueryWebClientApplicationTests.Initializer.class)
-class ElasticQueryWebClientApplicationTests {
+class ElasticQueryWebClientApplicationTests extends KeycloakAbstractTest {
 
     private static final String REALM_NAME = "gelenler-tutorial";
 
@@ -68,9 +64,6 @@ class ElasticQueryWebClientApplicationTests {
     private static final String APP_ADMIN_PASSWORD = "234";
     private static final String APP_SUPER_USER_USERNAME = "app.superuser";
     private static final String APP_SUPER_USER_PASSWORD = "345";
-
-    private static final String REALM_FILE_PATH = "../docker-compose/export/gelenler-tutorial-realm.json";
-    private static final String DEFAULT_REALM_IMPORT_FILES_LOCATION = "/opt/keycloak/data/import/";
 
     private String baseUri;
 
@@ -102,21 +95,6 @@ class ElasticQueryWebClientApplicationTests {
     static LinkedMultiValueMap<String, String> cookiesWithSession;
 
     com.gargoylesoftware.htmlunit.WebClient htmlUnitWebClient;
-
-    static KeycloakContainer keycloakContainer;
-
-    static {
-        keycloakContainer = new KeycloakContainer("quay.io/keycloak/keycloak:" + VersionUtil.getVersion("KEYCLOAK_VERSION"))
-                .withAdminUsername("admin")
-                .withAdminPassword("Pa55w0rd")
-                .withRealmImportFile("fake-realm.json") //fake insert to enable flag --import realm
-                .withCopyFileToContainer(
-                        MountableFile.forHostPath(REALM_FILE_PATH),
-                        DEFAULT_REALM_IMPORT_FILES_LOCATION + FilenameUtils.getName(REALM_FILE_PATH))
-                .withReuse(true)
-                .withStartupTimeout(Duration.ofMinutes(4));
-        keycloakContainer.start();
-    }
 
     @BeforeEach
     void setUp() {
