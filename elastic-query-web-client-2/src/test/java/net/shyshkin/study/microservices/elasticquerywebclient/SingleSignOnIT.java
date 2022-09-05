@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.shyshkin.study.microservices.test.KeycloakAbstractTest;
 import net.shyshkin.study.microservices.util.VersionUtil;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.condition.DisabledIf;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.util.TestPropertyValues;
 import org.springframework.boot.test.web.server.LocalServerPort;
@@ -23,6 +24,8 @@ import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.time.Duration;
 import java.util.UUID;
 
@@ -38,6 +41,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @Testcontainers
 @ContextConfiguration(initializers = SingleSignOnIT.Initializer.class)
+@DisabledIf(
+        value = "hostTestcontainersInternalIsAbsent",
+        disabledReason = "Please provide domain `host.testcontainers.internal` redirecting to 127.0.0.1 into `/etc/hosts` (or C:\\Windows\\System32\\drivers\\etc\\hosts in Windows)"
+)
 class SingleSignOnIT extends KeycloakAbstractTest {
 
     private static final String REALM_NAME = "gelenler-tutorial";
@@ -277,6 +284,22 @@ class SingleSignOnIT extends KeycloakAbstractTest {
                     .of(issuerUriProperty)
                     .applyTo(applicationContext.getEnvironment());
         }
+    }
+
+    static boolean hostTestcontainersInternalIsAbsent() {
+
+        boolean isAbsent = true;
+        try {
+            InetAddress[] hosts = InetAddress.getAllByName("host.testcontainers.internal");
+            isAbsent = hosts.length == 0;
+        } catch (UnknownHostException ignored) {
+        }
+
+        if (isAbsent) {
+            System.err.println("\n    -------------Skipping Test SingleSignOnIT------------ ");
+            System.err.println("\n    Please provide domain `host.testcontainers.internal` redirecting to 127.0.0.1 into `/etc/hosts` (or C:\\\\Windows\\\\System32\\\\drivers\\\\etc\\\\hosts in Windows)\"\n");
+        }
+        return isAbsent;
     }
 
 }
