@@ -99,12 +99,16 @@ services:
         condition: service_healthy
       elastic-3:
         condition: service_healthy
+      postgres:
+        condition: service_started
     environment:
       - "JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n -Xms128m -Xmx256m"
       - "ENCRYPT_KEY=${ENCRYPT_KEY}"
       - "SPRING_CLOUD_CONFIG_URI=http://config-server:8080"
+      - "spring.datasource.url=jdbc:postgresql://postgres:5432/postgres?currentSchema=public&binaryTransfer=true&reWriteBatchedInserts=true"
       - "ELASTIC-CONFIG_CONNECTION-URL=http://elastic-1:9200"
-      - "spring.security.oauth2.resourceserver.jwt.issuer-uri=http://keycloak-authorization-server:8080/realms/gelenler-tutorial"
+#      - "spring.security.oauth2.resourceserver.jwt.issuer-uri=http://keycloak-authorization-server:8080/realms/gelenler-tutorial"
+      - "spring.security.oauth2.resourceserver.jwt.issuer-uri=http://host.docker.internal:8181/realms/gelenler-tutorial"
     networks:
       - ${GLOBAL_NETWORK:-services}
 
@@ -123,12 +127,17 @@ services:
         condition: service_healthy
       elastic-3:
         condition: service_healthy
+      postgres:
+        condition: service_started
     environment:
       - "JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n -Xms128m -Xmx256m"
       - "ENCRYPT_KEY=${ENCRYPT_KEY}"
       - "SPRING_CLOUD_CONFIG_URI=http://config-server:8080"
+      - "spring.datasource.url=jdbc:postgresql://postgres:5432/postgres?currentSchema=public&binaryTransfer=true&reWriteBatchedInserts=true"
+      - "spring.sql.init.mode=never"
       - "ELASTIC-CONFIG_CONNECTION-URL=http://elastic-1:9200"
-      - "spring.security.oauth2.resourceserver.jwt.issuer-uri=http://keycloak-authorization-server:8080/realms/gelenler-tutorial"
+#      - "spring.security.oauth2.resourceserver.jwt.issuer-uri=http://keycloak-authorization-server:8080/realms/gelenler-tutorial"
+      - "spring.security.oauth2.resourceserver.jwt.issuer-uri=http://host.docker.internal:8181/realms/gelenler-tutorial"
     networks:
       - ${GLOBAL_NETWORK:-services}
 
@@ -148,11 +157,43 @@ services:
     environment:
       - "JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n -Xms128m -Xmx256m"
       - "ENCRYPT_KEY=${ENCRYPT_KEY}"
+      - "SPRING_PROFILES_ACTIVE=configserver"
       - "SPRING_CLOUD_CONFIG_URI=http://config-server:8080"
       - "elastic-query-web-client.webclient.instances[0].host=elastic-query-service-1"
       - "elastic-query-web-client.webclient.instances[0].port=8080"
       - "elastic-query-web-client.webclient.instances[1].host=elastic-query-service-2"
       - "elastic-query-web-client.webclient.instances[1].port=8080"
+      - "app.oauth.baseUri=http://host.docker.internal:8181"
+      - "app.redirect.host.uri=http://localhost:8094"
+      - "app.security.logout-success-uri=http://localhost:8094/elastic-query-web-client"
+    networks:
+      - ${GLOBAL_NETWORK:-services}
+
+  elastic-query-web-client-2:
+    image: ${GROUP_ID}/art-gelenler-elastic-query-web-client-2:${SERVICE_VERSION:-latest}
+    ports:
+      - "8194:8080"
+    volumes:
+      - "./docker-logs/elastic-query-web-client:/workspace/elastic-query-web-client/logs"
+    depends_on:
+      config-server:
+        condition: service_healthy
+      elastic-query-service-1:
+        condition: service_healthy
+      elastic-query-service-2:
+        condition: service_healthy
+    environment:
+      - "JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n -Xms128m -Xmx256m"
+      - "ENCRYPT_KEY=${ENCRYPT_KEY}"
+      - "SPRING_PROFILES_ACTIVE=configserver"
+      - "SPRING_CLOUD_CONFIG_URI=http://config-server:8080"
+      - "elastic-query-web-client.webclient.instances[0].host=elastic-query-service-1"
+      - "elastic-query-web-client.webclient.instances[0].port=8080"
+      - "elastic-query-web-client.webclient.instances[1].host=elastic-query-service-2"
+      - "elastic-query-web-client.webclient.instances[1].port=8080"
+      - "app.oauth.baseUri=http://host.docker.internal:8181"
+      - "app.redirect.host.uri=http://localhost:8194"
+      - "app.security.logout-success-uri=http://localhost:8194/elastic-query-web-client"
     networks:
       - ${GLOBAL_NETWORK:-services}
 
