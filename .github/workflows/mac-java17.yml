@@ -5,7 +5,7 @@ name: Tested on JVM 17 (MacOS)
 
 on:
   push:
-    branches: [ main, sso-testing ]
+    branches: [ main, reuse-container ]
   pull_request:
     branches: [ main ]
 
@@ -24,6 +24,10 @@ jobs:
         run: |
           echo '127.0.0.1 host.testcontainers.internal' | sudo tee -a /etc/hosts
           cat /etc/hosts
+      - name: Enable reuse containers in testcontainers tests
+        run: |
+          echo 'testcontainers.reuse.enable=true' | sudo tee -a $HOME/.testcontainers.properties
+          cat $HOME/.testcontainers.properties
       - uses: docker-practice/actions-setup-docker@master
       - run: set -x
       - name: Print Docker version
