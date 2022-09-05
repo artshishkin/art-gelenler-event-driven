@@ -20,7 +20,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.testcontainers.elasticsearch.ElasticsearchContainer;
-import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
@@ -64,9 +63,14 @@ class ReactiveElasticQueryServiceApplicationTests {
     @SpyBean
     ReactiveElasticQueryClient<TwitterIndexModel> elasticQueryClient;
 
-    @Container
-    static ElasticsearchContainer elasticsearchContainer = new ElasticsearchContainer("docker.elastic.co/elasticsearch/elasticsearch:" + getVersion("ELASTIC_VERSION"))
-            .withStartupTimeout(Duration.ofMinutes(3));
+    static ElasticsearchContainer elasticsearchContainer;
+
+    static {
+        elasticsearchContainer = new ElasticsearchContainer("docker.elastic.co/elasticsearch/elasticsearch:" + getVersion("ELASTIC_VERSION"))
+                .withReuse(true)
+                .withStartupTimeout(Duration.ofMinutes(3));
+        elasticsearchContainer.start();
+    }
 
     @Autowired
     TwitterElasticReactiveQueryRepository repository;

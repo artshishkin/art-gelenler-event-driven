@@ -31,11 +31,11 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.BodyInserters;
-import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.MountableFile;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.time.Duration;
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -104,13 +104,20 @@ class ElasticQueryWebClientApplicationTests {
 
     com.gargoylesoftware.htmlunit.WebClient htmlUnitWebClient;
 
-    @Container
-    static KeycloakContainer keycloakContainer = new KeycloakContainer("quay.io/keycloak/keycloak:" + VersionUtil.getVersion("KEYCLOAK_VERSION"))
-            .withAdminUsername("admin")
-            .withAdminPassword("Pa55w0rd")
-            .withRealmImportFile(".") //fake insert to enable flag --import realm
-            .withCopyFileToContainer(MountableFile.forHostPath(REALM_FILE_PATH), DEFAULT_REALM_IMPORT_FILES_LOCATION + FilenameUtils.getName(REALM_FILE_PATH))
-            .withStartupTimeout(Duration.ofMinutes(4));
+    static KeycloakContainer keycloakContainer;
+
+    static {
+        keycloakContainer = new KeycloakContainer("quay.io/keycloak/keycloak:" + VersionUtil.getVersion("KEYCLOAK_VERSION"))
+                .withAdminUsername("admin")
+                .withAdminPassword("Pa55w0rd")
+                .withRealmImportFile(".") //fake insert to enable flag --import realm
+                .withCopyFileToContainer(
+                        MountableFile.forHostPath(Path.of(REALM_FILE_PATH).toAbsolutePath().normalize()),
+                        DEFAULT_REALM_IMPORT_FILES_LOCATION + FilenameUtils.getName(REALM_FILE_PATH))
+                .withReuse(true)
+                .withStartupTimeout(Duration.ofMinutes(4));
+        keycloakContainer.start();
+    }
 
     @BeforeEach
     void setUp() {

@@ -29,7 +29,6 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.testcontainers.elasticsearch.ElasticsearchContainer;
-import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.MountableFile;
 
@@ -37,6 +36,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
+import java.nio.file.Path;
 import java.time.Duration;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -83,17 +83,26 @@ class ElasticQueryServiceApplicationTests {
     @MockBean
     ElasticQueryClient<TwitterIndexModel> elasticQueryClient;
 
-    @Container
-    static ElasticsearchContainer elasticsearchContainer = new ElasticsearchContainer("docker.elastic.co/elasticsearch/elasticsearch:" + getVersion("ELASTIC_VERSION"))
-            .withStartupTimeout(Duration.ofSeconds(120));
+    static ElasticsearchContainer elasticsearchContainer;
 
-    @Container
-    static KeycloakContainer keycloakContainer = new KeycloakContainer("quay.io/keycloak/keycloak:" + getVersion("KEYCLOAK_VERSION"))
-            .withAdminUsername("admin")
-            .withAdminPassword("Pa55w0rd")
-            .withRealmImportFile(".") //fake insert to enable flag --import realm
-            .withCopyFileToContainer(MountableFile.forHostPath(REALM_FILE_PATH), DEFAULT_REALM_IMPORT_FILES_LOCATION + FilenameUtils.getName(REALM_FILE_PATH))
-            .withStartupTimeout(Duration.ofMinutes(4));
+    static KeycloakContainer keycloakContainer;
+
+    static {
+        keycloakContainer = new KeycloakContainer("quay.io/keycloak/keycloak:" + getVersion("KEYCLOAK_VERSION"))
+                .withAdminUsername("admin")
+                .withAdminPassword("Pa55w0rd")
+                .withRealmImportFile(".") //fake insert to enable flag --import realm
+                .withCopyFileToContainer(
+                        MountableFile.forHostPath(Path.of(REALM_FILE_PATH).toAbsolutePath().normalize()),
+                        DEFAULT_REALM_IMPORT_FILES_LOCATION + FilenameUtils.getName(REALM_FILE_PATH))
+                .withReuse(true)
+                .withStartupTimeout(Duration.ofMinutes(4));
+        elasticsearchContainer = new ElasticsearchContainer("docker.elastic.co/elasticsearch/elasticsearch:" + getVersion("ELASTIC_VERSION"))
+                .withReuse(true)
+                .withStartupTimeout(Duration.ofMinutes(3));
+        keycloakContainer.start();
+        elasticsearchContainer.start();
+    }
 
     @BeforeEach
     void setUp() {

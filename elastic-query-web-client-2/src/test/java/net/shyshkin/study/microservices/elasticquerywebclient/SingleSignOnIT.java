@@ -21,11 +21,11 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
-import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.MountableFile;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.time.Duration;
 import java.util.UUID;
 
@@ -63,13 +63,20 @@ class SingleSignOnIT {
 
     WebClient htmlUnitWebClient;
 
-    @Container
-    static KeycloakContainer keycloakContainer = new KeycloakContainer("quay.io/keycloak/keycloak:" + VersionUtil.getVersion("KEYCLOAK_VERSION"))
-            .withAdminUsername("admin")
-            .withAdminPassword("Pa55w0rd")
-            .withRealmImportFile(".") //fake insert to enable flag --import realm
-            .withCopyFileToContainer(MountableFile.forHostPath(REALM_FILE_PATH), DEFAULT_REALM_IMPORT_FILES_LOCATION + FilenameUtils.getName(REALM_FILE_PATH))
-            .withStartupTimeout(Duration.ofMinutes(4));
+    static KeycloakContainer keycloakContainer;
+
+    static {
+        keycloakContainer = new KeycloakContainer("quay.io/keycloak/keycloak:" + VersionUtil.getVersion("KEYCLOAK_VERSION"))
+                .withAdminUsername("admin")
+                .withAdminPassword("Pa55w0rd")
+                .withRealmImportFile(".") //fake insert to enable flag --import realm
+                .withCopyFileToContainer(
+                        MountableFile.forHostPath(Path.of(REALM_FILE_PATH).toAbsolutePath().normalize()),
+                        DEFAULT_REALM_IMPORT_FILES_LOCATION + FilenameUtils.getName(REALM_FILE_PATH))
+                .withReuse(true)
+                .withStartupTimeout(Duration.ofMinutes(4));
+        keycloakContainer.start();
+    }
 
     private GenericContainer<?> elasticQueryWebClient_1 = new GenericContainer<>("artarkatesoft/art-gelenler-elastic-query-web-client:" + VersionUtil.getVersion("SERVICE_VERSION"));
 
