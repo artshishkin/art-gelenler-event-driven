@@ -8,6 +8,7 @@ import net.shyshkin.study.microservices.elastic.model.index.impl.TwitterIndexMod
 import net.shyshkin.study.microservices.elastic.query.client.service.ElasticQueryClient;
 import net.shyshkin.study.microservices.elasticqueryservicecommon.model.ElasticQueryServiceRequestModel;
 import net.shyshkin.study.microservices.elasticqueryservicecommon.model.ElasticQueryServiceResponseModel;
+import net.shyshkin.study.microservices.util.VersionUtil;
 import org.apache.commons.io.FilenameUtils;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -33,12 +34,11 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.MountableFile;
 
 import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.Reader;
 import java.time.Duration;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.*;
@@ -67,11 +67,8 @@ class ElasticQueryServiceApplicationTests {
     private static final ParameterizedTypeReference<List<ElasticQueryServiceResponseModel>> RESPONSE_MODEL_LIST_TYPE = new ParameterizedTypeReference<>() {
     };
 
-    private static final String ENV_FILE_PATH = "../docker-compose/.env";
     private static final String REALM_FILE_PATH = "../docker-compose/export/gelenler-tutorial-realm.json";
     private static final String DEFAULT_REALM_IMPORT_FILES_LOCATION = "/opt/keycloak/data/import/";
-
-    private static Map<String, String> versions;
 
     @Autowired
     TestRestTemplate testRestTemplate;
@@ -87,7 +84,7 @@ class ElasticQueryServiceApplicationTests {
     static KeycloakContainer keycloakContainer;
 
     static {
-        keycloakContainer = new KeycloakContainer("quay.io/keycloak/keycloak:" + getVersion("KEYCLOAK_VERSION"))
+        keycloakContainer = new KeycloakContainer("quay.io/keycloak/keycloak:" + VersionUtil.getVersion("KEYCLOAK_VERSION"))
                 .withAdminUsername("admin")
                 .withAdminPassword("Pa55w0rd")
                 .withRealmImportFile("fake-realm.json") //fake insert to enable flag --import realm
@@ -96,7 +93,7 @@ class ElasticQueryServiceApplicationTests {
                         DEFAULT_REALM_IMPORT_FILES_LOCATION + FilenameUtils.getName(REALM_FILE_PATH))
                 .withReuse(true)
                 .withStartupTimeout(Duration.ofMinutes(4));
-        elasticsearchContainer = new ElasticsearchContainer("docker.elastic.co/elasticsearch/elasticsearch:" + getVersion("ELASTIC_VERSION"))
+        elasticsearchContainer = new ElasticsearchContainer("docker.elastic.co/elasticsearch/elasticsearch:" + VersionUtil.getVersion("ELASTIC_VERSION"))
                 .withReuse(true)
                 .withStartupTimeout(Duration.ofMinutes(3));
         keycloakContainer.start();
@@ -651,30 +648,4 @@ class ElasticQueryServiceApplicationTests {
         String key = username + ":" + password;
         cache.put(key, accessToken);
     }
-
-    private static String getVersion(String versionKey) {
-        if (versions == null) {
-            versions = getEnvVariables();
-        }
-        return versions.get(versionKey);
-    }
-
-    private static Map<String, String> getEnvVariables() {
-        Properties properties = new Properties();
-        log.debug("Current directory: {}", System.getProperty("user.dir"));
-        try (Reader reader = new FileReader(ENV_FILE_PATH)) {
-            properties.load(reader);
-        } catch (IOException e) {
-            log.error("", e);
-        }
-
-        Map<String, String> envVariables = properties.entrySet()
-                .stream()
-                .collect(Collectors.toMap(e -> e.getKey().toString(),
-                        e -> e.getValue().toString()));
-
-        log.debug("Docker-compose Environment variables: {}", envVariables);
-        return envVariables;
-    }
-
 }

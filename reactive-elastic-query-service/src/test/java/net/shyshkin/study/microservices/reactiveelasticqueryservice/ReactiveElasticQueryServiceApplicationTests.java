@@ -7,6 +7,7 @@ import net.shyshkin.study.microservices.elasticqueryservicecommon.model.ElasticQ
 import net.shyshkin.study.microservices.elasticqueryservicecommon.model.ElasticQueryServiceResponseModel;
 import net.shyshkin.study.microservices.reactiveelasticqueryservice.business.ReactiveElasticQueryClient;
 import net.shyshkin.study.microservices.reactiveelasticqueryservice.repository.TwitterElasticReactiveQueryRepository;
+import net.shyshkin.study.microservices.util.VersionUtil;
 import org.awaitility.Awaitility;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,14 +26,9 @@ import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.Reader;
 import java.time.Duration;
 import java.time.ZonedDateTime;
 import java.util.Map;
-import java.util.Properties;
-import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -49,11 +45,6 @@ import static org.mockito.BDDMockito.given;
 @ContextConfiguration(initializers = ReactiveElasticQueryServiceApplicationTests.Initializer.class)
 class ReactiveElasticQueryServiceApplicationTests {
 
-    private static final String ENV_FILE_PATH = "../docker-compose/.env";
-
-    private static Map<String, String> versions;
-
-
     @Autowired
     WebTestClient webTestClient;
 
@@ -66,7 +57,7 @@ class ReactiveElasticQueryServiceApplicationTests {
     static ElasticsearchContainer elasticsearchContainer;
 
     static {
-        elasticsearchContainer = new ElasticsearchContainer("docker.elastic.co/elasticsearch/elasticsearch:" + getVersion("ELASTIC_VERSION"))
+        elasticsearchContainer = new ElasticsearchContainer("docker.elastic.co/elasticsearch/elasticsearch:" + VersionUtil.getVersion("ELASTIC_VERSION"))
                 .withReuse(true)
                 .withStartupTimeout(Duration.ofMinutes(3));
         elasticsearchContainer.start();
@@ -433,31 +424,6 @@ class ReactiveElasticQueryServiceApplicationTests {
             System.setProperty("ELASTIC_HOST_ADDRESS", hostAddress);
             log.debug("ELASTIC_HOST_ADDRESS: {}", hostAddress);
         }
-    }
-
-    private static String getVersion(String versionKey) {
-        if (versions == null) {
-            versions = getEnvVariables();
-        }
-        return versions.get(versionKey);
-    }
-
-    private static Map<String, String> getEnvVariables() {
-        Properties properties = new Properties();
-        log.debug("Current directory: {}", System.getProperty("user.dir"));
-        try (Reader reader = new FileReader(ENV_FILE_PATH)) {
-            properties.load(reader);
-        } catch (IOException e) {
-            log.error("", e);
-        }
-
-        Map<String, String> envVariables = properties.entrySet()
-                .stream()
-                .collect(Collectors.toMap(e -> e.getKey().toString(),
-                        e -> e.getValue().toString()));
-
-        log.debug("Docker-compose Environment variables: {}", envVariables);
-        return envVariables;
     }
 
 }

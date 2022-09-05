@@ -51,6 +51,7 @@
         <module>reactive-elastic-query-web-client</module>
         <module>elastic-query-web-client-common</module>
         <module>elastic-query-web-client-2</module>
+        <module>common-test</module>
     </modules>
 
     <dependencyManagement>
