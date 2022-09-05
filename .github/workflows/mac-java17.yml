@@ -5,7 +5,7 @@ name: Tested on JVM 17 (MacOS)
 
 on:
   push:
-    branches: [ main, common-test-module ]
+    branches: [ main, disable-test-if-host-testcontainers-absent ]
   pull_request:
     branches: [ main ]
 
