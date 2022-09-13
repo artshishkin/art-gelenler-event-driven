@@ -9,6 +9,10 @@
               <option name="name" value="ENCRYPT_KEY" />
               <option name="value" value="jcePassword" />
             </DockerEnvVarImpl>
+            <DockerEnvVarImpl>
+              <option name="name" value="COMPOSE_PROFILES" />
+              <option name="value" value="app" />
+            </DockerEnvVarImpl>
           </list>
         </option>
         <option name="secondarySourceFiles">

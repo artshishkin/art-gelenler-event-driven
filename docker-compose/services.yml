@@ -3,6 +3,9 @@ services:
 
   twitter-to-kafka-service:
     image: ${GROUP_ID}/art-gelenler-twitter-to-kafka-service:${SERVICE_VERSION:-latest}
+    profiles:
+      - app
+      - reactive-app
     ports:
       - "8091:8080"
     volumes:
@@ -31,6 +34,9 @@ services:
 
   config-server:
     image: ${GROUP_ID}/art-gelenler-config-server:${SERVICE_VERSION:-latest}
+    profiles:
+      - app
+      - reactive-app
     ports:
       - "8080:8080"
     restart: always
@@ -52,6 +58,9 @@ services:
 
   kafka-to-elastic-service:
     image: ${GROUP_ID}/art-gelenler-kafka-to-elastic-service:${SERVICE_VERSION:-latest}
+    profiles:
+      - app
+      - reactive-app
     ports:
       - "8092:8080"
     volumes:
@@ -86,6 +95,8 @@ services:
 
   elastic-query-service-1:
     image: ${GROUP_ID}/art-gelenler-elastic-query-service:${SERVICE_VERSION:-latest}
+    profiles:
+      - app
     ports:
       - "8093:8080"
     volumes:
@@ -114,6 +125,8 @@ services:
 
   elastic-query-service-2:
     image: ${GROUP_ID}/art-gelenler-elastic-query-service:${SERVICE_VERSION:-latest}
+    profiles:
+      - app
     ports:
       - "8095:8080"
     volumes:
@@ -143,6 +156,8 @@ services:
 
   elastic-query-web-client:
     image: ${GROUP_ID}/art-gelenler-elastic-query-web-client:${SERVICE_VERSION:-latest}
+    profiles:
+      - app
     ports:
       - "8094:8080"
     volumes:
@@ -171,6 +186,8 @@ services:
 
   elastic-query-web-client-2:
     image: ${GROUP_ID}/art-gelenler-elastic-query-web-client-2:${SERVICE_VERSION:-latest}
+    profiles:
+      - sso-demo
     ports:
       - "8194:8080"
     volumes:
@@ -199,6 +216,8 @@ services:
 
   reactive-elastic-query-service:
     image: ${GROUP_ID}/art-gelenler-reactive-elastic-query-service:${SERVICE_VERSION:-latest}
+    profiles:
+      - reactive-app
     ports:
       - "8096:8080"
     volumes:
@@ -221,6 +240,8 @@ services:
       - ${GLOBAL_NETWORK:-services}
 
   reactive-elastic-query-web-client:
+    profiles:
+      - reactive-app
     image: ${GROUP_ID}/art-gelenler-reactive-elastic-query-web-client:${SERVICE_VERSION:-latest}
     ports:
       - "8098:8080"
