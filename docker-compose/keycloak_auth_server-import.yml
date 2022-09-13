@@ -20,6 +20,8 @@ services:
 
   adminer:
     image: adminer
+    profiles:
+      - debug
     restart: always
     ports:
       - 9082:8080
