@@ -26,6 +26,7 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <avro.version>1.11.0</avro.version>
         <kafka-avro-serializer.version>7.1.1</kafka-avro-serializer.version>
+        <kafka-streams-avro-serde.version>7.1.1</kafka-streams-avro-serde.version>
         <docker.image.prefix>artarkatesoft</docker.image.prefix>
         <docker.image.name>art-gelenler-${project.artifactId}</docker.image.name>
         <testcontainers.version>1.17.3</testcontainers.version>
@@ -52,6 +53,7 @@
         <module>elastic-query-web-client-common</module>
         <module>elastic-query-web-client-2</module>
         <module>common-test</module>
+        <module>kafka-streams-service</module>
     </modules>
 
     <dependencyManagement>
@@ -137,6 +139,11 @@
                 <groupId>io.confluent</groupId>
                 <artifactId>kafka-avro-serializer</artifactId>
                 <version>${kafka-avro-serializer.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.confluent</groupId>
+                <artifactId>kafka-streams-avro-serde</artifactId>
+                <version>${kafka-streams-avro-serde.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.springdoc</groupId>
