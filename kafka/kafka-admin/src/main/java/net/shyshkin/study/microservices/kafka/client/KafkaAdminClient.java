@@ -35,15 +35,19 @@ public class KafkaAdminClient {
 
 //        if (true) throw new RuntimeException("Fake exception");
 
+        List<String> existingTopics = getTopics().stream().map(TopicListing::name).collect(Collectors.toList());
+
         List<NewTopic> newTopics = kafkaConfigData
                 .getTopicNamesToCreate()
                 .stream()
+                .filter(name -> !existingTopics.contains(name))
                 .map(this::newTopic)
                 .collect(Collectors.toList());
         var createTopicsResult = adminClient.createTopics(newTopics);
         try {
             createTopicsResult.all().get(1L, TimeUnit.SECONDS);
         } catch (TimeoutException | InterruptedException | ExecutionException e) {
+//            log.error("Error creating topics", e);
             throw new RuntimeException("Exception while creating topics", e);
         }
     }
