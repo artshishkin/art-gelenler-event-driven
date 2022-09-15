@@ -1,6 +1,6 @@
 spring:
   application:
-    name: "@project.artifactId@"
+    name: kafka-streams-service
   cloud:
     config:
       enabled: false
