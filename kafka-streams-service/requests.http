@@ -1,0 +1,30 @@
+### Healthcheck
+GET http://localhost:8187/kafka-streams-service/actuator/health
+Accept: application/json
+
+> {%
+   client.global.set("client_id", "elastic-query-service");
+   client.global.set("client_secret", "ev8wdPngiAmJTwIKlY94kBGC5Vxfluo7");
+   client.global.set("username", "app.admin");
+   client.global.set("password", "234");
+%}
+
+### 1 GET Access Token - Password grant_type
+POST http://localhost:8181/realms/gelenler-tutorial/protocol/openid-connect/token
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=password&client_id={{client_id}}&client_secret={{client_secret}}&scope=openid profile&username={{username}}&password={{password}}
+
+> {% client.global.set("access_token", response.body.access_token); %}
+
+### Get word count by word `Microservices`.
+GET http://localhost:8187/kafka-streams-service/get-word-count-by-word/Microservices
+Accept: application/vnd.api.v1+json
+Authorization: Bearer {{access_token}}
+
+### Get word count by word `Java`.
+GET http://localhost:8187/kafka-streams-service/get-word-count-by-word/java
+Accept: application/vnd.api.v1+json
+Authorization: Bearer {{access_token}}
+
+
