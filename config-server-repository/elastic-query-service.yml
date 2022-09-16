@@ -1,13 +1,22 @@
 elastic-query-service:
   version: v1
   custom-audience: elastic-query-service
-
+app.oauth.baseUri: http://localhost:8181
 spring:
   security:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://localhost:8181/realms/gelenler-tutorial
+          issuer-uri: ${app.oauth.baseUri}/realms/gelenler-tutorial
+      client:
+        registration:
+          keycloak:
+            client-id: elastic-query-service
+            client-secret: '{cipher}7561ff7c967124b30fac59dc89cf18b1c0bff8b1c43ceb6c7031b3c4ae58d068c351e753858487009d5f5169477141eb37548b65c59cca0005e2af3cc4d7bb62'
+            authorization-grant-type: client_credentials
+        provider:
+          keycloak:
+            issuer-uri: ${app.oauth.baseUri}/realms/gelenler-tutorial
   jpa:
     open-in-view: false
     show-sql: true
