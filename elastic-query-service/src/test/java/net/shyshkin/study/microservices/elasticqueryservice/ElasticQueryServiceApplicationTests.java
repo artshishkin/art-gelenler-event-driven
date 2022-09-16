@@ -567,8 +567,8 @@ class ElasticQueryServiceApplicationTests extends KeycloakAbstractTest {
             String hostAddress = elasticsearchContainer.getHttpHostAddress();
             System.setProperty("ELASTIC_HOST_ADDRESS", hostAddress);
             String issuerUriProperty = String.format(
-                    "spring.security.oauth2.resourceserver.jwt.issuer-uri=%srealms/gelenler-tutorial",
-                    keycloakContainer.getAuthServerUrl()
+                    "app.oauth.baseUri=%s",
+                    keycloakContainer.getAuthServerUrl().replaceAll("/*$", "")
             );
 
             TestPropertyValues

@@ -5,7 +5,7 @@ name: Tested on JVM 17 (Ubuntu)
 
 on:
   push:
-    branches: [ main, disable-test-if-host-testcontainers-absent ]
+    branches: [ main, kafka-streams ]
   pull_request:
     branches: [ main ]
 
