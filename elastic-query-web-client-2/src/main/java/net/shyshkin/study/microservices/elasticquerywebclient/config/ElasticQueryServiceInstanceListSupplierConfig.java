@@ -1,6 +1,7 @@
 package net.shyshkin.study.microservices.elasticquerywebclient.config;
 
 import net.shyshkin.study.microservices.config.ElasticQueryWebClientConfigData;
+import net.shyshkin.study.microservices.config.WebClientConfigData;
 import org.springframework.cloud.client.DefaultServiceInstance;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.loadbalancer.core.ServiceInstanceListSupplier;
@@ -15,7 +16,7 @@ import java.util.stream.Collectors;
 @Primary
 public class ElasticQueryServiceInstanceListSupplierConfig implements ServiceInstanceListSupplier {
 
-    private final ElasticQueryWebClientConfigData.Webclient webClientConfigData;
+    private final WebClientConfigData webClientConfigData;
 
     public ElasticQueryServiceInstanceListSupplierConfig(ElasticQueryWebClientConfigData elasticQueryWebClientConfigData) {
         this.webClientConfigData = elasticQueryWebClientConfigData.getWebclient();

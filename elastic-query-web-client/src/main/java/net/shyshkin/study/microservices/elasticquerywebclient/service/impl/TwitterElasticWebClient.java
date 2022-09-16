@@ -1,6 +1,7 @@
 package net.shyshkin.study.microservices.elasticquerywebclient.service.impl;
 
 import net.shyshkin.study.microservices.config.ElasticQueryWebClientConfigData;
+import net.shyshkin.study.microservices.config.WebClientConfigData;
 import net.shyshkin.study.microservices.elasticquerywebclient.service.ElasticWebClient;
 import net.shyshkin.study.microservices.elasticquerywebclientcommon.exception.ElasticQueryWebClientException;
 import net.shyshkin.study.microservices.elasticquerywebclientcommon.model.ElasticQueryWebClientRequestModel;
@@ -32,7 +33,7 @@ public class TwitterElasticWebClient implements ElasticWebClient {
 
     @Override
     public List<ElasticQueryWebClientResponseModel> getDataByText(ElasticQueryWebClientRequestModel requestModel) {
-        ElasticQueryWebClientConfigData.Query queryParams = elasticQueryWebClientConfigData.getQueries()
+        WebClientConfigData.Query queryParams = elasticQueryWebClientConfigData.getQueries()
                 .get("query-by-text");
         HttpMethod httpMethod = HttpMethod.resolve(queryParams.getMethod());
         Objects.requireNonNull(httpMethod);

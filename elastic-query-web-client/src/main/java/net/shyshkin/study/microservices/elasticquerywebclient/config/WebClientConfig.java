@@ -4,6 +4,7 @@ import io.netty.channel.ChannelOption;
 import io.netty.handler.timeout.ReadTimeoutHandler;
 import io.netty.handler.timeout.WriteTimeoutHandler;
 import net.shyshkin.study.microservices.config.ElasticQueryWebClientConfigData;
+import net.shyshkin.study.microservices.config.WebClientConfigData;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.cloud.loadbalancer.annotation.LoadBalancerClient;
@@ -25,7 +26,7 @@ import java.util.concurrent.TimeUnit;
 @LoadBalancerClient(name = "elastic-query-service", configuration = ElasticQueryServiceInstanceListSupplierConfig.class)
 public class WebClientConfig {
 
-    private final ElasticQueryWebClientConfigData.Webclient webClientConfigData;
+    private final WebClientConfigData webClientConfigData;
 
     public WebClientConfig(ElasticQueryWebClientConfigData webClientConfigData) {
         this.webClientConfigData = webClientConfigData.getWebclient();

@@ -5,6 +5,7 @@ import io.netty.handler.timeout.ReadTimeoutHandler;
 import io.netty.handler.timeout.WriteTimeoutHandler;
 import net.shyshkin.study.microservices.config.ElasticQueryWebClientConfigData;
 import net.shyshkin.study.microservices.config.UserConfigData;
+import net.shyshkin.study.microservices.config.WebClientConfigData;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
@@ -19,7 +20,7 @@ import java.util.concurrent.TimeUnit;
 @Configuration
 public class WebClientConfig {
 
-    private final ElasticQueryWebClientConfigData.Webclient webClientConfigData;
+    private final WebClientConfigData webClientConfigData;
     private final UserConfigData userConfigData;
 
     public WebClientConfig(ElasticQueryWebClientConfigData webClientConfigData, UserConfigData userConfigData) {
