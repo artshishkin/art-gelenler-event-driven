@@ -1,6 +1,7 @@
 package net.shyshkin.study.microservices.elasticqueryservice.security;
 
 import lombok.RequiredArgsConstructor;
+import net.shyshkin.study.microservices.elasticqueryservice.model.ElasticQueryServiceAnalyticsResponseModel;
 import net.shyshkin.study.microservices.elasticqueryservicecommon.model.ElasticQueryServiceRequestModel;
 import net.shyshkin.study.microservices.elasticqueryservicecommon.model.ElasticQueryServiceResponseModel;
 import org.springframework.http.ResponseEntity;
@@ -31,9 +32,15 @@ public class QueryServicePermissionEvaluator implements PermissionEvaluator {
         } else if (targetDomainObject == null) {
             return true;
         } else if (targetDomainObject instanceof ResponseEntity) {
-            List<ElasticQueryServiceResponseModel> responseBody = ((ResponseEntity<List<ElasticQueryServiceResponseModel>>) targetDomainObject).getBody();
+            Object responseBody = ((ResponseEntity<?>) targetDomainObject).getBody();
             Objects.requireNonNull(responseBody);
-            return postAuthorize(authentication, responseBody, permission);
+            if (responseBody instanceof List) {
+                var responseModelList = (List<ElasticQueryServiceResponseModel>) responseBody;
+                return postAuthorize(authentication, responseModelList, permission);
+            } else if (responseBody instanceof ElasticQueryServiceAnalyticsResponseModel) {
+                var responseModel = (ElasticQueryServiceAnalyticsResponseModel) responseBody;
+                return postAuthorize(authentication, responseModel.getQueryResponseModels(), permission);
+            }
         }
         return false;
     }
