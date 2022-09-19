@@ -1,5 +1,6 @@
 package net.shyshkin.study.microservices.elasticqueryservice.business;
 
+import net.shyshkin.study.microservices.elasticqueryservice.model.ElasticQueryServiceAnalyticsResponseModel;
 import net.shyshkin.study.microservices.elasticqueryservicecommon.model.ElasticQueryServiceRequestModel;
 import net.shyshkin.study.microservices.elasticqueryservicecommon.model.ElasticQueryServiceResponseModel;
 
@@ -11,5 +12,5 @@ public interface ElasticQueryService {
 
     ElasticQueryServiceResponseModel getDocumentById(String id);
 
-    List<ElasticQueryServiceResponseModel> getDocumentsByText(ElasticQueryServiceRequestModel requestModel);
+    ElasticQueryServiceAnalyticsResponseModel getDocumentsByText(ElasticQueryServiceRequestModel requestModel, String accessToken);
 }
