@@ -110,6 +110,8 @@ services:
         condition: service_healthy
       elastic-3:
         condition: service_healthy
+      kafka-streams-service:
+        condition: service_healthy
       postgres:
         condition: service_started
     environment:
@@ -118,8 +120,8 @@ services:
       - "SPRING_CLOUD_CONFIG_URI=http://config-server:8080"
       - "spring.datasource.url=jdbc:postgresql://postgres:5432/postgres?currentSchema=public&binaryTransfer=true&reWriteBatchedInserts=true"
       - "ELASTIC-CONFIG_CONNECTION-URL=http://elastic-1:9200"
-#      - "spring.security.oauth2.resourceserver.jwt.issuer-uri=http://keycloak-authorization-server:8080/realms/gelenler-tutorial"
-      - "spring.security.oauth2.resourceserver.jwt.issuer-uri=http://host.docker.internal:8181/realms/gelenler-tutorial"
+      - "app.oauth.baseUri=http://host.docker.internal:8181"
+      - "app.kafka-streams-service.baseUri=http://kafka-streams-service:8080"
     networks:
       - ${GLOBAL_NETWORK:-services}
 
@@ -140,6 +142,8 @@ services:
         condition: service_healthy
       elastic-3:
         condition: service_healthy
+      kafka-streams-service:
+        condition: service_healthy
       postgres:
         condition: service_started
     environment:
@@ -149,8 +153,8 @@ services:
       - "spring.datasource.url=jdbc:postgresql://postgres:5432/postgres?currentSchema=public&binaryTransfer=true&reWriteBatchedInserts=true"
       - "spring.sql.init.mode=never"
       - "ELASTIC-CONFIG_CONNECTION-URL=http://elastic-1:9200"
-#      - "spring.security.oauth2.resourceserver.jwt.issuer-uri=http://keycloak-authorization-server:8080/realms/gelenler-tutorial"
-      - "spring.security.oauth2.resourceserver.jwt.issuer-uri=http://host.docker.internal:8181/realms/gelenler-tutorial"
+      - "app.oauth.baseUri=http://host.docker.internal:8181"
+      - "app.kafka-streams-service.baseUri=http://kafka-streams-service:8080"
     networks:
       - ${GLOBAL_NETWORK:-services}
 
@@ -211,6 +215,30 @@ services:
       - "app.oauth.baseUri=http://host.docker.internal:8181"
       - "app.redirect.host.uri=http://localhost:8194"
       - "app.security.logout-success-uri=http://localhost:8194/elastic-query-web-client"
+    networks:
+      - ${GLOBAL_NETWORK:-services}
+
+  kafka-streams-service:
+    image: ${GROUP_ID}/art-gelenler-kafka-streams-service:${SERVICE_VERSION:-latest}
+    profiles:
+      - app
+    ports:
+      - "8187:8080"
+    volumes:
+      - "./docker-logs/kafka-streams-service:/application/kafka-streams-service/logs"
+    depends_on:
+      config-server:
+        condition: service_healthy
+      kafka-to-elastic-service:
+        condition: service_healthy
+    environment:
+      - "JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n -Xms128m -Xmx256m"
+      - "ENCRYPT_KEY=${ENCRYPT_KEY}"
+      - "SPRING_PROFILES_ACTIVE=configserver"
+      - "SPRING_CLOUD_CONFIG_URI=http://config-server:8080"
+      - "KAFKA-CONFIG_BOOTSTRAP-SERVERS=kafka-broker-1:9092, kafka-broker-2:9092, kafka-broker-3:9092"
+      - "KAFKA-CONFIG_SCHEMA-REGISTRY_URL=http://schema-registry:8081"
+      - "spring.security.oauth2.resourceserver.jwt.issuer-uri=http://host.docker.internal:8181/realms/gelenler-tutorial"
     networks:
       - ${GLOBAL_NETWORK:-services}
 

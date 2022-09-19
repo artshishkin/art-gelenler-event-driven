@@ -86,6 +86,17 @@ Tutorial -  Event-Driven Microservices: Spring Boot, Kafka and Elastic - from Al
 
 - [Configure Keycloak](/instructions/configure-keycloak.md)
 
+### Stack variations
+
+**ENCRYPT_KEY** must be provided through System Environment Variables
+
+1. Infrastructure (without microservices)
+   - `docker-compose up -d`
+   - `docker-compose up -d -e `
+   - `docker-compose --profile=debug up -d` (with adminer, kibana)
+2. Full stack
+   - `docker-compose --profile=app up -d`
+
 
 [springver]: https://img.shields.io/badge/dynamic/xml?label=Spring%20Boot&query=%2F%2A%5Blocal-name%28%29%3D%27project%27%5D%2F%2A%5Blocal-name%28%29%3D%27parent%27%5D%2F%2A%5Blocal-name%28%29%3D%27version%27%5D&url=https%3A%2F%2Fraw.githubusercontent.com%2Fartshishkin%2Fart-gelenler-event-driven%2Fmain%2Fpom.xml&logo=Spring&labelColor=white&color=grey
 [licence]: https://img.shields.io/github/license/artshishkin/art-gelenler-event-driven.svg
