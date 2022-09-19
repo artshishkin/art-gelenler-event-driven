@@ -5,10 +5,9 @@
     <parent>
         <groupId>net.shyshkin.study.microservices</groupId>
         <artifactId>art-gelenler-event-driven</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>0.0.2-SNAPSHOT</version>
     </parent>
     <artifactId>twitter-to-kafka-service</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
     <name>twitter-to-kafka-service</name>
     <description>twitter-to-kafka-service</description>
 

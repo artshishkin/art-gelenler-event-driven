@@ -11,7 +11,7 @@
     <packaging>pom</packaging>
     <groupId>net.shyshkin.study.microservices</groupId>
     <artifactId>art-gelenler-event-driven</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.2-SNAPSHOT</version>
     <name>art-gelenler-event-driven</name>
     <description>art-gelenler-event-driven</description>
 
@@ -396,7 +396,7 @@
                         <artifactId>docker-maven-plugin</artifactId>
                         <executions>
                             <execution>
-                                <id>push-to-docker</id>
+                                <id>build-docker-image</id>
                                 <phase>install</phase>
                                 <goals>
                                     <goal>build</goal>

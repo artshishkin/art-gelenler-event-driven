@@ -5,7 +5,7 @@ name: Tested on JVM 17 (MacOS)
 
 on:
   push:
-    branches: [ main, kafka-streams ]
+    branches: [ main, bellsoft-jdk11 ]
   pull_request:
     branches: [ main ]
 

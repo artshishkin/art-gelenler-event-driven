@@ -5,7 +5,7 @@
     <parent>
         <artifactId>kafka</artifactId>
         <groupId>net.shyshkin.study.microservices</groupId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>0.0.2-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -20,7 +20,7 @@
         <dependency>
             <groupId>net.shyshkin.study.microservices</groupId>
             <artifactId>app-config-data</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <version>0.0.2-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
