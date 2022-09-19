@@ -8,14 +8,15 @@ elastic-query-service:
     max-in-memory-size: 10485760 #10MB
     content-type: 'application/vnd.api.v1+json'
     accept-type: 'application/vnd.api.v1+json'
-    base-url: 'http://kafka-streams-service/kafka-streams-service'
+    base-url: null
     query-type: 'KAFKA_STATE_STORE'
   queries:
     get-word-count-by-word:
       method: GET
-      uri: '/get-word-count-by-word/{word}'
+      uri: '${app.kafka-streams-service.baseUri}/kafka-streams-service/get-word-count-by-word/{word}'
       accept: ${elastic-query-service.webclient.accept-type}
 app.oauth.baseUri: http://localhost:8181
+app.kafka-streams-service.baseUri: http://localhost:8187
 spring:
   security:
     oauth2:
