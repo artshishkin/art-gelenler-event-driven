@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.shyshkin.study.microservices.config.UserConfigData;
 import net.shyshkin.study.microservices.elastic.model.index.impl.TwitterIndexModel;
 import net.shyshkin.study.microservices.elastic.query.client.service.ElasticQueryClient;
+import net.shyshkin.study.microservices.elasticqueryservice.model.ElasticQueryServiceAnalyticsResponseModel;
 import net.shyshkin.study.microservices.elasticqueryservicecommon.model.ElasticQueryServiceRequestModel;
 import net.shyshkin.study.microservices.elasticqueryservicecommon.model.ElasticQueryServiceResponseModel;
 import net.shyshkin.study.microservices.test.KeycloakAbstractTest;
@@ -24,12 +25,19 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.elasticsearch.ElasticsearchContainer;
+import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.utility.DockerImageName;
+import org.testcontainers.utility.MountableFile;
 
 import java.io.FileNotFoundException;
 import java.time.Duration;
@@ -65,6 +73,10 @@ class ElasticQueryServiceApplicationTests extends KeycloakAbstractTest {
     private static final ParameterizedTypeReference<List<ElasticQueryServiceResponseModel>> RESPONSE_MODEL_LIST_TYPE = new ParameterizedTypeReference<>() {
     };
 
+    private static final int MOCKSERVER_PORT = 1080;
+    private static final String INIT_MOCK_CONTAINER_LOCATION = "/config/mock-init.json";
+    private static final String INIT_MOCK_HOST_LOCATION = "./src/test/resources/data-mockserver/mock-init.json";
+
     @Autowired
     TestRestTemplate testRestTemplate;
 
@@ -75,6 +87,17 @@ class ElasticQueryServiceApplicationTests extends KeycloakAbstractTest {
     ElasticQueryClient<TwitterIndexModel> elasticQueryClient;
 
     static ElasticsearchContainer elasticsearchContainer;
+
+    @Container
+    static GenericContainer<?> mockserver = new GenericContainer<>(
+            DockerImageName
+                    .parse("mockserver/mockserver")
+                    .withTag(VersionUtil.getVersion("MOCKSERVER_VERSION")))
+            .withExposedPorts(MOCKSERVER_PORT)
+            .withEnv("MOCKSERVER_INITIALIZATION_JSON_PATH", "/config/mock-init.json")
+            .withCopyFileToContainer(MountableFile.forHostPath(INIT_MOCK_HOST_LOCATION), INIT_MOCK_CONTAINER_LOCATION)
+            .waitingFor(Wait.forListeningPort());
+    ;
 
     static {
         elasticsearchContainer = new ElasticsearchContainer("docker.elastic.co/elasticsearch/elasticsearch:" + VersionUtil.getVersion("ELASTIC_VERSION"))
@@ -177,11 +200,12 @@ class ElasticQueryServiceApplicationTests extends KeycloakAbstractTest {
         //when
         HttpEntity<ElasticQueryServiceRequestModel> reqEntity = new HttpEntity<>(requestModel, httpHeaders);
         var responseEntity = testRestTemplate
-                .exchange("/documents/get-document-by-text", HttpMethod.POST, reqEntity, RESPONSE_MODEL_LIST_TYPE);
+                .exchange("/documents/get-document-by-text", HttpMethod.POST, reqEntity, ElasticQueryServiceAnalyticsResponseModel.class);
 
         //then
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(responseEntity.getBody())
+        assertThat(responseEntity.getBody()).isNotNull();
+        assertThat(responseEntity.getBody().getQueryResponseModels())
                 .isNotNull()
                 .hasSize(1)
                 .allSatisfy(model -> assertThat(model.getText()).isEqualTo(text));
@@ -326,11 +350,12 @@ class ElasticQueryServiceApplicationTests extends KeycloakAbstractTest {
 
             //when
             var responseEntity = testRestTemplate
-                    .exchange(requestEntity, RESPONSE_MODEL_LIST_TYPE);
+                    .exchange(requestEntity, ElasticQueryServiceAnalyticsResponseModel.class);
 
             //then
             assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
-            assertThat(responseEntity.getBody())
+            assertThat(responseEntity.getBody()).isNotNull();
+            assertThat(responseEntity.getBody().getQueryResponseModels())
                     .isNotNull()
                     .hasSize(1)
                     .allSatisfy(model -> assertThat(model.getText()).isEqualTo(text));
@@ -387,11 +412,12 @@ class ElasticQueryServiceApplicationTests extends KeycloakAbstractTest {
 
             //when
             var responseEntity = testRestTemplate
-                    .exchange(requestEntity, RESPONSE_MODEL_LIST_TYPE);
+                    .exchange(requestEntity, ElasticQueryServiceAnalyticsResponseModel.class);
 
             //then
             assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
-            assertThat(responseEntity.getBody())
+            assertThat(responseEntity.getBody()).isNotNull();
+            assertThat(responseEntity.getBody().getQueryResponseModels())
                     .isNotNull()
                     .hasSize(1)
                     .allSatisfy(model -> assertThat(model.getText()).isEqualTo(text));
@@ -520,11 +546,12 @@ class ElasticQueryServiceApplicationTests extends KeycloakAbstractTest {
             //when
             HttpEntity<ElasticQueryServiceRequestModel> reqEntity = new HttpEntity<>(requestModel, httpHeaders);
             var responseEntity = testRestTemplate
-                    .exchange("/documents/get-document-by-text", HttpMethod.POST, reqEntity, RESPONSE_MODEL_LIST_TYPE);
+                    .exchange("/documents/get-document-by-text", HttpMethod.POST, reqEntity, ElasticQueryServiceAnalyticsResponseModel.class);
 
             //then
             assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
-            assertThat(responseEntity.getBody())
+            assertThat(responseEntity.getBody()).isNotNull();
+            assertThat(responseEntity.getBody().getQueryResponseModels())
                     .isNotNull()
                     .hasSize(1)
                     .allSatisfy(model -> assertThat(model.getText()).isEqualTo(text));
@@ -575,6 +602,13 @@ class ElasticQueryServiceApplicationTests extends KeycloakAbstractTest {
                     .of(issuerUriProperty)
                     .applyTo(applicationContext.getEnvironment());
         }
+    }
+
+    @DynamicPropertySource
+    static void mockserverProperties(DynamicPropertyRegistry registry) {
+        var mockPort = mockserver.getMappedPort(MOCKSERVER_PORT);
+        var mockHost = mockserver.getHost();
+        registry.add("app.kafka-streams-service.baseUri", () -> String.format("http://%s:%s", mockHost, mockPort));
     }
 
     private final RestTemplate oauthServerRestTemplate = new RestTemplateBuilder()

@@ -13,9 +13,10 @@ elastic-query-service:
   queries:
     get-word-count-by-word:
       method: GET
-      uri: '/get-word-count-by-word/{word}'
+      uri: '${app.kafka-streams-service.baseUri}/kafka-streams-service/get-word-count-by-word/{word}'
       accept: ${elastic-query-service.webclient.accept-type}
 app.oauth.baseUri: http://localhost:8181
+app.kafka-streams-service.baseUri: http://localhost:8187
 spring:
   security:
     oauth2:

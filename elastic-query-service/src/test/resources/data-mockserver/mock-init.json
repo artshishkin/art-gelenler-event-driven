@@ -1,0 +1,14 @@
+[
+  {
+    "httpRequest": {
+      "path": "/kafka-streams-service/get-word-count-by-word/.*"
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "body": {
+        "word": "mock",
+        "wordCount": 0
+      }
+    }
+  }
+]
