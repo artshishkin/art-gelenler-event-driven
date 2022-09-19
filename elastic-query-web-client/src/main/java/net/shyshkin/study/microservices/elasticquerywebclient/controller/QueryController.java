@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.shyshkin.study.microservices.elasticquerywebclient.service.ElasticWebClient;
 import net.shyshkin.study.microservices.elasticquerywebclientcommon.model.ElasticQueryWebClientRequestModel;
-import net.shyshkin.study.microservices.elasticquerywebclientcommon.model.ElasticQueryWebClientResponseModel;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @Slf4j
 @Controller
@@ -48,9 +46,10 @@ public class QueryController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         log.debug("Authentication: {}", authentication);
 
-        List<ElasticQueryWebClientResponseModel> responseModels = elasticWebClient.getDataByText(requestModel);
-        model.addAttribute("elasticQueryWebClientResponseModels", responseModels);
+        var elasticQueryWebClientAnalyticsResponseModel = elasticWebClient.getDataByText(requestModel);
+        model.addAttribute("elasticQueryWebClientResponseModels", elasticQueryWebClientAnalyticsResponseModel.getQueryResponseModels());
         model.addAttribute("searchText", searchText);
+        model.addAttribute("wordCount", elasticQueryWebClientAnalyticsResponseModel.getWordCount());
         model.addAttribute("elasticQueryWebClientRequestModel",
                 ElasticQueryWebClientRequestModel.builder().build());
 

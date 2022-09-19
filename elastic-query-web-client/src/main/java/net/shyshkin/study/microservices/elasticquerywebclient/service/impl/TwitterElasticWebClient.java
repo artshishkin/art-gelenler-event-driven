@@ -4,6 +4,7 @@ import net.shyshkin.study.microservices.config.ElasticQueryWebClientConfigData;
 import net.shyshkin.study.microservices.config.WebClientConfigData;
 import net.shyshkin.study.microservices.elasticquerywebclient.service.ElasticWebClient;
 import net.shyshkin.study.microservices.elasticquerywebclientcommon.exception.ElasticQueryWebClientException;
+import net.shyshkin.study.microservices.elasticquerywebclientcommon.model.ElasticQueryWebClientAnalyticsResponseModel;
 import net.shyshkin.study.microservices.elasticquerywebclientcommon.model.ElasticQueryWebClientRequestModel;
 import net.shyshkin.study.microservices.elasticquerywebclientcommon.model.ElasticQueryWebClientResponseModel;
 import org.springframework.core.ParameterizedTypeReference;
@@ -32,7 +33,7 @@ public class TwitterElasticWebClient implements ElasticWebClient {
     }
 
     @Override
-    public List<ElasticQueryWebClientResponseModel> getDataByText(ElasticQueryWebClientRequestModel requestModel) {
+    public ElasticQueryWebClientAnalyticsResponseModel getDataByText(ElasticQueryWebClientRequestModel requestModel) {
         WebClientConfigData.Query queryParams = elasticQueryWebClientConfigData.getQueries()
                 .get("query-by-text");
         HttpMethod httpMethod = HttpMethod.resolve(queryParams.getMethod());
@@ -56,7 +57,7 @@ public class TwitterElasticWebClient implements ElasticWebClient {
                         HttpStatus::is5xxServerError,
                         clientResponse -> Mono.just(new Exception(clientResponse.statusCode().getReasonPhrase()))
                 )
-                .bodyToMono(RESPONSE_MODEL_LIST_TYPE)
+                .bodyToMono(ElasticQueryWebClientAnalyticsResponseModel.class)
                 .block();
     }
 }

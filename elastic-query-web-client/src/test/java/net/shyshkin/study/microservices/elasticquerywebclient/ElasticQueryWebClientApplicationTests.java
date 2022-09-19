@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.shyshkin.study.microservices.config.ElasticQueryWebClientConfigData;
 import net.shyshkin.study.microservices.config.UserConfigData;
 import net.shyshkin.study.microservices.elasticquerywebclient.service.ElasticWebClient;
+import net.shyshkin.study.microservices.elasticquerywebclientcommon.model.ElasticQueryWebClientAnalyticsResponseModel;
 import net.shyshkin.study.microservices.elasticquerywebclientcommon.model.ElasticQueryWebClientRequestModel;
 import net.shyshkin.study.microservices.elasticquerywebclientcommon.model.ElasticQueryWebClientResponseModel;
 import net.shyshkin.study.microservices.test.KeycloakAbstractTest;
@@ -245,7 +246,10 @@ class ElasticQueryWebClientApplicationTests extends KeycloakAbstractTest {
                 .createdAt(ZonedDateTime.now().minusDays(1))
                 .build();
         given(elasticWebClient.getDataByText(any(ElasticQueryWebClientRequestModel.class)))
-                .willReturn(List.of(expectedResponseModel));
+                .willReturn(ElasticQueryWebClientAnalyticsResponseModel.builder()
+                        .queryResponseModels(List.of(expectedResponseModel))
+                        .wordCount(124L)
+                        .build());
 
         //when
 
@@ -294,7 +298,10 @@ class ElasticQueryWebClientApplicationTests extends KeycloakAbstractTest {
                 .createdAt(ZonedDateTime.now().minusDays(1))
                 .build();
         given(elasticWebClient.getDataByText(any(ElasticQueryWebClientRequestModel.class)))
-                .willReturn(List.of(expectedResponseModel));
+                .willReturn(ElasticQueryWebClientAnalyticsResponseModel.builder()
+                        .queryResponseModels(List.of(expectedResponseModel))
+                        .wordCount(125L)
+                        .build());
 
         //when
         HtmlPage page = htmlUnitWebClient.getPage(queryByTextPageUrl);
