@@ -209,6 +209,7 @@ class ElasticQueryServiceApplicationTests extends KeycloakAbstractTest {
                 .isNotNull()
                 .hasSize(1)
                 .allSatisfy(model -> assertThat(model.getText()).isEqualTo(text));
+        assertThat(responseEntity.getBody().getWordCount()).isEqualTo(123L);
     }
 
     @Nested
@@ -359,6 +360,7 @@ class ElasticQueryServiceApplicationTests extends KeycloakAbstractTest {
                     .isNotNull()
                     .hasSize(1)
                     .allSatisfy(model -> assertThat(model.getText()).isEqualTo(text));
+            assertThat(responseEntity.getBody().getWordCount()).isEqualTo(123L);
             then(elasticQueryClient).should().getIndexModelByText(eq(text));
         }
 
@@ -421,6 +423,7 @@ class ElasticQueryServiceApplicationTests extends KeycloakAbstractTest {
                     .isNotNull()
                     .hasSize(1)
                     .allSatisfy(model -> assertThat(model.getText()).isEqualTo(text));
+            assertThat(responseEntity.getBody().getWordCount()).isEqualTo(123L);
             then(elasticQueryClient).should().getIndexModelByText(eq(text));
         }
 
@@ -555,6 +558,7 @@ class ElasticQueryServiceApplicationTests extends KeycloakAbstractTest {
                     .isNotNull()
                     .hasSize(1)
                     .allSatisfy(model -> assertThat(model.getText()).isEqualTo(text));
+            assertThat(responseEntity.getBody().getWordCount()).isEqualTo(123L);
         }
 
         @Test

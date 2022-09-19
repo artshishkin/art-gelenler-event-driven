@@ -7,7 +7,7 @@
       "statusCode": 200,
       "body": {
         "word": "mock",
-        "wordCount": 0
+        "wordCount": 123
       }
     }
   }
