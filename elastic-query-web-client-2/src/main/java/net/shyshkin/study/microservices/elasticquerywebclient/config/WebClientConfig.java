@@ -18,7 +18,6 @@ import org.springframework.security.oauth2.client.web.OAuth2AuthorizedClientRepo
 import org.springframework.security.oauth2.client.web.reactive.function.client.ServletOAuth2AuthorizedClientExchangeFilterFunction;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.netty.http.client.HttpClient;
-import reactor.netty.tcp.TcpClient;
 
 import java.util.concurrent.TimeUnit;
 
@@ -39,7 +38,12 @@ public class WebClientConfig {
                                        @Value("${app.security.default-client-registration-id}") String defaultClientRegistrationId) {
 
         ClientHttpConnector clientConnector = new ReactorClientHttpConnector(
-                HttpClient.from(getTcpClient())
+                HttpClient.create()
+                        .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, webClientConfigData.getConnectTimeoutMs())
+                        .doOnConnected(connection -> {
+                            connection.addHandlerLast(new ReadTimeoutHandler(webClientConfigData.getReadTimeoutMs(), TimeUnit.MILLISECONDS));
+                            connection.addHandlerLast(new WriteTimeoutHandler(webClientConfigData.getWriteTimeoutMs(), TimeUnit.MILLISECONDS));
+                        })
         );
 
         var oauth2FilterFunction = new ServletOAuth2AuthorizedClientExchangeFilterFunction(clientRegistrationRepository, authorizedClientRepository);
@@ -55,15 +59,6 @@ public class WebClientConfig {
                 .codecs(configurer -> configurer
                         .defaultCodecs()
                         .maxInMemorySize(webClientConfigData.getMaxInMemorySize()));
-    }
-
-    private TcpClient getTcpClient() {
-        return TcpClient.create()
-                .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, webClientConfigData.getConnectTimeoutMs())
-                .doOnConnected(connection -> {
-                    connection.addHandlerLast(new ReadTimeoutHandler(webClientConfigData.getReadTimeoutMs(), TimeUnit.MILLISECONDS));
-                    connection.addHandlerLast(new WriteTimeoutHandler(webClientConfigData.getWriteTimeoutMs(), TimeUnit.MILLISECONDS));
-                });
     }
 
 }

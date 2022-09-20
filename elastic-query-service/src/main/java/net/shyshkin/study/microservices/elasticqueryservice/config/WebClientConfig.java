@@ -13,7 +13,6 @@ import org.springframework.http.client.reactive.ClientHttpConnector;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.netty.http.client.HttpClient;
-import reactor.netty.tcp.TcpClient;
 
 import java.util.concurrent.TimeUnit;
 
@@ -31,7 +30,12 @@ public class WebClientConfig {
     WebClient.Builder webClientBuilder() {
 
         ClientHttpConnector clientConnector = new ReactorClientHttpConnector(
-                HttpClient.from(getTcpClient())
+                HttpClient.create()
+                        .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, webClientConfigData.getConnectTimeoutMs())
+                        .doOnConnected(connection -> {
+                            connection.addHandlerLast(new ReadTimeoutHandler(webClientConfigData.getReadTimeoutMs(), TimeUnit.MILLISECONDS));
+                            connection.addHandlerLast(new WriteTimeoutHandler(webClientConfigData.getWriteTimeoutMs(), TimeUnit.MILLISECONDS));
+                        })
         );
 
         return WebClient.builder()
@@ -41,15 +45,6 @@ public class WebClientConfig {
                 .codecs(configurer -> configurer
                         .defaultCodecs()
                         .maxInMemorySize(webClientConfigData.getMaxInMemorySize()));
-    }
-
-    private TcpClient getTcpClient() {
-        return TcpClient.create()
-                .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, webClientConfigData.getConnectTimeoutMs())
-                .doOnConnected(connection -> {
-                    connection.addHandlerLast(new ReadTimeoutHandler(webClientConfigData.getReadTimeoutMs(), TimeUnit.MILLISECONDS));
-                    connection.addHandlerLast(new WriteTimeoutHandler(webClientConfigData.getWriteTimeoutMs(), TimeUnit.MILLISECONDS));
-                });
     }
 
 }
