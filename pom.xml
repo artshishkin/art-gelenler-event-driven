@@ -365,7 +365,7 @@
                                 <assembly>
                                     <descriptorRef>artifact</descriptorRef>
                                 </assembly>
-                                <dockerFile>Dockerfile</dockerFile>
+                                <dockerFile>Dockerfile-bellsoft</dockerFile>
                                 <tags>
                                     <tag>latest</tag>
                                     <tag>${project.version}</tag>
@@ -386,7 +386,7 @@
             <id>dockerbuild</id>
             <activation>
                 <file>
-                    <exists>src/main/docker/Dockerfile</exists>
+                    <exists>src/main/docker/Dockerfile-bellsoft</exists>
                 </file>
             </activation>
             <build>
