@@ -54,6 +54,7 @@
         <module>elastic-query-web-client-2</module>
         <module>common-test</module>
         <module>kafka-streams-service</module>
+        <module>analytics-service</module>
     </modules>
 
     <dependencyManagement>
