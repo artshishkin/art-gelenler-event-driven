@@ -11,8 +11,8 @@ spring:
           issuer-uri: http://localhost:8181/realms/gelenler-tutorial
   sql:
     init:
-      schema-locations: classpath:init-schema-simplified.sql
-      data-locations: classpath:init-data-simplified.sql
+      schema-locations: classpath:init-schema.sql
+      data-locations: classpath:init-data.sql
       mode: always
 
 analytics-service:
