@@ -20,7 +20,7 @@ public class TwitterAnalyticsService implements AnalyticsService {
     @Override
     public Optional<AnalyticsResponseModel> getWordAnalytics(String word) {
         var latestResult = analyticsRepository
-                .getAnalyticsEntitiesByWordCustomQuery(word, PageRequest.of(0, 1))
+                .getAnalyticsEntitiesByWordCustomQuery(word.toLowerCase(), PageRequest.of(0, 1))
                 .stream()
                 .findFirst()
                 .orElse(null);
