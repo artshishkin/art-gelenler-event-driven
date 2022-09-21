@@ -58,7 +58,7 @@ public class AnalyticsKafkaConsumer implements KafkaConsumer<TwitterAnalyticsAvr
             @Header(KafkaHeaders.OFFSET) List<Long> offsets) {
 
         log.info("{} number of message received with keys {}, partitions {} and offsets {}, " +
-                        "sending it to elastic: Thread id {}",
+                        "persisting them: Thread id {}",
                 messages.size(),
                 keys.toString(),
                 partitions.toString(),
