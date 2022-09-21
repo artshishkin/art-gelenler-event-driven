@@ -778,14 +778,14 @@
       }
     }, {
       "id" : "e1dcb5e0-3b6a-47df-b8f5-e124a5e9d1a9",
-      "name" : "analitics-service",
+      "name" : "analytics-service",
       "protocol" : "openid-connect",
       "protocolMapper" : "oidc-audience-mapper",
       "consentRequired" : false,
       "config" : {
         "id.token.claim" : "false",
         "access.token.claim" : "true",
-        "included.custom.audience" : "analitics-service"
+        "included.custom.audience" : "analytics-service"
       }
     }, {
       "id" : "343ac2f7-8672-4fb1-b75f-86bf773b9d39",

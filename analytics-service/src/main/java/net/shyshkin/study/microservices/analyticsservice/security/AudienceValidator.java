@@ -1,7 +1,7 @@
 package net.shyshkin.study.microservices.analyticsservice.security;
 
 import lombok.RequiredArgsConstructor;
-import net.shyshkin.study.microservices.config.KafkaStreamsServiceConfigData;
+import net.shyshkin.study.microservices.config.AnalyticsServiceConfigData;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.oauth2.core.OAuth2Error;
 import org.springframework.security.oauth2.core.OAuth2TokenValidator;
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class AudienceValidator implements OAuth2TokenValidator<Jwt> {
 
-    private final KafkaStreamsServiceConfigData configData;
+    private final AnalyticsServiceConfigData configData;
 
     @Override
     public OAuth2TokenValidatorResult validate(Jwt token) {

@@ -177,7 +177,7 @@
     - but
     - Audience: 2 values:
         - `kafka-streams-service`
-        - `analitics-service`
+        - `analytics-service`
 
 ### 2. Export Realm
 
