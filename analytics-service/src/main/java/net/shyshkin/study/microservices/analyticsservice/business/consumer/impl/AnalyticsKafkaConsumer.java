@@ -3,6 +3,9 @@ package net.shyshkin.study.microservices.analyticsservice.business.consumer.impl
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.shyshkin.study.microservices.analyticsservice.business.consumer.KafkaConsumer;
+import net.shyshkin.study.microservices.analyticsservice.dataaccess.entity.AnalyticsEntity;
+import net.shyshkin.study.microservices.analyticsservice.dataaccess.repository.AnalyticsRepository;
+import net.shyshkin.study.microservices.analyticsservice.mapper.AnalyticsMapper;
 import net.shyshkin.study.microservices.config.KafkaConfigData;
 import net.shyshkin.study.microservices.kafka.avro.model.TwitterAnalyticsAvroModel;
 import net.shyshkin.study.microservices.kafka.client.KafkaAdminClient;
@@ -29,6 +32,8 @@ public class AnalyticsKafkaConsumer implements KafkaConsumer<TwitterAnalyticsAvr
     private final KafkaListenerEndpointRegistry kafkaListenerEndpointRegistry;
     private final KafkaAdminClient kafkaAdminClient;
     private final KafkaConfigData kafkaConfigData;
+    private final AnalyticsRepository analyticsRepository;
+    private final AnalyticsMapper mapper;
 
     @EventListener
     public void onAppStarted(ApplicationStartedEvent event) {
@@ -60,6 +65,9 @@ public class AnalyticsKafkaConsumer implements KafkaConsumer<TwitterAnalyticsAvr
                 offsets.toString(),
                 Thread.currentThread().getId());
 
+        List<AnalyticsEntity> analyticsEntities = mapper.toEntityList(messages);
+        analyticsRepository.batchPersist(analyticsEntities);
+        log.debug("{} number of messages send to database", analyticsEntities.size());
 
     }
 
