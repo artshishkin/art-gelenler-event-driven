@@ -1,4 +1,4 @@
-CREATE SCHEMA analytics;
+CREATE SCHEMA IF NOT EXISTS analytics;
 
 DROP TABLE IF EXISTS analytics.twitter_analytics CASCADE;
 
