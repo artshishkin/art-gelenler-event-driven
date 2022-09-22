@@ -12,7 +12,8 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQL95Dialect
         use_sql_comments: false
-        format_sql: true
+        format_sql: false
+        generate_statistics: true
         jdbc.batch_size: 50
         order_insertes: true
         order_updates: true
