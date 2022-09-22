@@ -5,7 +5,7 @@ name: Tested on JVM 11 (Ubuntu)
 
 on:
   push:
-    branches: [ main, bellsoft-jdk11 ]
+    branches: [ main, analytics-service ]
   pull_request:
     branches: [ main ]
 
