@@ -93,7 +93,6 @@ Tutorial -  Event-Driven Microservices: Spring Boot, Kafka and Elastic - from Al
 
 1. Infrastructure (without microservices)
    - `docker-compose up -d`
-   - `docker-compose up -d -e `
    - `docker-compose --profile=debug up -d` (with adminer, kibana)
 2. Full stack
    - `docker-compose --profile=app up -d`
