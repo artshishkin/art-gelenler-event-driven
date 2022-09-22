@@ -26,10 +26,12 @@ spring:
         order_insertes: true
         order_updates: true
     database-platform: org.hibernate.dialect.PostgreSQL95Dialect
+    hibernate:
+      ddl-auto: none
   sql:
     init:
-      schema-locations: classpath:init-schema.sql
-      data-locations: classpath:init-data.sql
+      schema-locations: classpath:init-schema-simplified.sql
+      data-locations: classpath:init-data-simplified.sql
       mode: always
 
 analytics-service:
