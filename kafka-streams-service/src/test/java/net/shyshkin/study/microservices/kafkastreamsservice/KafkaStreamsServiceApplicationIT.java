@@ -7,7 +7,6 @@ import net.shyshkin.study.microservices.kafkastreamsservice.model.KafkaStreamsRe
 import net.shyshkin.study.microservices.test.KeycloakAbstractTest;
 import net.shyshkin.study.microservices.util.VersionUtil;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -39,7 +38,6 @@ import static org.assertj.core.api.Assertions.assertThat;
         "spring.cloud.config.enabled=false"
 })
 @Testcontainers
-@Disabled
 class KafkaStreamsServiceApplicationIT extends KeycloakAbstractTest {
 
     private static final String CLIENT_ID = "elastic-query-service";
