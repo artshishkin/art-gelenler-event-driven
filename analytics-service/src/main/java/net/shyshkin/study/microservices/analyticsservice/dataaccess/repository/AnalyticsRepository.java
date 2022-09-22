@@ -7,11 +7,12 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface AnalyticsRepository extends JpaRepository<AnalyticsEntity, UUID>, AnalyticsCustomRepository<AnalyticsEntity, UUID> {
 
-    List<AnalyticsEntity> getAnalyticsEntitiesByWordOrderByRecordDateDesc(String word, Pageable pageable);
+    Optional<AnalyticsEntity> findFirstByWordOrderByRecordDateDesc(String word);
 
     @Query("select e from AnalyticsEntity e where e.word=:word order by e.recordDate desc")
     List<AnalyticsEntity> getAnalyticsEntitiesByWordCustomQuery(@Param("word") String word, Pageable pageable);
